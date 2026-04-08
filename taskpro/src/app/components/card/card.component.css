@@ -1,0 +1,6 @@
+mat-card {
+    margin-left: calc(100vw - 72%);
+    width: calc((100% - 30%));
+    margin: 6rem auto;
+ 
+}

@@ -1,0 +1,21 @@
+ .styletopic {
+     font-size: 1rem;
+     background: rgba(255, 255, 255, 0.1);
+     padding: 0.5rem;
+     border-radius: 0.6rem;
+
+ }
+
+ mat-toolbar {
+     box-shadow: 1px 1px 10px rgb(233, 231, 231);
+ }
+
+ mat-icon {
+     cursor: pointer;
+ }
+
+ .navbar {
+     display: flex;
+     justify-content: space-between;
+     padding: 0 1.5rem;
+ }

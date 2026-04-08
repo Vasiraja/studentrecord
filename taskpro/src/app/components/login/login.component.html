@@ -1,0 +1,68 @@
+<div class="wholeaction">
+    <form class="formsection" #actionform="ngForm" (ngSubmit)="submitForm(actionform)" *ngIf="!loginState">
+
+        <div class="input-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" ngModel required placeholder="Enter your email" #email="ngModel"
+                email required>
+            <div *ngIf="email.touched && email.invalid">
+                <span class="errorstyle" *ngIf="email.errors?.['email']">invalid email</span>
+                <span class="errorstyle" *ngIf="email.errors?.['required']">field required</span>
+
+            </div>
+        </div>
+        <div class="input-group">
+            <label for="name">First Name</label>
+            <input type="text" id="firstname" name="name" ngModel placeholder="Enter your firstname" #name="ngModel"
+                required minlength="4">
+            <div *ngIf="name.touched && name.invalid">
+                <span class="errorstyle" *ngIf="name.errors?.['required']">field required</span>
+                <span class="errorstyle" *ngIf="name.errors?.['minlength']"> * minlenght 4 atleast needed</span>
+
+            </div>
+        </div>
+
+        <div class="input-group" id="passworddiv">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" ngModel placeholder="Enter your password"
+                #password="ngModel" required minlength="8">
+            <div *ngIf="password.touched && password.invalid">
+                <span class="errorstyle" *ngIf="password.errors?.['required']">required field</span>
+                <span class="errorstyle" *ngIf="password.errors?.['minlength']">8 characters atleast needed</span>
+
+            </div>
+        </div>
+
+        <button id="submitbutton" type="submit">Submit</button>
+        <p id="info" (click)="toggleState()">Already have an account? <span>login</span></p>
+
+    </form>
+    <form class="formsection" #loginForm="ngForm" (ngSubmit)="submitLogin(loginForm)" *ngIf="loginState">
+
+        <div class="input-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" ngModel required placeholder="Enter your email" #email="ngModel"
+                email required>
+            <div *ngIf="email.touched && email.invalid">
+                <span class="errorstyle" *ngIf="email.errors?.['email']">invalid email</span>
+                <span class="errorstyle" *ngIf="email.errors?.['required']">field required</span>
+
+            </div>
+        </div>
+
+        <div class="input-group" id="passworddiv">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" ngModel required placeholder="Enter your password"
+                #password="ngModel">
+            <div *ngIf="password.touched && password.invalid">
+                <span class="errorstyle" *ngIf="password.errors?.['required']">required field</span>
+
+            </div>
+        </div>
+
+        <button id="submitbutton" type="submit">LOGIN</button>
+        <p id="info" (click)="toggleState()">Don't have an account? <span>signup</span></p>
+
+
+    </form>
+</div>
