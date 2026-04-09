@@ -15,7 +15,7 @@ export const productsSchema = Type.Object(
     title: Type.String(),
     price: Type.Number(),
     category: Type.String(),
-    stock: Type.Number(),
+    stock: Type.Number(), 
     overAllRating: Type.Number()
 
   },

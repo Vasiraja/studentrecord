@@ -1,21 +1,52 @@
- .styletopic {
-     font-size: 1rem;
-     background: rgba(255, 255, 255, 0.1);
-     padding: 0.5rem;
-     border-radius: 0.6rem;
+/* Navbar container */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    height: 60px;
 
+    background: white;
+    border-bottom: 1px solid #e5e7eb;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.app-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.nav-icon,
+.menu-icon {
+    cursor: pointer;
+    color: #374151;
+    transition: 0.2s;
+}
+
+.nav-icon:hover,
+.menu-icon:hover {
+    color: #2563eb;
+}
+
+.logout-icon {
+    cursor: pointer;
+    font-size: 18px;
+    color: #ef4444;
  }
 
- mat-toolbar {
-     box-shadow: 1px 1px 10px rgb(233, 231, 231);
- }
-
- mat-icon {
-     cursor: pointer;
- }
-
- .navbar {
-     display: flex;
-     justify-content: space-between;
-     padding: 0 1.5rem;
- }
+.logout-icon:hover {
+    color: #dc2626;
+}

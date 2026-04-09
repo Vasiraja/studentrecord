@@ -1,16 +1,14 @@
 <mat-toolbar class="navbar">
-    <!-- <button matIconButton class="example-icon" aria-label="Example icon-button with menu icon">
-        <mat-icon>menu</mat-icon>
-    </button> -->
 
-    <div class="leftbar">
-        <mat-icon (click)="sidebarAction()">menu</mat-icon>
-
+    <div class="nav-left">
+        <mat-icon class="menu-icon" (click)="sidebarAction()">menu</mat-icon>
+        <!-- <span class="app-title">Data Management</span> -->
     </div>
-    <div class="rightbar">
-        <i class="fa-solid fa-arrow-right-from-bracket"></i>
 
+    <div class="nav-right">
+        <i class="fa fa-bell nav-icon"> </i>
+        <i class="fa fa-user nav-icon"></i>
+        <i class="fa fa-sign-out logout-icon "></i>
     </div>
-    <!-- <span class="styletopic">DataManagement</span> -->
 
 </mat-toolbar>

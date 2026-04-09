@@ -1,0 +1,61 @@
+<mat-card class="edit-card" cdkDrag>
+
+    <mat-card-header cdkDragHandle>
+        <mat-card-title>Edit Student</mat-card-title>
+        <mat-card-subtitle>Update student details</mat-card-subtitle>
+        <i class="fa fa-times" (click)="cancelForm()"></i>
+    </mat-card-header>
+
+    <mat-card-content>
+        <form class="student-form">
+
+            <mat-form-field appearance="outline">
+                <mat-label>Student Name</mat-label>
+                <input matInput [(ngModel)]="student.studentname" name="studentname" placeholder="Name">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Age</mat-label>
+                <input matInput type="text" [(ngModel)]="student.age" name="age" [disabled]="true" placeholder="Age">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Class</mat-label>
+                <mat-select [(ngModel)]="student.class" name="class">
+
+                    <mat-option *ngFor="let class of studentClass" [value]=class>{{class}}</mat-option>
+
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" (change)="changeEvent($event)">
+                <mat-label>Date of Birth</mat-label>
+                <input matInput type="date" [(ngModel)]="student.dob" name="dob">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Gender</mat-label>
+                <mat-select [(ngModel)]="student.gender" name="gender">
+                    <mat-option value="male">Male</mat-option>
+                    <mat-option value="female">Female</mat-option>
+                    <mat-option value="other">Other</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+        </form>
+    </mat-card-content>
+
+    <mat-card-footer class="card-footer">
+
+        <div class="left-actions">
+            <button mat-stroked-button color="accent" (click)="cancelForm()">Cancel</button>
+        </div>
+
+        <div class="right-actions">
+            <button mat-stroked-button color="accent" (click)="resetForm()">Reset</button>
+            <button mat-raised-button color="primary" (click)="saveStudent(student._id)">Save</button>
+        </div>
+
+    </mat-card-footer>
+
+</mat-card>

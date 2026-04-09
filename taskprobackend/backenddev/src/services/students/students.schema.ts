@@ -51,7 +51,7 @@ export const studentsDataResolver = resolve<StudentsData, HookContext<StudentsSe
     else if (birthMonth === currentMonth) {
       console.log(birthDate.getDate())
       if (birthDate.getDate() > newDate.getDate()) {
-         ageCalc = ageCalc - 1
+        ageCalc = ageCalc - 1
 
 
       }
@@ -69,7 +69,33 @@ export const studentsPatchSchema = Type.Partial(studentsSchema, {
 })
 export type StudentsPatch = Static<typeof studentsPatchSchema>
 export const studentsPatchValidator = getValidator(studentsPatchSchema, dataValidator)
-export const studentsPatchResolver = resolve<StudentsPatch, HookContext<StudentsService>>({})
+export const studentsPatchResolver = resolve<StudentsPatch, HookContext<StudentsService>>({
+  age: async (curr: any, data: any, context: any) => {
+    const newDate = new Date();
+    const birthDate = new Date(data?.dob);
+    const birthyear = birthDate.getFullYear();
+    const currentYear = newDate.getFullYear();
+    let ageCalc = currentYear - birthyear;
+
+    const birthMonth = birthDate.getMonth() + 1
+    const currentMonth = newDate.getMonth() + 1;
+    if (birthMonth > currentMonth) {
+      ageCalc = ageCalc - 1;
+
+    }
+    else if (birthMonth === currentMonth) {
+      console.log(birthDate.getDate())
+      if (birthDate.getDate() > newDate.getDate()) {
+        ageCalc = ageCalc - 1
+
+
+      }
+    }
+    curr = ageCalc;
+    return curr;
+
+  }
+})
 
 // Schema for allowed query properties
 export const studentsQueryProperties = Type.Pick(studentsSchema, ['_id'])

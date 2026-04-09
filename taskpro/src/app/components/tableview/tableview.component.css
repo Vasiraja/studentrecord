@@ -1,0 +1,29 @@
+
+
+.dashboard-container,mat-toolbar{
+    margin-left: 310px;
+    position: fixed;
+    top: 20%;
+    width: 80%;
+}
+ 
+.editBut,.deleteBut{
+    background-color: #fff;
+    border:none;
+    padding: 0.3rem;
+    box-shadow: 1px 1px 2px rgb(198, 198, 199);
+}
+table{}
+.buttoncontainer{
+     display: flex;
+     margin-top: 28px;
+     gap: 0.5rem;
+     padding-bottom: 1.5rem;
+     
+ 
+ }
+
+ .buttoncontainer button{
+    border-radius: 4px;
+    cursor:pointer;
+ }

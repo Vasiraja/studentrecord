@@ -5,19 +5,20 @@ import { StudentsService } from '../../services/students.service';
 import { ProductsService } from '../../services/products.service';
 import { forkJoin } from 'rxjs';
 import { Title } from '@angular/platform-browser';
+import { TableviewComponent } from "../tableview/tableview.component";
 
 declare var $: any;
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TableviewComponent],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css'
 })
 export class SidebarComponent implements OnInit, AfterViewInit {
 
-  constructor(private studentservice: StudentsService, private productservice: ProductsService) { }
+  constructor(private studentservice: StudentsService, private productservice: ProductsService, private sidebarservice: SidebarService) { }
 
   ngAfterViewInit(): void {
     // this.studentservice.getStudents().subscribe({
@@ -102,9 +103,9 @@ export class SidebarComponent implements OnInit, AfterViewInit {
       core: {
         data: [
           {
-            text: "Home", icon: "fa-solid fa-home", type: "students",
+            text: "Home", icon: "fa-solid fa-home",
             children: [{
-              text: "students", icon: "fa-solid fa-user",
+              text: "students", icon: "fa-solid fa-user", type: "students",
               children: this.students.map(per => ({
                 text: per.studentname,
                 id: per._id,
@@ -137,8 +138,15 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     })
 
     $(treeView).on('select_node.jstree', (e: any, value: any) => {
-      console.log(e);
-      console.log(value.type)
+
+
+      const node = value.node;
+
+      this.sidebarservice.sendNode({
+        id: node.id,
+        text: node.text,
+        type: node.original?.type
+      })
     })
 
   }

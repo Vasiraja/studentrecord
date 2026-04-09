@@ -1,0 +1,43 @@
+.edit-card {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50%;
+}
+
+.student-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem 0;
+}
+mat-card-header:hover    {
+    cursor:grab;
+}
+.fa-times{
+    cursor:pointer;
+    position:absolute;
+    right:5%;
+    top:5%;
+ }
+.student-form mat-form-field {
+    width: 100%;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 1rem 0.7rem;
+}
+
+.right-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.left-actions {
+    display: flex;
+}
