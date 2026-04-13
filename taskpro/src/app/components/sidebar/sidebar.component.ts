@@ -39,10 +39,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     //         }
 
     //       }
-    //     })
-
-
-
+    //     }) 
     //   },
     //   error: (err: any) => {
     //     console.error(err);
@@ -109,7 +106,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
               children: this.students.map(per => ({
                 text: per.studentname,
                 id: per._id,
-                icon: "fa-regular fa-id-badge"
+                icon: "fa-regular fa-id-badge", type: "studentsapi"
 
 
 
@@ -120,12 +117,12 @@ export class SidebarComponent implements OnInit, AfterViewInit {
             }, {
               text: "products", icon: "fa-solid fa-store", type: "products",
               children: this.apiProducts.map((items) => (
-                { text: items.title.length > 15 ? items.title.slice(0, 15) + '...' : items.title, id: items.id, icon: "fa-solid fa-cart-shopping" }
+                { text: items.title.length > 15 ? items.title.slice(0, 15) + '...' : items.title, id: items.id, icon: "fa-solid fa-cart-shopping", type: "productsapi" }
               ))
             },
             {
               text: "productsDB", icon: "fa-solid fa-store", type: "productdb",
-              children: this.dbProducts.map((items) => ({ text: items.title, id: items._id, icon: "fa-solid fa-cart-shopping" }))
+              children: this.dbProducts.map((items) => ({ text: items.title, id: items._id, icon: "fa-solid fa-cart-shopping", type: "productsdbapi" }))
             },
 
             ]
@@ -140,13 +137,43 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     $(treeView).on('select_node.jstree', (e: any, value: any) => {
 
 
+
       const node = value.node;
 
-      this.sidebarservice.sendNode({
+      if (node.original?.type === "students" || node.original?.type === "products" || node.original?.type === "productdb") {
+
+        // this.sidebarservice.profileCardData$.next(false);
+        this.sidebarservice.profileCardTrigger(false);
+
+        // if (!checkDouble) {
+        this.sidebarservice.sendNode({
+          id: node.id,
+          text: node.text,
+          type: node.original?.type
+        })
+        console.log("entered...")
+        // }
+
+
+
+      }
+
+      console.log(value.node);
+      this.sidebarservice.individualNodeGet({
         id: node.id,
-        text: node.text,
         type: node.original?.type
+
+      }).subscribe({
+        next: (res: any) => {
+          console.log(res);
+          this.sidebarservice.profileDataObserve(res);
+          this.sidebarservice.profileCardTrigger(true);
+        },
+        error: (err: any) => {
+          console.log(err)
+        }
       })
+
     })
 
   }

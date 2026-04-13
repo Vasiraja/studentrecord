@@ -6,7 +6,7 @@
         <i class="fa fa-times" (click)="cancelForm()"></i>
     </mat-card-header>
 
-    <mat-card-content>
+    <mat-card-content *ngIf="student?.studentname">
         <form class="student-form">
 
             <mat-form-field appearance="outline">
@@ -16,21 +16,21 @@
 
             <mat-form-field appearance="outline">
                 <mat-label>Age</mat-label>
-                <input matInput type="text" [(ngModel)]="student.age" name="age" [disabled]="true" placeholder="Age">
+                <input matInput type="text" [(ngModel)]="student.age" name="age" disabled placeholder="Age">
             </mat-form-field>
 
             <mat-form-field appearance="outline">
                 <mat-label>Class</mat-label>
                 <mat-select [(ngModel)]="student.class" name="class">
 
-                    <mat-option *ngFor="let class of studentClass" [value]=class>{{class}}</mat-option>
+                    <mat-option *ngFor="let clss of studentClass" [value]=clss>{{clss}}</mat-option>
 
                 </mat-select>
             </mat-form-field>
 
-            <mat-form-field appearance="outline" (change)="changeEvent($event)">
+            <mat-form-field appearance="outline">
                 <mat-label>Date of Birth</mat-label>
-                <input matInput type="date" [(ngModel)]="student.dob" name="dob">
+                <input matInput type="date" [(ngModel)]="student.dob" name="dob" (change)="changeEvent($event)">
             </mat-form-field>
 
             <mat-form-field appearance="outline">
@@ -41,7 +41,48 @@
                     <mat-option value="other">Other</mat-option>
                 </mat-select>
             </mat-form-field>
+            <mat-form-field appearance="outline" *ngIf="!student?._id && !products._id">
+                <button>submit</button>
+            </mat-form-field>
 
+        </form>
+    </mat-card-content>
+    <mat-card-content *ngIf="products?.title">
+        <form class="student-form">
+
+            <mat-form-field appearance="outline">
+                <mat-label>Product Name</mat-label>
+                <input matInput [(ngModel)]="products.title" name="productname" placeholder="Name">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Price</mat-label>
+                <input matInput type="number" [(ngModel)]="products.price" name="price" placeholder="Price">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Category</mat-label>
+                <mat-select [(ngModel)]="products.category" name="category">
+
+                    <mat-option *ngFor="let cat of productCategories" [value]=cat>{{cat}}</mat-option>
+
+
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Stock</mat-label>
+                <input matInput type="number" [(ngModel)]="products.stock" name="stock">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Rating</mat-label>
+                <input matInput type="number" [(ngModel)]="products.overAllRating" name="overallrating">
+
+            </mat-form-field>
+            <mat-form-field appearance="outline" *ngIf="!student?._id && !products._id">
+                <button>submit</button>
+            </mat-form-field>
         </form>
     </mat-card-content>
 
@@ -53,7 +94,11 @@
 
         <div class="right-actions">
             <button mat-stroked-button color="accent" (click)="resetForm()">Reset</button>
-            <button mat-raised-button color="primary" (click)="saveStudent(student._id)">Save</button>
+            <button mat-raised-button color="primary"
+                (click)="student.studentname ? saveStudent(student._id) : saveProduct(products._id)">
+                Save
+            </button>
+
         </div>
 
     </mat-card-footer>

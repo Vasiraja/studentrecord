@@ -14,7 +14,7 @@ export interface ProductsParams extends MongoDBAdapterParams<ProductsQuery> {}
 export class ProductsService<ServiceParams extends Params = ProductsParams> extends MongoDBService<
   Products,
   ProductsData,
-  ProductsParams,
+  ProductsParams, 
   ProductsPatch
 > {}
 

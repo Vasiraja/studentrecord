@@ -1,0 +1,66 @@
+<mat-card class="student-card" appearance="outlined">
+
+    <div class="leftcard">
+        <mat-card-header>
+
+            <mat-card-title>{{ profileData.studentname }}</mat-card-title>
+            <mat-card-subtitle>{{ profileData.class }} | {{ profileData.gender }}</mat-card-subtitle>
+        </mat-card-header>
+
+        <div class="photo-wrapper" (click)="fileInput.click()">
+
+            <ng-container *ngIf="profileData.profilePhoto; else largInitials">
+                <img class="profile-img" [src]="profilePhotoSafe" alt="Profile Photo" />
+                <div class="photodeldownload">
+                    <i class="fa fa-trash delete" (click)="delPhoto($event)"></i>
+                    <i class="fa fa-download download" (click)="downloadPhoto($event,profilePhotoSafe)"></i>
+
+                </div>
+
+            </ng-container>
+
+            <ng-template #largInitials>
+                <div class="large-initials-block">
+                    {{ profileData.studentname?.slice(0, 2)?.toUpperCase() }}
+                </div>
+            </ng-template>
+
+            <div class="photo-overlay">
+                <i class="fa-solid fa-upload"></i>
+                <span>Change Photo</span>
+            </div>
+
+        </div>
+
+        <input #fileInput type="file" accept="image/*" style="display:none"
+            (change)="onPhotoSelected($event,profileData._id)" />
+
+    </div>
+
+    <div class="rightcard">
+        <mat-card-content>
+            <mat-list>
+                <mat-list-item>
+                    <span matListItemTitle>Date of Birth</span>
+                    <span matListItemLine>{{ profileData.dob }}</span>
+                </mat-list-item>
+                <mat-divider></mat-divider>
+                <mat-list-item>
+                    <span matListItemTitle>Age</span>
+                    <span matListItemLine>{{ profileData.age }}</span>
+                </mat-list-item>
+                <mat-divider></mat-divider>
+                <mat-list-item>
+                    <span matListItemTitle>Class</span>
+                    <span matListItemLine>{{ profileData.class }}</span>
+                </mat-list-item>
+                <mat-divider></mat-divider>
+                <mat-list-item>
+                    <span matListItemTitle>Gender</span>
+                    <span matListItemLine>{{ profileData.gender }}</span>
+                </mat-list-item>
+            </mat-list>
+        </mat-card-content>
+    </div>
+
+</mat-card>

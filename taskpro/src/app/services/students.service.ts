@@ -31,6 +31,9 @@ export class StudentsService {
     }
 
   }
+  addNewStudent() {
+    this.studentEditComponent$.next(true);
+  }
   updateStudents(id: any, data: any) {
 
     return this.http.patch(`${this.apiUrl}/${id}`, data);
@@ -40,5 +43,11 @@ export class StudentsService {
   }
   delStudents(id: any) {
     return this.http.delete(`${this.apiUrl}/${id}`);
+  }
+  updatePhoto(id: any, base64String: any) {
+    console.log(id);
+    console.log("^^^^^");
+    console.log(base64String);
+    return this.http.patch(`${this.apiUrl}/${id}`, { profilePhoto: base64String });
   }
 }

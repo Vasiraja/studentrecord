@@ -2,13 +2,28 @@
     <mat-tab-group animationDuration="300ms" [(selectedIndex)]="selectedTabIndex">
         <mat-tab label="Students">
             <div class="tab-content">
+                <button mat-raised-button color="primary" (click)="addStudent()">
+                    + Add Student
+                </button>
                 <table mat-table [dataSource]="students">
                     <div class="table-toolbar">
                         <span>Students</span>
-                        <button mat-raised-button color="primary" (click)="addStudent()">
-                            <i class="fa fa-plus"></i> Add Students
-                        </button>
-                    </div> <ng-container matColumnDef="id">
+
+                    </div>
+                    <ng-container matColumnDef="photo">
+                        <th mat-header-cell *matHeaderCellDef></th>
+                        <td mat-cell *matCellDef="let student">
+                            <img *ngIf="student?.profilePhoto; else intialsdiv" class="student-avatar"
+                                [src]="formateImg(student?.profilePhoto)" alt="photo" />
+                            <ng-template #intialsdiv>
+                                <div class="student-initials">
+                                    {{ student.studentname.slice(0,2).toUpperCase()}}
+                                </div>
+                            </ng-template>
+                        </td>
+
+                    </ng-container>
+                    <ng-container matColumnDef="id">
                         <th mat-header-cell *matHeaderCellDef> ID </th>
                         <td mat-cell *matCellDef="let student"> {{ student._id }} </td>
                     </ng-container>
@@ -31,7 +46,7 @@
                         <td mat-cell *matCellDef="let student"> {{ student.gender }} </td>
                     </ng-container>
                     <ng-container matColumnDef="age">
-                        <th mat-header-cell *matHeaderCellDef> age </th>
+                        <th mat-header-cell *matHeaderCellDef (click)="sortbyname()"> age </th>
                         <td mat-cell *matCellDef="let student"> {{ student.age }} </td>
                     </ng-container>
                     <ng-container matColumnDef="actions">
@@ -53,6 +68,7 @@
         </mat-tab>
         <mat-tab label="Products API">
             <div class="tab-content">
+
                 <table mat-table [dataSource]="productsApi">
 
                     <ng-container matColumnDef="id">
@@ -90,6 +106,9 @@
 
         <mat-tab label="Products DB">
             <div class="tab-content">
+                <button mat-raised-button color="primary" (click)="addProductr()">
+                    +
+                </button>
                 <table mat-table [dataSource]="products">
 
                     <ng-container matColumnDef="id">
@@ -114,11 +133,23 @@
                         <td mat-cell *matCellDef="let product"> {{ product.overAllRating }} </td>
                     </ng-container>
 
+
                     <ng-container matColumnDef="price">
                         <th mat-header-cell *matHeaderCellDef> Price </th>
                         <td mat-cell *matCellDef="let product"> ₹ {{ product.price }} </td>
                     </ng-container>
 
+                    <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef> Actions </th>
+                        <td class="buttoncontainer" mat-cell *matCellDef="let product">
+                            <button class="editBut" (click)="editProducts(product)">
+                                <i class="fa fa-edit" style="color: #1976d2"></i>
+                            </button>
+                            <button class="deleteBut" (click)="deleteProducts(product._id)">
+                                <i class="fa fa-trash" style="color: #f44336"></i>
+                            </button>
+                        </td>
+                    </ng-container>
                     <tr mat-header-row *matHeaderRowDef="productDbColumns"></tr>
                     <tr mat-row *matRowDef="let row; columns: productDbColumns;"></tr>
                 </table>

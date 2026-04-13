@@ -3,6 +3,7 @@
 
 <app-card></app-card>
 
-<app-tableview></app-tableview>
+<app-tableview *ngIf="!profileCard" ></app-tableview>
 
 <app-edit *ngIf="editStatus"></app-edit>
+<app-profilecard *ngIf="profileCard"></app-profilecard>

@@ -6,18 +6,40 @@ import { ProductsService } from '../../services/products.service';
 import { StudentsService } from '../../services/students.service';
 import { forkJoin } from 'rxjs';
 import { SidebarService } from '../../services/sidebar.service';
-import { MatIcon } from '@angular/material/icon';
 import { SnackbarService } from '../../services/snackbar.service';
+import { MatButton } from '@angular/material/button';
+import { CommonModule } from '@angular/common';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+
 @Component({
   selector: 'app-tableview',
   standalone: true,
-  imports: [MatTableModule, MatTable, MatTab, MatTabGroup, MatToolbar, MatIcon],
+  imports: [MatTableModule, MatTable, MatTab, MatTabGroup, MatToolbar, MatButton, CommonModule],
   templateUrl: './tableview.component.html',
   styleUrl: './tableview.component.css'
 })
 export class TableviewComponent implements AfterViewInit {
-  addStudent() {
+
+
+  photoUrl!: SafeUrl;
+
+
+
+  formateImg(imgString: any): any {
+
+    this.photoUrl = this.sanitizer.bypassSecurityTrustUrl(
+      imgString
+    )
+
+    return this.photoUrl;
+
+  }
+  addProductr() {
     throw new Error('Method not implemented.');
+  }
+
+  addStudent() {
+    this.studentservice.addNewStudent();
   }
   editStudent(data: any) {
 
@@ -34,19 +56,32 @@ export class TableviewComponent implements AfterViewInit {
       }
     })
   }
+  deleteProducts(id: any) {
+    this.productservice.deleteProducts(id).subscribe({
+      next: (data: any) => {
+        console.log(data);
+        this.snackbar.openSnackBar("product delted");
+        this.initialAllData();
+      }
+    })
+  }
+  editProducts(data: any) {
+    this.productservice.sendProducts(data);
+  }
 
   productsApi: any[] = [];
   products: any[] = [];
   students: any[] = [];
 
   productApiColumns: string[] = ['id', 'title', 'rating', 'category', 'stock', 'price'];
-  productDbColumns: string[] = ['id', 'name', 'category', 'stock', 'overAllRating', 'price'];
-  studentColumns: string[] = ['id', 'name', 'dob', 'class', 'gender', 'age', 'actions'];
+  productDbColumns: string[] = ['id', 'name', 'category', 'stock', 'overAllRating', 'price', 'actions'];
+  studentColumns: string[] = ['photo', 'id', 'name', 'dob', 'class', 'gender', 'age', 'actions'];
   selectedTabIndex: number | undefined;
-  constructor(private productservice: ProductsService, private studentservice: StudentsService, private sidebarservice: SidebarService, private snackbar: SnackbarService,private cdr:ChangeDetectorRef) { }
+  constructor(private productservice: ProductsService, private studentservice: StudentsService, private sidebarservice: SidebarService, private snackbar: SnackbarService, private cdr: ChangeDetectorRef, private sanitizer: DomSanitizer) { }
 
 
   ngAfterViewInit(): void {
+    this.sidebarservice.profileCardTrigger$.next(false);
 
     this.initialAllData();
 
@@ -63,7 +98,26 @@ export class TableviewComponent implements AfterViewInit {
       }
     })
   }
+  sortingtoggle: boolean | undefined;
 
+  sortbyname() {
+    console.log(this.students)
+    if (!this.sortingtoggle) {
+      this.students = [...this.students].sort((a, b) => a.age - b.age);
+      this.sortingtoggle = true;
+
+
+
+    }
+    else {
+      this.students = [...this.students].sort((a, b) => b.age - a.age)
+      this.sortingtoggle = false;
+
+
+    }
+    return this.students;
+
+  }
   initialAllData() {
     const productfetch = this.productservice.getThirdpartyProducts();
     const productDbFetch = this.productservice.getProducts();

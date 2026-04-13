@@ -1,4 +1,4 @@
-<mat-toolbar class="navbar">
+<mat-toolbar class="navbar" *ngIf="['/'].includes( router.url)">
 
     <div class="nav-left">
         <mat-icon class="menu-icon" (click)="sidebarAction()">menu</mat-icon>
@@ -6,9 +6,8 @@
     </div>
 
     <div class="nav-right">
-        <i class="fa fa-bell nav-icon"> </i>
-        <i class="fa fa-user nav-icon"></i>
-        <i class="fa fa-sign-out logout-icon "></i>
+         <i class="fa fa-user nav-icon"></i>
+        <i class="fa fa-sign-out logout-icon " (click)="logoutAction()"></i>
     </div>
 
 </mat-toolbar>

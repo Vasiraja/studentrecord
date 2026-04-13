@@ -14,7 +14,7 @@ import {
   studentsQueryResolver
 } from './students.schema'
 
-import type { Application } from '../../declarations'
+import type { Application, HookContext } from '../../declarations'
 import { StudentsService, getOptions } from './students.class'
 import { studentsPath, studentsMethods } from './students.shared'
 
@@ -52,7 +52,21 @@ export const students = (app: Application) => {
       ],
       patch: [
         schemaHooks.validateData(studentsPatchValidator),
-        schemaHooks.resolveData(studentsPatchResolver)
+        schemaHooks.resolveData(studentsPatchResolver),
+        async (context: HookContext) => {
+          console.log("-------");
+          console.log(context);
+          if (!context.data.profilePhoto) {
+            throw new Error("photo url missing")
+          }
+
+          // context.data = { profilePhoto: context.data.profilePhoto }
+          console.log(context.data.profilePhoto)  
+
+
+          return context
+
+        }
       ],
       remove: []
     },

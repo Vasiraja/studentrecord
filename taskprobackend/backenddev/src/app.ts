@@ -22,7 +22,12 @@ app.use(cors())
 app.use(serveStatic(app.get('public')))
 app.use(errorHandler())
 app.use(parseAuthentication())
-app.use(bodyParser())
+app.use(bodyParser(
+  {
+    jsonLimit: '10mb',
+    formLimit: '10mb'
+  }
+))
 
 // Configure services and transports
 app.configure(rest())
@@ -47,7 +52,7 @@ app.hooks({
   after: {},
   error: {}
 })
-// Register application setup and teardown hooks here
+// Registe r application setup and teardown hooks here
 app.hooks({
   setup: [],
   teardown: []

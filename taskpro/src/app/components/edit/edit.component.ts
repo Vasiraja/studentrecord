@@ -10,6 +10,7 @@ import { MatSelect } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { SnackbarService } from '../../services/snackbar.service';
+import { ProductsService } from '../../services/products.service';
 
 @Component({
   selector: 'app-edit',
@@ -20,19 +21,38 @@ import { SnackbarService } from '../../services/snackbar.service';
 })
 export class EditComponent implements OnInit {
 
-  constructor(private studentservice: StudentsService, private snackbar: SnackbarService) { }
+
+  constructor(private studentservice: StudentsService, private snackbar: SnackbarService, private productservice: ProductsService) { }
 
   student: any = {};
-  studentClass: any = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+  products: any = {};
+  studentClass: any = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
+  productCategories: any = ['Grocery', 'Gadgets', 'Electronics']
   ngOnInit(): void {
 
     this.studentservice.studentEditData$.subscribe({
       next: (data: any) => {
+        if (!data || !data.studentname) return
         this.student = data;
+
+        this.products = {};
         console.log(data);
+
       },
       error: (error: any) => {
         console.error(error)
+      }
+    })
+
+    this.productservice.productValue$.subscribe({
+      next: (data: any) => {
+        if (!data || !data.title) return
+        this.student = {};
+        this.products = data;
+
+      },
+      error: (err: any) => {
+        console.error(err)
       }
     })
 
@@ -43,6 +63,7 @@ export class EditComponent implements OnInit {
   }
   changeEvent(event: any) {
     console.log(event.target.value);
+
   }
   saveStudent(id: any) {
     console.log(id);
@@ -51,10 +72,13 @@ export class EditComponent implements OnInit {
     this.studentservice.updateStudents(id, this.student).subscribe({
       next: (res: any) => {
         console.log(res.age + "Updated Successfully");
+        console.log(res);
         this.snackbar.openSnackBar("Updated Successfully");
         if (res.age) {
           this.student.age = res.age;
           this.studentservice.studentEditComponent$.next(false);
+          // this.studentservice.studentEditComponent$.next(true);
+
 
         }
 
@@ -64,11 +88,27 @@ export class EditComponent implements OnInit {
       }
     })
   }
-  deleteStudent(id:any){
-    
+  saveProduct(id: any) {
+
+    this.productservice.updateProducts(id, this.products).subscribe({
+      next: (res: any) => {
+        console.log(res);
+        this.snackbar.openSnackBar("Product Updated");
+        this.productservice.productEditStatus$.next(false);
+
+      },
+      error: (err: any) => {
+        console.error(err);
+
+      }
+    })
   }
+  
   cancelForm() {
     this.studentservice.studentEditComponent$.next(false);
-  }
+    this.productservice.productEditStatus$.next(false);
+    this.student = {};
+    this.products = {};
 
+  }
 }
