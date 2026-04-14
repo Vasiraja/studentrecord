@@ -4,7 +4,7 @@
 
         <mat-card>
             <mat-card-content>
-                <form #productForm="ngForm" (ngSubmit)="onSubmitProduct(productForm)">
+                <form #productForm="ngForm" (ngSubmit)="addProduct(productForm)">
 
                     <mat-form-field appearance="outline">
                         <mat-label>Title</mat-label>
@@ -51,7 +51,7 @@
     <mat-tab label="Add Student">
         <mat-card>
             <mat-card-content>
-                <form #studentForm="ngForm" (ngSubmit)="onSubmitStudent(studentForm)">
+                <form #studentForm="ngForm" (ngSubmit)="addStudent(studentForm)">
 
                     <mat-form-field appearance="outline">
                         <mat-label>Student Name</mat-label>
