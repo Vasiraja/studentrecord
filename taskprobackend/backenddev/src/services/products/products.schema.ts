@@ -9,14 +9,14 @@ import { dataValidator, queryValidator } from '../../validators'
 import type { ProductsService } from './products.class'
 
 // Main data model schema
-export const productsSchema = Type.Object(
+export const productsSchema = Type.Object( 
   {
     _id: ObjectIdSchema(),
     title: Type.String(),
     price: Type.Number(),
     category: Type.String(),
     stock: Type.Number(), 
-    overAllRating: Type.Number()
+    overallrating: Type.Number()
 
   },
   { $id: 'Products', additionalProperties: false } 
@@ -28,7 +28,7 @@ export const productsResolver = resolve<ProductsQuery, HookContext<ProductsServi
 export const productsExternalResolver = resolve<Products, HookContext<ProductsService>>({})
 
 // Schema for creating new entries
-export const productsDataSchema = Type.Pick(productsSchema, ['title', 'price', 'category', 'stock', 'overAllRating'], {
+export const productsDataSchema = Type.Pick(productsSchema, ['title', 'price', 'category', 'stock', 'overallrating'], {
   $id: 'ProductsData'
 })
 export type ProductsData = Static<typeof productsDataSchema>

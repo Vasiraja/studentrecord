@@ -33,6 +33,11 @@ export class StudentsService {
   }
   addNewStudent() {
     this.studentEditComponent$.next(true);
+
+  }
+  addStudent(studentdata: any) {
+    return this.http.post(`${this.apiUrl}`, studentdata);
+
   }
   updateStudents(id: any, data: any) {
 

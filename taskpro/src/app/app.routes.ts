@@ -5,6 +5,7 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { TableviewComponent } from './components/tableview/tableview.component';
 import { EditComponent } from './components/edit/edit.component';
 import { protectGuard } from './protect.guard';
+import { AddComponent } from './components/add/add.component';
 
 export const routes: Routes = [
 
@@ -12,5 +13,6 @@ export const routes: Routes = [
     { path: "table", component: TableviewComponent },
     { path: "edit", component: EditComponent },
     { path: "", component: HomeComponent, canActivate: [protectGuard] },
+    { path: "add", component: AddComponent },
     { path: "**", component: LoginComponent }
 ];

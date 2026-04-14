@@ -33,9 +33,10 @@ export class EditComponent implements OnInit {
     this.studentservice.studentEditData$.subscribe({
       next: (data: any) => {
         if (!data || !data.studentname) return
+        this.products = {};
         this.student = data;
 
-        this.products = {};
+
         console.log(data);
 
       },
@@ -103,12 +104,18 @@ export class EditComponent implements OnInit {
       }
     })
   }
-  
+
   cancelForm() {
     this.studentservice.studentEditComponent$.next(false);
     this.productservice.productEditStatus$.next(false);
+
+    this.studentservice.studentEditData$.next(null);
+    this.productservice.productValue$.next(null);
+
     this.student = {};
     this.products = {};
-
+  }
+  addDetails() {
+    
   }
 }

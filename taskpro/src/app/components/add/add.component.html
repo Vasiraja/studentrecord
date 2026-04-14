@@ -1,0 +1,93 @@
+<mat-tab-group>
+
+    <mat-tab label="Add Product">
+
+        <mat-card>
+            <mat-card-content>
+                <form #productForm="ngForm" (ngSubmit)="onSubmitProduct(productForm)">
+
+                    <mat-form-field appearance="outline">
+                        <mat-label>Title</mat-label>
+                        <input matInput name="title" [(ngModel)]="products.title" required />
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                        <mat-label>Price</mat-label>
+                        <input matInput type="number" name="price" [(ngModel)]="products.price" required />
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                        <mat-label>Category</mat-label>
+
+                        <mat-select name="category" [(ngModel)]="products.category" required>
+
+                            <mat-option *ngFor="let categ of categories" [value]=categ>{{categ}}</mat-option>
+
+
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                        <mat-label>Stock</mat-label>
+                        <input matInput type="number" name="stock" [(ngModel)]="products.stock" required />
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                        <mat-label>Overall Rating</mat-label>
+                        <input matInput type="number" name="overallrating" [(ngModel)]="products.overallrating"
+                            required />
+                    </mat-form-field>
+
+                    <div class="form-actions">
+                        <button mat-raised-button color="primary" type="submit">Add Product</button>
+                        <button mat-stroked-button type="button" (click)="resetForm(productForm)">Reset</button>
+                    </div>
+
+                </form>
+            </mat-card-content>
+        </mat-card>
+    </mat-tab>
+
+    <mat-tab label="Add Student">
+        <mat-card>
+            <mat-card-content>
+                <form #studentForm="ngForm" (ngSubmit)="onSubmitStudent(studentForm)">
+
+                    <mat-form-field appearance="outline">
+                        <mat-label>Student Name</mat-label>
+                        <input matInput name="studentname" [(ngModel)]="student.studentname" required />
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                        <mat-label>Class</mat-label>
+                        <mat-select name="class" [(ngModel)]="student.class" required>
+                            <mat-option *ngFor="let cls of classList" [value]="cls">{{ cls }}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                        <mat-label>Date of Birth</mat-label>
+                        <input matInput type="date" name="dob" [(ngModel)]="student.dob" required />
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                        <mat-label>Gender</mat-label>
+                        <mat-select name="gender" [(ngModel)]="student.gender" required>
+                            <mat-option value="male">Male</mat-option>
+                            <mat-option value="female">Female</mat-option>
+                            <mat-option value="others">Others</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+
+                    <div class="form-actions">
+                        <button mat-raised-button color="primary" type="submit">Add Student</button>
+                        <button mat-stroked-button type="button" (click)="resetForm(studentForm)">Reset</button>
+                    </div>
+
+                </form>
+            </mat-card-content>
+        </mat-card>
+    </mat-tab>
+
+</mat-tab-group>

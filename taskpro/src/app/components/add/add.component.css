@@ -1,0 +1,33 @@
+ 
+mat-tab{
+    width: 40%;
+}
+mat-card {
+    width: 480px;
+    margin: 24px auto;
+}
+
+mat-card-content {
+    padding: 16px 0;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+mat-form-field {
+    width: 100%;
+}
+
+.form-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 8px;
+}
+
+mat-tab-group {
+    width: 100%;
+}

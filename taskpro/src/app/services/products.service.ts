@@ -23,6 +23,9 @@ export class ProductsService {
   getProducts(): Observable<any> {
     return this.http.get(this.apiUrl);
   }
+  addProduct(productdata: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}`, productdata)
+  }
   updateProducts(id: any, data: any): Observable<any> {
     return this.http.patch(`${this.apiUrl}/${id}`, data)
   }
