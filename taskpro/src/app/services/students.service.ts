@@ -8,6 +8,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 export class StudentsService {
   apiUrl: string = "http://localhost:3030/students";
+  productUrl: string = "http://localhost:3030/products";
 
   studentEditData$ = new BehaviorSubject<any>(null);
   studentEditComponent$ = new BehaviorSubject<boolean>(false);
@@ -77,14 +78,33 @@ export class StudentsService {
   delStudents(id: any) {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
-  updatePhoto(id: any, base64String: any) {
+  updatePhoto(id: any, base64String: any, type: any) {
+    let apiOverwrite: any = "";
     console.log(id);
     console.log("^^^^^");
     console.log(base64String);
-    return this.http.patch(`${this.apiUrl}/${id}`, { profilePhoto: base64String });
-  }
-  deleteProfilePhoto(id: any) {
 
-    return this.http.patch(`${this}apiUrl/${id}`, { delProfilePhoto: true })
+    if (type === 'students') {
+      apiOverwrite = this.http.patch(`${this.apiUrl}/${id}`, { profilePhoto: base64String })
+    }
+    else if (type === 'products') {
+      apiOverwrite = this.http.patch(`${this.productUrl}/${id}`, { profilePhoto: base64String })
+
+
+    }
+
+    return apiOverwrite;
+  }
+  deleteProfilePhoto(id: any, type: any) {
+    let apiOverwrite: any = ""
+    if (type === 'students') {
+      apiOverwrite = this.http.patch(`${this.apiUrl}/${id}`, { delProfilePhoto: true })
+    }
+    else if (type === 'products') {
+      apiOverwrite = this.http.patch(`${this.productUrl}/${id}`, { delProfilePhoto: true })
+
+
+    }
+    return apiOverwrite;
   }
 }

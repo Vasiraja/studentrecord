@@ -28,10 +28,8 @@ export class StudentsService<ServiceParams extends Params = StudentsParams> exte
 
 
     if (data.delProfilePhoto) {
-      await deletionProfilePhoto(id)
+      await deletionProfilePhoto.call(this, id);
       delete data.delProfilePhoto;
-
-
     }
 
     console.log(id);
@@ -56,24 +54,16 @@ export const getOptions = (app: Application): MongoDBAdapterOptions => {
     Model: app.get('mongodbClient').then(db => db.collection('students'))
   }
 }
-export async function deletionProfilePhoto(this:any,id:any) {
-
+async function deletionProfilePhoto(this: any, id: any) {
   const updated = await (await this.getModel()).updateOne(
-
     { _id: new ObjectId(id) },
-    { $set: { profilePhoto: "" } })
-
-
+    { $set: { profilePhoto: "" } }
+  );
 
   console.log("Update result:", updated);
 
-
-
   if (updated?.modifiedCount > 0) {
-    console.log("profile photo deleted")
-
-
+    console.log("profile photo deleted");
   }
-
 }
 

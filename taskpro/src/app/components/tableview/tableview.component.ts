@@ -35,7 +35,7 @@ export class TableviewComponent implements AfterViewInit {
 
   }
   addProduct() {
-     this.studentservice.addProductTrigger();
+    this.studentservice.addProductTrigger();
 
   }
 
@@ -77,7 +77,7 @@ export class TableviewComponent implements AfterViewInit {
   students: any[] = [];
 
   productApiColumns: string[] = ['id', 'title', 'rating', 'category', 'stock', 'price'];
-  productDbColumns: string[] = ['id', 'name', 'category', 'stock', 'overallrating', 'price', 'actions'];
+  productDbColumns: string[] = ['photo', 'id', 'name', 'category', 'stock', 'overallrating', 'price', 'actions'];
   studentColumns: string[] = ['photo', 'id', 'name', 'dob', 'class', 'gender', 'age', 'actions'];
   selectedTabIndex: number | undefined;
   constructor(private productservice: ProductsService, private studentservice: StudentsService, private sidebarservice: SidebarService, private snackbar: SnackbarService, private cdr: ChangeDetectorRef, private sanitizer: DomSanitizer) { }

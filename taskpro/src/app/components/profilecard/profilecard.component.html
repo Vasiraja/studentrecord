@@ -10,10 +10,10 @@
 
             <div class="photo-wrapper" (click)="fileInput.click()">
 
-                <ng-container *ngIf="profileData.profilePhoto; else largInitials">
-                    <img class="profile-img" [src]="profilePhotoSafe" alt="Profile Photo" />
+                <ng-container *ngIf="profilePhotoSafe && profileData.profilePhoto; else largInitials"> <img
+                        class="profile-img" [src]="profilePhotoSafe" alt="Profile Photo" />
                     <div class="photodeldownload">
-                        <i class="fa fa-trash delete" (click)="delPhoto($event,profileData._id)"></i>
+                        <i class="fa fa-trash delete" (click)="delPhoto($event,profileData._id,'students')"></i>
                         <i class="fa fa-download download" (click)="downloadPhoto($event,profilePhotoSafe)"></i>
 
                     </div>
@@ -34,7 +34,7 @@
             </div>
 
             <input #fileInput type="file" accept="image/*" style="display:none"
-                (change)="onPhotoSelected($event,profileData._id)" />
+                (change)="onPhotoSelected($event,profileData._id,'students')" />
 
         </div>
         <div class="rightcard">
@@ -70,12 +70,12 @@
                 <mat-card-title> {{ profileData.title }}</mat-card-title>
             </mat-card-header>
 
-            <div class="photo-wrapper" (click)="fileInput.click()">
+            <div class="photo-wrapper" (click)="profileData.overAllRating && fileInput.click()">
 
-                <ng-container *ngIf="profileData.profilePhoto; else largInitials">
+                <ng-container *ngIf="profilePhotoSafe && profileData.profilePhoto  else largInitials">
                     <img class="profile-img" [src]="profilePhotoSafe" alt="Profile Photo" />
                     <div class="photodeldownload">
-                        <i class="fa fa-trash delete" (click)="delPhoto($event,profileData._id)"></i>
+                        <i class="fa fa-trash delete" (click)="delPhoto($event,profileData._id,'products')"></i>
                         <i class="fa fa-download download" (click)="downloadPhoto($event,profilePhotoSafe)"></i>
 
                     </div>
@@ -88,7 +88,7 @@
                     </div>
                 </ng-template>
 
-                <div class="photo-overlay">
+                <div *ngIf="profileData.overAllRating" class="photo-overlay">
                     <i class="fa-solid fa-upload"></i>
                     <span>Change Photo</span>
                 </div>
@@ -96,7 +96,7 @@
             </div>
 
             <input #fileInput type="file" accept="image/*" style="display:none"
-                (change)="onPhotoSelected($event,profileData._id)" />
+                (change)="onPhotoSelected($event,profileData._id,'products')" />
 
         </div>
         <div class="rightcard">

@@ -19,7 +19,7 @@ export const productsSchema = Type.Object(
     overAllRating: Type.Number()
 
   },
-  { $id: 'Products', additionalProperties: false } 
+  { $id: 'Products', additionalProperties: true } 
 )
 export type Products = Static<typeof productsSchema>
 export const productsValidator = getValidator(productsSchema, dataValidator)

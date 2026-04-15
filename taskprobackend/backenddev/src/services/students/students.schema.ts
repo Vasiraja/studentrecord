@@ -60,7 +60,7 @@ export const studentsDataResolver = resolve<StudentsData, HookContext<StudentsSe
     curr = ageCalc;
     return curr;
 
-  }
+  } 
 
 })
 

@@ -14,6 +14,7 @@ import { CommonModule } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { StudentsService } from '../../services/students.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { SnackbarService } from '../../services/snackbar.service';
 
 @Component({
   selector: 'app-profilecard',
@@ -60,9 +61,22 @@ export class ProfilecardComponent implements OnInit {
 
 
   }
-  delPhoto(event: Event,id:any) {
+  delPhoto(event: Event, id: any, type: any) {
     event.stopPropagation()
-   }
+    this.studentservice.deleteProfilePhoto(id, type).subscribe({
+      next: (res: any) => {
+        console.log(res);
+        this.snackbar.openSnackBar("Photo deleted");
+        this.profileData.profilePhoto = null;
+        this.profilePhotoSafe = null;
+
+
+      },
+      error: (err: any) => {
+        console.error(err);
+      }
+    })
+  }
   base64String: string = '';
   profileData: any = {};
   profilePhotoSafe: SafeUrl | null = null;
@@ -70,16 +84,21 @@ export class ProfilecardComponent implements OnInit {
   constructor(
     private sidebarservice: SidebarService,
     private studentservice: StudentsService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private snackbar: SnackbarService
   ) { }
 
   ngOnInit(): void {
+    this.initializeProfile()
+
+  }
+  initializeProfile() {
     this.sidebarservice.profileCardData$.subscribe({
       next: (res: any) => {
         this.profileData = res;
 
         let photoStr = "";
-        if (res.studentname) {
+        if (res.studentname || res.title) {
           photoStr = res.profilePhoto || "";
         }
 
@@ -90,10 +109,9 @@ export class ProfilecardComponent implements OnInit {
       }
     });
   }
-
-  onPhotoSelected(event: any, id: any) {
+  onPhotoSelected(event: any, id: any, type: any) {
+    console.log(type)
     const file = event.target.files[0];
-
     if (!file) return;
 
     const fileReader = new FileReader();
@@ -101,18 +119,26 @@ export class ProfilecardComponent implements OnInit {
     fileReader.onload = () => {
       this.base64String = fileReader.result as string;
 
-      this.studentservice.updatePhoto(id, this.base64String).subscribe({
+      this.studentservice.updatePhoto(id, this.base64String, type).subscribe({
         next: (res: any) => {
           this.profileData.profilePhoto = this.base64String;
           this.profilePhotoSafe = this.sanitizer.bypassSecurityTrustUrl(this.base64String);
-          console.log(res);
+
+          this.snackbar.openSnackBar("Photo updated successfully");
+          this.resetFileInput(event);
         },
         error: (err: any) => {
           console.error(err);
+          this.resetFileInput(event);
         }
       });
     };
 
     fileReader.readAsDataURL(file);
+  }
+  resetFileInput(event: any) {
+    if (event && event.target) {
+      event.target.value = '';
+    }
   }
 }
