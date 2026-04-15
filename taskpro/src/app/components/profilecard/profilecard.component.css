@@ -67,13 +67,27 @@
     align-items: center;
     justify-content: center;
 }
- 
+
 
 .photodeldownload {
     display: flex;
     justify-content: space-between;
     align-items: center;
 
+}
+
+mat-card-content {
+    width: 100%;
+}
+
+mat-list-item {
+    display: flex;
+    gap: 2rem;
+    width: 100%;
+}
+
+mat-list-item span:nth-child(even) {
+    margin-left:3rem;
 }
 
 i {

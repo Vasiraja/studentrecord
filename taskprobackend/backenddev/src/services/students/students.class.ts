@@ -5,7 +5,9 @@ import type { MongoDBAdapterParams, MongoDBAdapterOptions, NullableAdapterId } f
 
 import type { Application } from '../../declarations'
 import type { Students, StudentsData, StudentsPatch, StudentsQuery } from './students.schema'
- 
+import { Context } from 'node:vm'
+import { ObjectId } from 'mongodb'
+
 export type { Students, StudentsData, StudentsPatch, StudentsQuery }
 
 export interface StudentsParams extends MongoDBAdapterParams<StudentsQuery> { }
@@ -18,13 +20,29 @@ export class StudentsService<ServiceParams extends Params = StudentsParams> exte
   StudentsPatch
 > {
 
-  
 
 
 
+  async patch(id: any, data: any, params?: any): Promise<any> {
 
- 
 
+
+    if (data.delProfilePhoto) {
+      await deletionProfilePhoto(id)
+      delete data.delProfilePhoto;
+
+
+    }
+
+    console.log(id);
+    console.log(data);
+    console.log(params);
+
+
+
+    return super.patch(id, data, params)
+
+  }
 
 
 
@@ -38,3 +56,24 @@ export const getOptions = (app: Application): MongoDBAdapterOptions => {
     Model: app.get('mongodbClient').then(db => db.collection('students'))
   }
 }
+export async function deletionProfilePhoto(this:any,id:any) {
+
+  const updated = await (await this.getModel()).updateOne(
+
+    { _id: new ObjectId(id) },
+    { $set: { profilePhoto: "" } })
+
+
+
+  console.log("Update result:", updated);
+
+
+
+  if (updated?.modifiedCount > 0) {
+    console.log("profile photo deleted")
+
+
+  }
+
+}
+

@@ -10,9 +10,9 @@ import { AddComponent } from './components/add/add.component';
 export const routes: Routes = [
 
     { path: "login", component: LoginComponent },
-    { path: "table", component: TableviewComponent },
-    { path: "edit", component: EditComponent },
+    // { path: "table", component: TableviewComponent },
+    // { path: "edit", component: EditComponent },
     { path: "", component: HomeComponent, canActivate: [protectGuard] },
-    { path: "add", component: AddComponent },
+    // { path: "add", component: AddComponent },
     { path: "**", component: LoginComponent }
 ];

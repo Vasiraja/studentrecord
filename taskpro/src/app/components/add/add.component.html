@@ -1,93 +1,191 @@
-<mat-tab-group>
+<mat-card *ngIf="viewType === 'product'" class="formadd">
+    <mat-card-header>Product Form</mat-card-header>
+    <mat-card-content>
+        <form #productForm="ngForm" (ngSubmit)="addProduct(productForm)">
 
-    <mat-tab label="Add Product">
+            <mat-form-field appearance="outline">
+                <mat-label>Title</mat-label>
 
-        <mat-card>
-            <mat-card-content>
-                <form #productForm="ngForm" (ngSubmit)="addProduct(productForm)">
-
-                    <mat-form-field appearance="outline">
-                        <mat-label>Title</mat-label>
-                        <input matInput name="title" [(ngModel)]="products.title" required />
-                    </mat-form-field>
-
-                    <mat-form-field appearance="outline">
-                        <mat-label>Price</mat-label>
-                        <input matInput type="number" name="price" [(ngModel)]="products.price" required />
-                    </mat-form-field>
-
-                    <mat-form-field appearance="outline">
-                        <mat-label>Category</mat-label>
-
-                        <mat-select name="category" [(ngModel)]="products.category" required>
-
-                            <mat-option *ngFor="let categ of categories" [value]=categ>{{categ}}</mat-option>
+                <input matInput name="title" [(ngModel)]="products.title" #title="ngModel" required />
 
 
-                        </mat-select>
-                    </mat-form-field>
+            </mat-form-field>
+            <div *ngIf="title.invalid && title.touched">
+                <span class="errorstyle" *ngIf="title.errors?.['required']">
+                    Title is required
+                </span>
+            </div>
+            <mat-form-field appearance="outline">
+                <mat-label>Price</mat-label>
+                <input matInput type="number" name="price" [(ngModel)]="products.price" #price="ngModel" required
+                    min="1" />
 
-                    <mat-form-field appearance="outline">
-                        <mat-label>Stock</mat-label>
-                        <input matInput type="number" name="stock" [(ngModel)]="products.stock" required />
-                    </mat-form-field>
-
-                    <mat-form-field appearance="outline">
-                        <mat-label>Overall Rating</mat-label>
-                        <input matInput type="number" name="overallrating" [(ngModel)]="products.overallrating"
-                            required />
-                    </mat-form-field>
-
-                    <div class="form-actions">
-                        <button mat-raised-button color="primary" type="submit">Add Product</button>
-                        <button mat-stroked-button type="button" (click)="resetForm(productForm)">Reset</button>
-                    </div>
-
-                </form>
-            </mat-card-content>
-        </mat-card>
-    </mat-tab>
-
-    <mat-tab label="Add Student">
-        <mat-card>
-            <mat-card-content>
-                <form #studentForm="ngForm" (ngSubmit)="addStudent(studentForm)">
-
-                    <mat-form-field appearance="outline">
-                        <mat-label>Student Name</mat-label>
-                        <input matInput name="studentname" [(ngModel)]="student.studentname" required />
-                    </mat-form-field>
-
-                    <mat-form-field appearance="outline">
-                        <mat-label>Class</mat-label>
-                        <mat-select name="class" [(ngModel)]="student.class" required>
-                            <mat-option *ngFor="let cls of classList" [value]="cls">{{ cls }}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-
-                    <mat-form-field appearance="outline">
-                        <mat-label>Date of Birth</mat-label>
-                        <input matInput type="date" name="dob" [(ngModel)]="student.dob" required />
-                    </mat-form-field>
-
-                    <mat-form-field appearance="outline">
-                        <mat-label>Gender</mat-label>
-                        <mat-select name="gender" [(ngModel)]="student.gender" required>
-                            <mat-option value="male">Male</mat-option>
-                            <mat-option value="female">Female</mat-option>
-                            <mat-option value="others">Others</mat-option>
-                        </mat-select>
-                    </mat-form-field>
+            </mat-form-field>
+            <div *ngIf="price.invalid && price.touched">
+                <span class="errorstyle" *ngIf="price.errors?.['required']">
+                    Price is required
+                </span>
+                <span class="errorstyle" *ngIf="price.errors?.['min']">
+                    Price should be minimum greater than 0
+                </span>
+            </div>
+            <mat-form-field appearance="outline">
+                <mat-label>Category</mat-label>
+                <mat-select name="category" [(ngModel)]="products.category" #category="ngModel" required>
+                    <mat-option *ngFor="let categ of categories" [value]="categ">
+                        {{categ}}
+                    </mat-option>
+                </mat-select>
 
 
-                    <div class="form-actions">
-                        <button mat-raised-button color="primary" type="submit">Add Student</button>
-                        <button mat-stroked-button type="button" (click)="resetForm(studentForm)">Reset</button>
-                    </div>
+            </mat-form-field>
+            <div *ngIf="category.invalid && category.touched">
+                <span class="errorstyle" *ngIf="price.errors?.['required']">
+                    Select category
+                </span>
 
-                </form>
-            </mat-card-content>
-        </mat-card>
-    </mat-tab>
+            </div>
 
-</mat-tab-group>
+            <mat-form-field appearance="outline">
+                <mat-label>Stock</mat-label>
+                <input matInput type="number" name="stock" [(ngModel)]="products.stock" #stock="ngModel" required
+                    min="0" />
+            </mat-form-field>
+            <div *ngIf="stock.invalid && stock.touched">
+                <span class="errorstyle" *ngIf="stock.errors?.['required']">
+                    Stocks is required
+                </span>
+                <span class="errorstyle" *ngIf="stock.errors?.['min']">
+
+                    stock can't be minus value
+                </span>
+
+            </div>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Overall Rating</mat-label>
+                <input matInput type="number" name="overAllRating" [(ngModel)]="products.overAllRating"
+                    #overallrating="ngModel" required max="5" min="1" />
+            </mat-form-field>
+            <div *ngIf="overallrating.invalid && overallrating.touched">
+                <span class="errorstyle" *ngIf="overallrating.errors?.['required']">
+                    Rating is required
+                </span>
+                <span class="errorstyle" *ngIf="overallrating.errors?.['max']">
+                    maximum rating is 5
+                </span>
+                <span class="errorstyle" *ngIf="overallrating.errors?.['min']">
+                    minimum rating is 1
+                </span>
+
+            </div>
+
+
+
+
+        </form>
+    </mat-card-content>
+    <mat-card-footer>
+        <div class="form-actions">
+            <button mat-raised-button color="primary" type="submit" (click)="addProduct(productForm)"
+                [disabled]="productForm.invalid">Add
+                Product</button>
+            <button mat-stroked-button type="button" (click)="resetForm(productForm)">Reset</button>
+            <button mat-stroked-button type="button" (click)="closeForm()">Cancel</button>
+
+        </div>
+    </mat-card-footer>
+</mat-card>
+<mat-card *ngIf="viewType === 'student'" class="formadd">
+    <mat-card-header>Student Form</mat-card-header>
+
+    <mat-card-content>
+        <form #studentForm="ngForm" (ngSubmit)="addStudent(studentForm)">
+
+            <mat-form-field appearance="outline">
+                <mat-label>Student Name</mat-label>
+                <input matInput name="studentname" [(ngModel)]="student.studentname" #studentname="ngModel" required />
+            </mat-form-field>
+
+            <div *ngIf="studentname.invalid && studentname.touched">
+                <span class="errorstyle" *ngIf="studentname.errors?.['required']">
+                    Student name is required
+                </span>
+            </div>
+
+
+
+            <mat-form-field appearance="outline">
+                <mat-label>Date of Birth</mat-label>
+                <input matInput type="date" name="dob" [(ngModel)]="student.dob" (ngModelChange)="dobchange()"
+                    #dob="ngModel" required />
+                    
+            </mat-form-field>
+            <div *ngIf="dob.invalid && dob.touched">
+                <span class="errorstyle" *ngIf="dob.errors?.['required']">
+                    Date of Birth is required
+                </span>
+            </div>
+            <mat-form-field appearance="outline">
+                <mat-label>Class</mat-label>
+
+                <mat-select name="class" [(ngModel)]="student.class" #classField="ngModel" required
+                    [disabled]="!student.dob">
+
+                    <mat-option *ngFor="let cls of filteredClasses" [value]="cls">
+                        {{ cls }}
+                    </mat-option>
+
+                </mat-select>
+            </mat-form-field>
+
+            <div *ngIf="classField.invalid && classField.touched">
+                <span class="errorstyle" *ngIf="classField.errors?.['required']">
+                    Class is required
+                </span>
+            </div>
+            <div *ngIf="student.dob && filteredClasses.length === 0" class="errorstyle">
+                No class available for this age
+            </div>
+            <mat-form-field appearance="outline">
+                <mat-label>Age</mat-label>
+                <input matInput type="number" [value]="calculateAge(student.dob)" required disabled="true" />
+            </mat-form-field>
+
+            
+
+            <mat-form-field appearance="outline">
+                <mat-label>Gender</mat-label>
+                <mat-select name="gender" [(ngModel)]="student.gender" #gender="ngModel" required>
+                    <mat-option value="male">Male</mat-option>
+                    <mat-option value="female">Female</mat-option>
+                    <mat-option value="others">Others</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <div *ngIf="gender.invalid && gender.touched">
+                <span class="errorstyle" *ngIf="gender.errors?.['required']">
+                    Gender is required
+                </span>
+            </div>
+
+        </form>
+    </mat-card-content>
+
+    <mat-card-footer>
+        <div class="form-actions">
+            <button mat-raised-button color="primary" type="submit" (click)="addStudent(studentForm)"
+                [disabled]="studentForm.invalid">
+                Add Student
+            </button>
+
+            <button mat-stroked-button type="button" (click)="resetForm(studentForm)">
+                Reset
+            </button>
+
+            <button mat-stroked-button type="button" (click)="closeForm()">
+                Cancel
+            </button>
+        </div>
+    </mat-card-footer>
+</mat-card>

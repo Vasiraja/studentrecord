@@ -176,6 +176,16 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 
     })
 
+
+    $("#expandAll").on('click', function () {
+
+      $('#treeElem').jstree('open_all')
+    })
+    $("#collapseAll").on('click', function () {
+
+      $('#treeElem').jstree('close_all')
+    })
+
   }
 
 

@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ProductsService } from '../../services/products.service';
 import { StudentsService } from '../../services/students.service';
-import { MatFormField, MatFormFieldControl, MatLabel } from '@angular/material/form-field';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatOption } from '@angular/material/core';
-import { MatTab, MatTabGroup } from '@angular/material/tabs';
-import { MatCard, MatCardContent, MatCardModule } from '@angular/material/card';
+
+import { MatCard, MatCardContent, MatCardFooter, MatCardHeader, MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
@@ -15,13 +15,16 @@ import { SnackbarService } from '../../services/snackbar.service';
 @Component({
   selector: 'app-add',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatFormField, MatOption, MatLabel, MatTab, MatCard, MatCardContent, MatTabGroup
-    , MatInputModule, MatButtonModule, MatSelectModule
+  imports: [CommonModule, FormsModule, MatFormField, MatOption, MatLabel, MatCard, MatCardContent
+    , MatInputModule, MatButtonModule, MatSelectModule, MatCardHeader, MatCardFooter
   ],
   templateUrl: './add.component.html',
   styleUrl: './add.component.css'
 })
-export class AddComponent {
+export class AddComponent implements OnInit {
+  closeForm() {
+    this.studentservice.removeAddTrigger()
+  }
 
   classList = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
   categories = ['Electronics', 'Groceries', 'Gadgets']
@@ -31,7 +34,7 @@ export class AddComponent {
     price: '',
     category: '',
     stock: '',
-    overallrating: ''
+    overAllRating: ''
   };
 
   student: any = {
@@ -54,17 +57,54 @@ export class AddComponent {
     '11': { min: 15, max: 17 },
     '12': { min: 16, max: 18 }
   };
+  viewType: any = "";
+  currentAge: number | null = null;
+  filteredClasses: string[] = [];
   constructor(
     private productservice: ProductsService,
     private studentservice: StudentsService,
     public snackbar: SnackbarService
   ) { }
+  ngOnInit(): void {
 
+    this.studentservice.AddComponentState$.subscribe({
+      next: (res: any) => {
+        console.log(res);
+        this.viewType = res;
+
+
+      },
+      error: (err: any) => {
+        console.error(err)
+      }
+    })
+  }
+  dobchange() {
+    if (!this.student.dob) {
+      this.currentAge = null;
+      this.filteredClasses = [];
+      this.student.class = '';
+      return;
+    }
+
+    this.currentAge = this.calculateAge(this.student.dob);
+
+    this.filteredClasses = this.classList.filter((cls: string) => {
+      const range = this.classAgeMap[cls];
+
+      return this.currentAge! >= range.min && this.currentAge! <= range.max;
+    });
+
+
+  }
   addProduct(form: NgForm) {
     console.log(this.products)
     this.productservice.addProduct(this.products).subscribe({
       next: (res: any) => {
-        this.snackbar.openSnackBar("Product Added")
+        console.log(res);
+        this.studentservice.removeAddTrigger();
+
+        this.snackbar.openSnackBar("Product Added");
         this.resetForm(form);
       },
       error: (err: any) => {
@@ -75,22 +115,13 @@ export class AddComponent {
 
   addStudent(form: NgForm) {
 
-    const age = this.calculateAge(this.student.dob);
-    const selectedClass = this.student.class;
-
-    const selectedone = this.classAgeMap[selectedClass];
-
-
-
-    if (age < selectedone.min || age > selectedone.max) {
-      alert('Age is not valid or this specific class');
-      return;
-    }
 
     this.studentservice.addStudent(this.student).subscribe({
       next: (res: any) => {
         console.log(res.studentname)
         this.snackbar.openSnackBar("Student Added");
+        this.studentservice.removeAddTrigger();
+
 
         this.resetForm(form);
       },
@@ -127,7 +158,7 @@ export class AddComponent {
   }
   resetForm(form: NgForm) {
     form.reset();
-    this.products = { title: '', price: '', category: '', stock: '', overallrating: '' };
+    this.products = { title: '', price: '', category: '', stock: '', overAllRating: '' };
     this.student = { studentname: '', class: '', dob: '', gender: '' };
   }
 }

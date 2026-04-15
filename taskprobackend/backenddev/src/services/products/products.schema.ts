@@ -16,7 +16,7 @@ export const productsSchema = Type.Object(
     price: Type.Number(),
     category: Type.String(),
     stock: Type.Number(), 
-    overallrating: Type.Number()
+    overAllRating: Type.Number()
 
   },
   { $id: 'Products', additionalProperties: false } 
@@ -28,7 +28,7 @@ export const productsResolver = resolve<ProductsQuery, HookContext<ProductsServi
 export const productsExternalResolver = resolve<Products, HookContext<ProductsService>>({})
 
 // Schema for creating new entries
-export const productsDataSchema = Type.Pick(productsSchema, ['title', 'price', 'category', 'stock', 'overallrating'], {
+export const productsDataSchema = Type.Pick(productsSchema, ['title', 'price', 'category', 'stock', 'overAllRating'], {
   $id: 'ProductsData'
 })
 export type ProductsData = Static<typeof productsDataSchema>

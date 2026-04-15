@@ -52,4 +52,5 @@ export class SidebarService {
     this.profileCardData$.next(data);
 
   }
+  
 }

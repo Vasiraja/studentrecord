@@ -8,15 +8,19 @@ import type { Products, ProductsData, ProductsPatch, ProductsQuery } from './pro
 
 export type { Products, ProductsData, ProductsPatch, ProductsQuery }
 
-export interface ProductsParams extends MongoDBAdapterParams<ProductsQuery> {}
+export interface ProductsParams extends MongoDBAdapterParams<ProductsQuery> { }
 
 // By default calls the standard MongoDB adapter service methods but can be customized with your own functionality.
 export class ProductsService<ServiceParams extends Params = ProductsParams> extends MongoDBService<
   Products,
   ProductsData,
-  ProductsParams, 
+  ProductsParams,
   ProductsPatch
-> {}
+> {
+
+
+
+}
 
 export const getOptions = (app: Application): MongoDBAdapterOptions => {
   return {

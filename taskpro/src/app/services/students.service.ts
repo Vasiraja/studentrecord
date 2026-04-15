@@ -12,6 +12,11 @@ export class StudentsService {
   studentEditData$ = new BehaviorSubject<any>(null);
   studentEditComponent$ = new BehaviorSubject<boolean>(false);
 
+
+  AddComponent$ = new BehaviorSubject<boolean>(false);
+  AddComponentState$ = new BehaviorSubject<string>('');
+
+
   constructor(private http: HttpClient) { }
 
   getStudents(): Observable<any> {
@@ -25,6 +30,9 @@ export class StudentsService {
     this.studentEditComponent$.next(!editStatus);
     editStatus = this.studentEditComponent$.value;
 
+
+
+
     if (editStatus) {
       this.studentEditData$.next(data);
 
@@ -36,8 +44,28 @@ export class StudentsService {
 
   }
   addStudent(studentdata: any) {
+
+
     return this.http.post(`${this.apiUrl}`, studentdata);
 
+  }
+  addTrigger() {
+    this.AddComponent$.next(true);
+    this.AddComponentState$.next("student");
+    console.log(this.AddComponent$.value)
+
+  }
+  addProductTrigger() {
+    this.AddComponent$.next(true);
+    this.AddComponentState$.next("product");
+
+
+  }
+
+  removeAddTrigger() {
+    this.AddComponent$.next(false);
+    console.log(this.AddComponent$.value)
+    this.AddComponentState$.next("");
   }
   updateStudents(id: any, data: any) {
 
@@ -54,5 +82,9 @@ export class StudentsService {
     console.log("^^^^^");
     console.log(base64String);
     return this.http.patch(`${this.apiUrl}/${id}`, { profilePhoto: base64String });
+  }
+  deleteProfilePhoto(id: any) {
+
+    return this.http.patch(`${this}apiUrl/${id}`, { delProfilePhoto: true })
   }
 }

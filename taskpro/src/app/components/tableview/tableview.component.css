@@ -40,3 +40,13 @@ table{}
     
  }
  
+ .mat-table-container {
+  max-height: 500px;          
+  overflow-y: auto;           
+  overflow-x: hidden;       
+  display: block;
+ }
+ .addbutton{
+    margin: 1rem 0;
+    justify-self: right;
+ }

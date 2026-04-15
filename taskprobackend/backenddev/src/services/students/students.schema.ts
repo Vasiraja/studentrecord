@@ -20,7 +20,7 @@ export const studentsSchema = Type.Object(
     profilePhoto: Type.Optional(Type.String()),
 
   },
-  { $id: 'Students', additionalProperties: false }
+  { $id: 'Students', additionalProperties: true }
 )
 export type Students = Static<typeof studentsSchema>
 export const studentsValidator = getValidator(studentsSchema, dataValidator)
@@ -29,7 +29,7 @@ export const studentsResolver = resolve<StudentsQuery, HookContext<StudentsServi
 export const studentsExternalResolver = resolve<Students, HookContext<StudentsService>>({})
 
 // Schema for creating new entries
-export const studentsDataSchema = Type.Pick(studentsSchema, ['studentname', 'dob', 'age', 'class', 'gender','profilePhoto'], {
+export const studentsDataSchema = Type.Pick(studentsSchema, ['studentname', 'dob', 'age', 'class', 'gender', 'profilePhoto'], {
   $id: 'StudentsData'
 })
 export type StudentsData = Static<typeof studentsDataSchema>
@@ -99,7 +99,7 @@ export const studentsPatchResolver = resolve<StudentsPatch, HookContext<Students
 })
 
 // Schema for allowed query properties
-export const studentsQueryProperties = Type.Pick(studentsSchema, ['_id', 'profilePhoto'])
+export const studentsQueryProperties = Type.Pick(studentsSchema, ['_id','profilePhoto'])
 export const studentsQuerySchema = Type.Intersect(
   [
     querySyntax(studentsQueryProperties),

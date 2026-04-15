@@ -8,11 +8,12 @@ import { EditComponent } from "../../components/edit/edit.component";
 import { StudentsService } from '../../services/students.service';
 import { ProductsService } from '../../services/products.service';
 import { ProfilecardComponent } from "../../components/profilecard/profilecard.component";
+import { AddComponent } from "../../components/add/add.component";
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [SidebarComponent, CommonModule, CardComponent, TableviewComponent, EditComponent, ProfilecardComponent],
+  imports: [SidebarComponent, CommonModule, CardComponent, TableviewComponent, EditComponent, ProfilecardComponent, AddComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -23,7 +24,7 @@ export class HomeComponent implements OnInit {
       this.sidebarStatus = data;
     });
     this.studentservice.studentEditComponent$.subscribe((data) => {
-      console.log("status------->",data);
+      console.log("status------->", data);
       this.editStatus = data;
     })
     this.productservice.productEditStatus$.subscribe((data) => {
@@ -32,6 +33,9 @@ export class HomeComponent implements OnInit {
     this.sidebarservice.profileCardTrigger$.subscribe((data) => {
       this.profileCard = data;
     })
+    this.studentservice.AddComponent$.subscribe((data) => {
+      this.addStatus = data;
+    })
 
 
   }
@@ -39,5 +43,6 @@ export class HomeComponent implements OnInit {
   sidebarStatus: boolean | undefined;
   editStatus: boolean | undefined;
   profileCard: boolean | undefined;
+  addStatus: boolean | undefined;
   constructor(private sidebarservice: SidebarService, private studentservice: StudentsService, private productservice: ProductsService) { }
 }

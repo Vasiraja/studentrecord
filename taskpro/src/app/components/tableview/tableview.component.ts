@@ -34,12 +34,15 @@ export class TableviewComponent implements AfterViewInit {
     return this.photoUrl;
 
   }
-  addProductr() {
-    throw new Error('Method not implemented.');
+  addProduct() {
+     this.studentservice.addProductTrigger();
+
   }
 
   addStudent() {
-    this.studentservice.addNewStudent();
+    this.studentservice.addTrigger();
+
+
   }
   editStudent(data: any) {
 
@@ -118,6 +121,7 @@ export class TableviewComponent implements AfterViewInit {
     return this.students;
 
   }
+
   initialAllData() {
     const productfetch = this.productservice.getThirdpartyProducts();
     const productDbFetch = this.productservice.getProducts();
@@ -126,6 +130,8 @@ export class TableviewComponent implements AfterViewInit {
 
     forkJoin({ productfetch, productDbFetch, studentfetch }).subscribe({
       next: (res: any) => {
+        console.log(res.productDbFetch);
+        console.log(res.studentfetch)
         this.productsApi = res.productfetch.products;
         this.products = res.productDbFetch.data;
         this.students = res.studentfetch.data;

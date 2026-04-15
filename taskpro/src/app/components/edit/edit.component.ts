@@ -27,7 +27,7 @@ export class EditComponent implements OnInit {
   student: any = {};
   products: any = {};
   studentClass: any = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
-  productCategories: any = ['Grocery', 'Gadgets', 'Electronics']
+  productCategories: any = ['Grocery', 'Gadgets', 'Electronics','Furniture',]
   ngOnInit(): void {
 
     this.studentservice.studentEditData$.subscribe({

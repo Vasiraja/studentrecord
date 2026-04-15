@@ -56,14 +56,13 @@ export class ProfilecardComponent implements OnInit {
     link.download = "profile.png";
     link.click();
 
-    
+
 
 
   }
-  delPhoto(event: Event) {
+  delPhoto(event: Event,id:any) {
     event.stopPropagation()
-    console.log("delphoto")
-  }
+   }
   base64String: string = '';
   profileData: any = {};
   profilePhotoSafe: SafeUrl | null = null;
@@ -78,9 +77,13 @@ export class ProfilecardComponent implements OnInit {
     this.sidebarservice.profileCardData$.subscribe({
       next: (res: any) => {
         this.profileData = res;
-        this.profilePhotoSafe = this.sanitizer.bypassSecurityTrustUrl(
-          this.profileData?.profilePhoto || ''
-        );
+
+        let photoStr = "";
+        if (res.studentname) {
+          photoStr = res.profilePhoto || "";
+        }
+
+        this.profilePhotoSafe = this.sanitizer.bypassSecurityTrustUrl(photoStr);
       },
       error: (err: any) => {
         console.error(err);
