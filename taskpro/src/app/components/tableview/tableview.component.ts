@@ -1,6 +1,5 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { MatTable, MatTableModule } from '@angular/material/table'
-import { MatTab, MatTabGroup } from '@angular/material/tabs';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { MatTable, MatTableModule } from '@angular/material/table';
 import { MatToolbar } from '@angular/material/toolbar';
 import { ProductsService } from '../../services/products.service';
 import { StudentsService } from '../../services/students.service';
@@ -14,63 +13,15 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 @Component({
   selector: 'app-tableview',
   standalone: true,
-  imports: [MatTableModule, MatTable, MatTab, MatTabGroup, MatToolbar, MatButton, CommonModule],
+  imports: [MatTableModule, MatTable, MatToolbar, MatButton, CommonModule],
   templateUrl: './tableview.component.html',
   styleUrl: './tableview.component.css'
 })
-export class TableviewComponent implements AfterViewInit {
-
+export class TableviewComponent implements AfterViewInit, OnInit {
 
   photoUrl!: SafeUrl;
 
-
-
-  formateImg(imgString: any): any {
-
-    this.photoUrl = this.sanitizer.bypassSecurityTrustUrl(
-      imgString
-    )
-
-    return this.photoUrl;
-
-  }
-  addProduct() {
-    this.studentservice.addProductTrigger();
-
-  }
-
-  addStudent() {
-    this.studentservice.addTrigger();
-
-
-  }
-  editStudent(data: any) {
-
-    this.studentservice.setStudents(data)
-  }
-  deleteStudent(id: any) {
-    this.studentservice.delStudents(id).subscribe({
-      next: (data: any) => {
-        console.log(data);
-        this.snackbar.openSnackBar("user deleted");
-        this.initialAllData();
-
-
-      }
-    })
-  }
-  deleteProducts(id: any) {
-    this.productservice.deleteProducts(id).subscribe({
-      next: (data: any) => {
-        console.log(data);
-        this.snackbar.openSnackBar("product delted");
-        this.initialAllData();
-      }
-    })
-  }
-  editProducts(data: any) {
-    this.productservice.sendProducts(data);
-  }
+  selectedView: any = '';
 
   productsApi: any[] = [];
   products: any[] = [];
@@ -79,65 +30,97 @@ export class TableviewComponent implements AfterViewInit {
   productApiColumns: string[] = ['id', 'title', 'rating', 'category', 'stock', 'price'];
   productDbColumns: string[] = ['photo', 'id', 'name', 'category', 'stock', 'overallrating', 'price', 'actions'];
   studentColumns: string[] = ['photo', 'id', 'name', 'dob', 'class', 'gender', 'age', 'actions'];
-  selectedTabIndex: number | undefined;
-  constructor(private productservice: ProductsService, private studentservice: StudentsService, private sidebarservice: SidebarService, private snackbar: SnackbarService, private cdr: ChangeDetectorRef, private sanitizer: DomSanitizer) { }
 
+  sortingtoggle: boolean | undefined;
+
+  constructor(
+    private productservice: ProductsService,
+    private studentservice: StudentsService,
+    private sidebarservice: SidebarService,
+    private snackbar: SnackbarService,
+    private sanitizer: DomSanitizer
+  ) { }
+  ngOnInit(): void {
+    this.selectedView = 'students';
+    this.sidebarservice.selectedNode$.subscribe((data: any) => {
+      if (data?.type === 'products') {
+        
+        this.selectedView = 'products';
+      } else if (data?.type === 'productdb') {
+        this.selectedView = 'productdb';
+      } else if (data?.type === 'students') {
+        this.selectedView = 'students';
+      }
+    })
+
+
+  }
 
   ngAfterViewInit(): void {
     this.sidebarservice.profileCardTrigger$.next(false);
-
     this.initialAllData();
 
     this.sidebarservice.selectedNode$.subscribe((data: any) => {
-
-      if (data.type === "products") {
-        console.log(data.type)
-        console.log(this.selectedTabIndex)
-        this.selectedTabIndex = 1;
-      } else if (data.type === "productdb") {
-        this.selectedTabIndex = 2
-      } else if (data.type === "students") {
-        this.selectedTabIndex = 0
+      if (data?.type === 'products') {
+        this.selectedView = 'products';
+      } else if (data?.type === 'productdb') {
+        this.selectedView = 'productdb';
+      } else if (data?.type === 'students') {
+        this.selectedView = 'students';
       }
-    })
+    });
   }
-  sortingtoggle: boolean | undefined;
 
-  sortbyname() {
-    console.log(this.students)
-    if (!this.sortingtoggle) {
-      this.students = [...this.students].sort((a, b) => a.age - b.age);
-      this.sortingtoggle = true;
-
-
-
-    }
-    else {
-      this.students = [...this.students].sort((a, b) => b.age - a.age)
-      this.sortingtoggle = false;
-
-
-    }
-    return this.students;
-
+  formateImg(imgString: any): SafeUrl {
+    return this.sanitizer.bypassSecurityTrustUrl(imgString);
   }
+
+  addProduct() {
+    this.studentservice.addProductTrigger();
+  }
+
+  addStudent() {
+    this.studentservice.addTrigger();
+  }
+
+  editStudent(data: any) {
+    this.studentservice.setStudents(data);
+  }
+
+  deleteStudent(id: any) {
+    this.studentservice.delStudents(id).subscribe({
+      next: () => {
+        this.snackbar.openSnackBar('user deleted');
+        this.initialAllData();
+      }
+    });
+  }
+
+  deleteProducts(id: any) {
+    this.productservice.deleteProducts(id).subscribe({
+      next: () => {
+        this.snackbar.openSnackBar('product deleted');
+        this.initialAllData();
+      }
+    });
+  }
+
+  editProducts(data: any) {
+    this.productservice.sendProducts(data);
+  }
+
 
   initialAllData() {
     const productfetch = this.productservice.getThirdpartyProducts();
     const productDbFetch = this.productservice.getProducts();
     const studentfetch = this.studentservice.getStudents();
 
-
     forkJoin({ productfetch, productDbFetch, studentfetch }).subscribe({
       next: (res: any) => {
-        console.log(res.productDbFetch);
-        console.log(res.studentfetch)
         this.productsApi = res.productfetch.products;
         this.products = res.productDbFetch.data;
         this.students = res.studentfetch.data;
       }
-    })
-
+    });
   }
-
 }

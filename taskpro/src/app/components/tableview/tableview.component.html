@@ -1,175 +1,177 @@
 <div class="dashboard-container">
-    <mat-tab-group animationDuration="300ms" [(selectedIndex)]="selectedTabIndex">
-        <mat-tab label="Students">
-            <div class="tab-content">
-                <button mat-raised-button color="primary" class="addbutton" (click)="addStudent()">
-                    + Add Student
-                </button>
-                <table mat-table [dataSource]="students">
-                    <div class="table-toolbar">
-                        <span>Students</span>
 
-                    </div>
-                    <ng-container matColumnDef="photo">
-                        <th mat-header-cell *matHeaderCellDef></th>
-                        <td mat-cell *matCellDef="let student">
-                            <img *ngIf="student?.profilePhoto; else intialsdiv" class="student-avatar"
-                                [src]="formateImg(student?.profilePhoto)" alt="photo" />
-                            <ng-template #intialsdiv>
-                                <div class="student-initials">
-                                    {{ student.studentname.slice(0,2).toUpperCase()}}
-                                </div>
-                            </ng-template>
-                        </td>
+     <div class="tab-content" *ngIf="selectedView === 'students'">
+        <button mat-raised-button color="primary" class="addbutton" (click)="addStudent()">
+            + Add Student
+        </button>
 
-                    </ng-container>
-                    <ng-container matColumnDef="id">
-                        <th mat-header-cell *matHeaderCellDef> ID </th>
-                        <td mat-cell *matCellDef="let student"> {{ student._id }} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="name">
-                        <th mat-header-cell *matHeaderCellDef> Name </th>
-                        <td mat-cell *matCellDef="let student"> {{ student.studentname }} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="dob">
-                        <th mat-header-cell *matHeaderCellDef> dob </th>
-                        <td mat-cell *matCellDef="let student"> {{ student.dob }} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="class">
-                        <th mat-header-cell *matHeaderCellDef> class </th>
-                        <td mat-cell *matCellDef="let student"> {{ student.class }} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="gender">
-                        <th mat-header-cell *matHeaderCellDef> gender </th>
-                        <td mat-cell *matCellDef="let student"> {{ student.gender }} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="age">
-                        <th mat-header-cell *matHeaderCellDef (click)="sortbyname()"> age </th>
-                        <td mat-cell *matCellDef="let student"> {{ student.age }} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="actions">
-                        <th mat-header-cell *matHeaderCellDef> Actions </th>
-                        <td class="buttoncontainer" mat-cell *matCellDef="let student">
-                            <button class="editBut" (click)="editStudent(student)">
-                                <i class="fa fa-edit" style="color: #1976d2"></i>
-                            </button>
-                            <button class="deleteBut" (click)="deleteStudent(student._id)">
-                                <i class="fa fa-trash" style="color: #f44336"></i>
-                            </button>
-                        </td>
-                    </ng-container>
-
-                    <tr mat-header-row *matHeaderRowDef="studentColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: studentColumns;"></tr>
-                </table>
+        <table mat-table [dataSource]="students">
+            <div class="table-toolbar">
+                <span>Students</span>
             </div>
-        </mat-tab>
-        <mat-tab label="Products API">
-            <div class="tab-content">
 
-                <table mat-table [dataSource]="productsApi" class="mat-table-container">
+            <ng-container matColumnDef="photo">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let student">
+                    <img *ngIf="student?.profilePhoto; else intialsdiv" class="student-avatar"
+                        [src]="formateImg(student?.profilePhoto)" alt="photo" />
+                    <ng-template #intialsdiv>
+                        <div class="student-initials">
+                            {{ student.studentname.slice(0,2).toUpperCase() }}
+                        </div>
+                    </ng-template>
+                </td>
+            </ng-container>
 
-                    <ng-container matColumnDef="id">
-                        <th mat-header-cell *matHeaderCellDef> ID </th>
-                        <td mat-cell *matCellDef="let product"> {{ product.id }} </td>
-                    </ng-container>
+            <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef>ID</th>
+                <td mat-cell *matCellDef="let student">{{ student._id }}</td>
+            </ng-container>
 
-                    <ng-container matColumnDef="title">
-                        <th mat-header-cell *matHeaderCellDef> Title </th>
-                        <td mat-cell *matCellDef="let product"> {{ product.title }} </td>
-                    </ng-container>
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>Name</th>
+                <td mat-cell *matCellDef="let student">{{ student.studentname }}</td>
+            </ng-container>
 
-                    <ng-container matColumnDef="rating">
-                        <th mat-header-cell *matHeaderCellDef> rating </th>
-                        <td mat-cell *matCellDef="let product"> {{ product.rating }} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="category">
-                        <th mat-header-cell *matHeaderCellDef> category </th>
-                        <td mat-cell *matCellDef="let product"> {{ product.category }} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="stock">
-                        <th mat-header-cell *matHeaderCellDef> stock </th>
-                        <td mat-cell *matCellDef="let product"> {{ product.stock }} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="price">
-                        <th mat-header-cell *matHeaderCellDef> Price </th>
-                        <td mat-cell *matCellDef="let product"> ₹ {{ product.price }} </td>
-                    </ng-container>
+            <ng-container matColumnDef="dob">
+                <th mat-header-cell *matHeaderCellDef>DOB</th>
+                <td mat-cell *matCellDef="let student">{{ student.dob }}</td>
+            </ng-container>
 
-                    <tr mat-header-row *matHeaderRowDef="productApiColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: productApiColumns;"></tr>
-                </table>
-            </div>
-        </mat-tab>
+            <ng-container matColumnDef="class">
+                <th mat-header-cell *matHeaderCellDef>Class</th>
+                <td mat-cell *matCellDef="let student">{{ student.class }}</td>
+            </ng-container>
 
-        <mat-tab label="Products DB">
-            <div class="tab-content">
-                <button mat-raised-button color="primary" class="addbutton" (click)="addProduct()">
-                    + Add Product
-                </button>
-                <table mat-table [dataSource]="products">
-                    <ng-container matColumnDef="photo">
-                        <th mat-header-cell *matHeaderCellDef></th>
-                        <td mat-cell *matCellDef="let product">
-                            <img *ngIf="product?.profilePhoto; else intialsdiv" class="student-avatar"
-                                [src]="formateImg(product?.profilePhoto)" alt="photo" />
-                            <ng-template #intialsdiv>
-                                <div class="student-initials">
-                                    {{ product.title.slice(0,2).toUpperCase()}}
-                                </div>
-                            </ng-template>
-                        </td>
+            <ng-container matColumnDef="gender">
+                <th mat-header-cell *matHeaderCellDef>Gender</th>
+                <td mat-cell *matCellDef="let student">{{ student.gender }}</td>
+            </ng-container>
 
-                    </ng-container>
+            <ng-container matColumnDef="age">
+                <th mat-header-cell *matHeaderCellDef >Age</th>
+                <td mat-cell *matCellDef="let student">{{ student.age }}</td>
+            </ng-container>
 
-                    <ng-container matColumnDef="id">
-                        <th mat-header-cell *matHeaderCellDef> ID </th>
-                        <td mat-cell *matCellDef="let product"> {{ product._id }} </td>
-                    </ng-container>
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                <td class="buttoncontainer" mat-cell *matCellDef="let student">
+                    <button class="editBut" (click)="editStudent(student)">
+                        <i class="fa fa-edit" style="color: #1976d2"></i>
+                    </button>
+                    <button class="deleteBut" (click)="deleteStudent(student._id)">
+                        <i class="fa fa-trash" style="color: #f44336"></i>
+                    </button>
+                </td>
+            </ng-container>
 
-                    <ng-container matColumnDef="name">
-                        <th mat-header-cell *matHeaderCellDef> Name </th>
-                        <td mat-cell *matCellDef="let product"> {{ product.title }} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="category">
-                        <th mat-header-cell *matHeaderCellDef> category </th>
-                        <td mat-cell *matCellDef="let product"> {{ product.category }} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="stock">
-                        <th mat-header-cell *matHeaderCellDef> stock </th>
-                        <td mat-cell *matCellDef="let product"> {{ product.stock }} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="overallrating">
-                        <th mat-header-cell *matHeaderCellDef> overallrating </th>
-                        <td mat-cell *matCellDef="let product"> {{ product.overAllRating }} </td>
-                    </ng-container>
+            <tr mat-header-row *matHeaderRowDef="studentColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: studentColumns;"></tr>
+        </table>
+    </div>
 
+     <div class="tab-content" *ngIf="selectedView === 'products'">
+        <table mat-table [dataSource]="productsApi" class="mat-table-container">
 
-                    <ng-container matColumnDef="price">
-                        <th mat-header-cell *matHeaderCellDef> Price </th>
-                        <td mat-cell *matCellDef="let product"> ₹ {{ product.price }} </td>
-                    </ng-container>
+            <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef>ID</th>
+                <td mat-cell *matCellDef="let product">{{ product.id }}</td>
+            </ng-container>
 
-                    <ng-container matColumnDef="actions">
-                        <th mat-header-cell *matHeaderCellDef> Actions </th>
-                        <td class="buttoncontainer" mat-cell *matCellDef="let product">
-                            <button class="editBut" (click)="editProducts(product)">
-                                <i class="fa fa-edit" style="color: #1976d2"></i>
-                            </button>
-                            <button class="deleteBut" (click)="deleteProducts(product._id)">
-                                <i class="fa fa-trash" style="color: #f44336"></i>
-                            </button>
-                        </td>
-                    </ng-container>
-                    <tr mat-header-row *matHeaderRowDef="productDbColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: productDbColumns;"></tr>
-                </table>
-            </div>
-        </mat-tab>
+            <ng-container matColumnDef="title">
+                <th mat-header-cell *matHeaderCellDef>Title</th>
+                <td mat-cell *matCellDef="let product">{{ product.title }}</td>
+            </ng-container>
 
+            <ng-container matColumnDef="rating">
+                <th mat-header-cell *matHeaderCellDef>Rating</th>
+                <td mat-cell *matCellDef="let product">{{ product.rating }}</td>
+            </ng-container>
 
+            <ng-container matColumnDef="category">
+                <th mat-header-cell *matHeaderCellDef>Category</th>
+                <td mat-cell *matCellDef="let product">{{ product.category }}</td>
+            </ng-container>
 
-    </mat-tab-group>
+            <ng-container matColumnDef="stock">
+                <th mat-header-cell *matHeaderCellDef>Stock</th>
+                <td mat-cell *matCellDef="let product">{{ product.stock }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="price">
+                <th mat-header-cell *matHeaderCellDef>Price</th>
+                <td mat-cell *matCellDef="let product">₹ {{ product.price }}</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="productApiColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: productApiColumns;"></tr>
+        </table>
+    </div>
+
+     <div class="tab-content" *ngIf="selectedView === 'productdb'">
+        <button mat-raised-button color="primary" class="addbutton" (click)="addProduct()">
+            + Add Product
+        </button>
+
+        <table mat-table [dataSource]="products">
+            <ng-container matColumnDef="photo">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let product">
+                    <img *ngIf="product?.profilePhoto; else intialsdiv2" class="student-avatar"
+                        [src]="formateImg(product?.profilePhoto)" alt="photo" />
+                    <ng-template #intialsdiv2>
+                        <div class="student-initials">
+                            {{ product.title.slice(0,2).toUpperCase() }}
+                        </div>
+                    </ng-template>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef>ID</th>
+                <td mat-cell *matCellDef="let product">{{ product._id }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>Name</th>
+                <td mat-cell *matCellDef="let product">{{ product.title }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="category">
+                <th mat-header-cell *matHeaderCellDef>Category</th>
+                <td mat-cell *matCellDef="let product">{{ product.category }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="stock">
+                <th mat-header-cell *matHeaderCellDef>Stock</th>
+                <td mat-cell *matCellDef="let product">{{ product.stock }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="overallrating">
+                <th mat-header-cell *matHeaderCellDef>Overall Rating</th>
+                <td mat-cell *matCellDef="let product">{{ product.overAllRating }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="price">
+                <th mat-header-cell *matHeaderCellDef>Price</th>
+                <td mat-cell *matCellDef="let product">₹ {{ product.price }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                <td class="buttoncontainer" mat-cell *matCellDef="let product">
+                    <button class="editBut" (click)="editProducts(product)">
+                        <i class="fa fa-edit" style="color: #1976d2"></i>
+                    </button>
+                    <button class="deleteBut" (click)="deleteProducts(product._id)">
+                        <i class="fa fa-trash" style="color: #f44336"></i>
+                    </button>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="productDbColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: productDbColumns;"></tr>
+        </table>
+    </div>
+
 </div>
