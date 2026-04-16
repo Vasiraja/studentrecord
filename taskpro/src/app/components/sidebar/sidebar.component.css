@@ -20,17 +20,18 @@
    display: flex;
    align-items: center;
    justify-content: center;
-   color: blue;
+   /* color: blue; */
 
  }
 
  button i:hover {
    /* padding: 0.5rem; */
    /* transition: 0.3s padding ease-in; */
-   border: 0.3px solid rgb(165, 164, 164);
+    color:blue;
 
    transition: 0.3s all ease-in;
  }
+ 
 
  button {
    border: none;
@@ -49,5 +50,5 @@
 
  .controls {
    display: flex;
-   justify-content: space-between;
- }
+   
+  }

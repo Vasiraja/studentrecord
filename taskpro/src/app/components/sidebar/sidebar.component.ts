@@ -9,6 +9,7 @@ import { TableviewComponent } from "../tableview/tableview.component";
 
 declare var $: any;
 
+
 @Component({
   selector: 'app-sidebar',
   standalone: true,
@@ -20,6 +21,10 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 
   constructor(private studentservice: StudentsService, private productservice: ProductsService, private sidebarservice: SidebarService) { }
 
+  expandState: boolean = false;
+  toggleState() {
+    this.expandState = !this.expandState;
+  }
   ngAfterViewInit(): void {
     // this.studentservice.getStudents().subscribe({
     //   next: (res: any) => {
@@ -179,17 +184,25 @@ export class SidebarComponent implements OnInit, AfterViewInit {
       })
 
     })
+   
 
 
-    $("#expandAll").on('click', function () {
 
-      $('#treeElem').jstree('open_all')
-    })
-    $("#collapseAll").on('click', function () {
 
-      $('#treeElem').jstree('close_all')
-    })
-
+  }
+  collapseAll() {
+    this.expandState = false;
+    const tree = $(this.treeElem.nativeElement).jstree(true);
+    if (tree) {
+      tree.close_all();
+    }
+  }
+  expandAll() {
+    this.expandState = true;
+    const tree = $(this.treeElem.nativeElement).jstree(true);
+    if (tree) {
+      tree.open_all();
+    }
   }
 
 

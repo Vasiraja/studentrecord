@@ -21,7 +21,7 @@ import * as XLSX from 'xlsx';
   templateUrl: './tableview.component.html',
   styleUrl: './tableview.component.css'
 })
-export class TableviewComponent implements AfterViewInit, OnInit {
+export class TableviewComponent implements OnInit {
 
 
   photoUrl!: SafeUrl;
@@ -51,17 +51,22 @@ export class TableviewComponent implements AfterViewInit, OnInit {
     private sanitizer: DomSanitizer
   ) { }
   ngOnInit(): void {
-    this.selectedView = 'students';
+    this.initialAllData();
+    this.sidebarservice.profileCardTrigger$.next(false);
     this.sidebarservice.selectedNode$.subscribe((data: any) => {
+      console.log(data.type);
       if (data?.type === 'products') {
-
         this.selectedView = 'products';
-      } else if (data?.type === 'productdb') {
+      }
+      else if (data?.type === 'productdb') {
         this.selectedView = 'productdb';
-      } else if (data?.type === 'students') {
+      }
+      else if (data?.type === 'students') {
         this.selectedView = 'students';
       }
     })
+
+
 
 
   }
@@ -143,20 +148,20 @@ export class TableviewComponent implements AfterViewInit, OnInit {
   cancelUpload() {
     this.selectedFile = null;
   }
-  ngAfterViewInit(): void {
-    this.sidebarservice.profileCardTrigger$.next(false);
-    this.initialAllData();
+  // ngAfterViewInit(): void {
+  //   this.sidebarservice.profileCardTrigger$.next(false);
+  //   this.initialAllData();
 
-    this.sidebarservice.selectedNode$.subscribe((data: any) => {
-      if (data?.type === 'products') {
-        this.selectedView = 'products';
-      } else if (data?.type === 'productdb') {
-        this.selectedView = 'productdb';
-      } else if (data?.type === 'students') {
-        this.selectedView = 'students';
-      }
-    });
-  }
+  // this.sidebarservice.selectedNode$.subscribe((data: any) => {
+  //   if (data?.type === 'products') {
+  //     this.selectedView = 'products';
+  //   } else if (data?.type === 'productdb') {
+  //     this.selectedView = 'productdb';
+  //   } else if (data?.type === 'students') {
+  //     this.selectedView = 'students';
+  //   }
+  // });
+  // }
 
   formateImg(imgString: any): SafeUrl {
     return this.sanitizer.bypassSecurityTrustUrl(imgString);

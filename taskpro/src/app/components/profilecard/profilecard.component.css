@@ -54,20 +54,7 @@
     border-radius: 50%;
     object-fit: cover;
 }
-
-.initials-circle {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background: #e3f2fd;
-    color: #1565c0;
-    font-size: 14px;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
+ 
 
 .photodeldownload {
     display: flex;
@@ -93,4 +80,25 @@ mat-list-item span:nth-child(even) {
 i {
     color: #1565c0;
     cursor: pointer;
+}
+
+.rightcard mat-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.rightcard mat-list-item span[matListItemTitle] {
+    font-weight: 500;
+}
+
+.rightcard mat-list-item span[matListItemLine] {
+   
+}   
+mat-list-item span{
+    display: flex;
+
+    justify-content: space-between;
+     align-items: center;
 }

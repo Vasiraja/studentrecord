@@ -9,7 +9,7 @@ export class SidebarService {
 
   constructor(private http: HttpClient) { }
 
-  selectedNode$ = new Subject<any>();
+  selectedNode$ = new BehaviorSubject<any>({ type: 'students' });
   profileCardTrigger$ = new BehaviorSubject<any>(false);
   profileCardData$ = new BehaviorSubject<any>(null);
   // selectedNode$ = this.selectedNode.asObservable();
@@ -59,4 +59,3 @@ export class SidebarService {
   }
 
 }
- 

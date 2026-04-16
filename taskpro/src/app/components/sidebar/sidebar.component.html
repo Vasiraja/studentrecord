@@ -1,7 +1,12 @@
 <div class="sidebar">
     <div class="controls">
-        <button id="expandAll"><i class="fa-solid fa-up-right-and-down-left-from-center"></i></button>
-        <button id="collapseAll"><i class="fa-solid fa-down-left-and-up-right-to-center"></i></button>
+        <button *ngIf="!expandState" (click)="expandAll()">
+            <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
+        </button>
+
+        <button *ngIf="expandState" (click)="collapseAll()">
+            <i class="fa-solid fa-down-left-and-up-right-to-center"></i>
+        </button>
     </div>
 
     <div class="tree-wrapper">
