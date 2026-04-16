@@ -20,6 +20,34 @@ import { ProductsService } from '../../services/products.service';
   styleUrl: './edit.component.css'
 })
 export class EditComponent implements OnInit {
+calculateAge(value: any): any {
+
+  const dob = value;
+  console.log("DOB", dob)
+
+  const newDate = new Date();
+  const birthDate = new Date(dob);
+
+  const birthyear = birthDate.getFullYear();
+  const currentYear = newDate.getFullYear();
+
+  let ageCalc = currentYear - birthyear;
+
+  const birthMonth = birthDate.getMonth() + 1;
+  const currentMonth = newDate.getMonth() + 1;
+
+  if (birthMonth > currentMonth) {
+    ageCalc = ageCalc - 1;
+  }
+  else if (birthMonth === currentMonth) {
+
+    if (birthDate.getDate() > newDate.getDate()) {
+      ageCalc = ageCalc - 1;
+    }
+
+  }
+
+  return ageCalc;}
 
 
   constructor(private studentservice: StudentsService, private snackbar: SnackbarService, private productservice: ProductsService) { }
@@ -27,7 +55,24 @@ export class EditComponent implements OnInit {
   student: any = {};
   products: any = {};
   studentClass: any = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
-  productCategories: any = ['Grocery', 'Gadgets', 'Electronics','Furniture',]
+  productCategories: any = ['Grocery', 'Gadgets', 'Electronics', 'Furniture'];
+  updatedDOB: boolean = false;
+  filteredClass: any[] = [];
+  currentage: any;
+  classAgeMap: any = {
+    '1': { min: 5, max: 7 },
+    '2': { min: 6, max: 8 },
+    '3': { min: 7, max: 9 },
+    '4': { min: 8, max: 10 },
+    '5': { min: 9, max: 11 },
+    '6': { min: 10, max: 12 },
+    '7': { min: 11, max: 13 },
+    '8': { min: 12, max: 14 },
+    '9': { min: 13, max: 15 },
+    '10': { min: 14, max: 16 },
+    '11': { min: 15, max: 17 },
+    '12': { min: 16, max: 18 }
+  };
   ngOnInit(): void {
 
     this.studentservice.studentEditData$.subscribe({
@@ -59,13 +104,24 @@ export class EditComponent implements OnInit {
 
   }
 
-  resetForm() {
-
-  }
+   
   changeEvent(event: any) {
-    console.log(event.target.value);
+    let value = event.target.value;
+    this.updatedDOB = true;
 
+    this.currentage = this.calculateAge(value);
+
+    console.log('AGE:', this.currentage);
+
+    this.filteredClass = this.studentClass.filter((cls: string) => {
+      const range = this.classAgeMap[cls];
+      return this.currentage >= range.min && this.currentage <= range.max;
+    });
+
+    console.log(this.filteredClass);
   }
+
+
   saveStudent(id: any) {
     console.log(id);
     console.log(this.student);
@@ -116,6 +172,7 @@ export class EditComponent implements OnInit {
     this.products = {};
   }
   addDetails() {
-    
+
   }
 }
+ 

@@ -44,4 +44,7 @@ export class ProductsService {
     }
 
   }
+  bulkCreate(data: any[]) {
+    return this.http.post(`${this.apiUrl}`, data);
+  }
 }

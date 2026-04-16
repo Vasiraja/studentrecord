@@ -20,7 +20,22 @@ export class StudentsService<ServiceParams extends Params = StudentsParams> exte
   StudentsPatch
 > {
 
+  async get(id: any, params?: any): Promise<any> {
 
+
+    return super.get(id, params)
+  }
+
+  async find(params?: any): Promise<any> {
+
+
+    const loggedUser = params?.user;
+
+
+    const students = await super.find(params);
+    return { ...students, loggedUser }
+
+  }
 
 
   async patch(id: any, data: any, params?: any): Promise<any> {

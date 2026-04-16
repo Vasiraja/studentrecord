@@ -19,12 +19,28 @@ export class ProductsService<ServiceParams extends Params = ProductsParams> exte
 > {
 
 
+  async create(data: any, params?: any): Promise<any> {
+
+    const isBulk = params?.query?.bulk === 'true';
+
+    if (isBulk) {
+      console.log("Bulk here");
+    }
+
+    if (Array.isArray(data)) {
+      console.log("Bulk array hhh");
+      return super.create(data, params);
+    }
+
+    return super.create(data, params);
+  }
 
 }
 
 export const getOptions = (app: Application): MongoDBAdapterOptions => {
   return {
     paginate: app.get('paginate'),
-    Model: app.get('mongodbClient').then(db => db.collection('products'))
+    Model: app.get('mongodbClient').then(db => db.collection('products')),
+    multi: true
   }
 }

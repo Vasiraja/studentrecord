@@ -1,52 +1,66 @@
-/* Navbar container */
 .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-    height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
-    background: white;
-    border-bottom: 1px solid #e5e7eb;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  padding: 0 1.1rem;
+  height: 56px;
+
+  background: #ffffff;
+  border-bottom: 1px solid #ebeef5;
 }
 
-.nav-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.app-title {
-    font-size: 16px;
-    font-weight: 600;
-    color: #1f2937;
-}
-
+ .nav-left,
 .nav-right {
-    display: flex;
-    align-items: center;
-    gap: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.usernamediv{
+    border:1px solid #fff;
+    padding:0.2rem 1rem;
+    border-radius: 10px;
+    box-shadow: 0px 0px 5px #b8b6b6;
+        padding-right: 0.5rem;
+
+
+
+}
+.usernamediv i{
+    font-size: 0.9rem;
+}
+.logout-icon{
+    border-left: 1px solid gray;
+    padding-left: 0.5rem;
+ }
+ .app-title {
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
 }
 
+ .menu-icon,
 .nav-icon,
-.menu-icon {
-    cursor: pointer;
-    color: #374151;
-    transition: 0.2s;
+.logout-icon {
+  cursor: pointer;
+  color: #555;
 }
 
-.nav-icon:hover,
-.menu-icon:hover {
-    color: #2563eb;
+ .menu-icon:hover,
+.nav-icon:hover {
+  color: #000;
 }
 
 .logout-icon {
-    cursor: pointer;
-    font-size: 18px;
-    color: #ef4444;
- }
+  color: #d32f2f;
+}
 
 .logout-icon:hover {
-    color: #dc2626;
+  color: #b71c1c;
 }
+
+ .username {
+  font-size: 14px;
+  color: #444;
+}
+ 

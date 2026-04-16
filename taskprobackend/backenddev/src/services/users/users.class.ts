@@ -31,6 +31,11 @@ export class UserService<ServiceParams extends Params = UserParams> extends Mong
   UserPatch
 > {
 
+  // async get(id: any, data: any): Promise<any> {
+
+
+  //   return super.get(id, data);
+  // }
 
 }
 

@@ -16,15 +16,15 @@
 
             <mat-form-field appearance="outline">
                 <mat-label>Age</mat-label>
-                <input matInput type="text" [(ngModel)]="student.age" name="age" disabled placeholder="Age">
+                <input matInput type="number" [value]="calculateAge(student.dob)" required disabled="true" />
             </mat-form-field>
 
             <mat-form-field appearance="outline">
                 <mat-label>Class</mat-label>
-                <mat-select [(ngModel)]="student.class" name="class">
-
-                    <mat-option *ngFor="let clss of studentClass" [value]=clss>{{clss}}</mat-option>
-
+                <mat-select [(ngModel)]="student.class" name="class" [disabled]="!updatedDOB">
+                    <mat-option *ngFor="let clss of filteredClass" [value]="clss">
+                        {{ clss }}
+                    </mat-option>
                 </mat-select>
             </mat-form-field>
 
@@ -93,8 +93,7 @@
         </div>
 
         <div class="right-actions">
-            <button mat-stroked-button color="accent" (click)="resetForm()">Reset</button>
-            <button mat-raised-button color="primary"
+             <button mat-raised-button color="primary"
                 (click)="student.studentname ? saveStudent(student._id) : saveProduct(products._id)">
                 Save
             </button>

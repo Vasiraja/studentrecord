@@ -14,9 +14,11 @@ export class SidebarService {
   profileCardData$ = new BehaviorSubject<any>(null);
   // selectedNode$ = this.selectedNode.asObservable();
 
+  currentUser$ = new BehaviorSubject<any>(null);
+
   sidebarState$ = new BehaviorSubject<boolean>(true);
 
-  apiUrl = "http://localhost:3030"
+  apiUrl = "http://localhost:3030";
   sidebarOpen() {
     this.sidebarState$.next(!this.sidebarState$)
 
@@ -42,6 +44,9 @@ export class SidebarService {
         return EMPTY;
     }
   }
+  currentLoggedIn(user: any) {
+    return this.currentUser$.next(user);
+  }
 
 
   profileCardTrigger(data: any) {
@@ -52,5 +57,6 @@ export class SidebarService {
     this.profileCardData$.next(data);
 
   }
-  
+
 }
+ 

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
+import { AfterContentChecked, AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIcon } from '@angular/material/icon'
 import { SidebarService } from '../../services/sidebar.service';
@@ -12,11 +12,26 @@ import { CommonModule } from '@angular/common';
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
 
   sideBarState: boolean | undefined;
+  currentUser: any;
 
   constructor(private sidebarserv: SidebarService, public router: Router, private cdr: ChangeDetectorRef) { }
+  ngOnInit(): void {
+    console.log("-------------------------------------")
+    this.sidebarserv.currentUser$.subscribe({
+      next: (res: any) => {
+        this.currentUser = res
+      },
+      error: (err: any) => {
+        console.error("user not found", err)
+      }
+    })
+    this.currentUser = this.sidebarserv.currentUser$.value;
+
+    console.log("navcurrentuser", this.currentUser)
+  }
 
   sidebarAction() {
     this.sideBarState = this.sidebarserv.sidebarState$.value;
@@ -36,7 +51,8 @@ export class NavbarComponent {
     }
 
 
-     
+
+
   }
 
 

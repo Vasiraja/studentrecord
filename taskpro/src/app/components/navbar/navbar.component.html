@@ -1,13 +1,22 @@
-<mat-toolbar class="navbar" *ngIf="['/'].includes( router.url)">
+<mat-toolbar class="navbar" *ngIf="router.url === '/'">
 
     <div class="nav-left">
-        <mat-icon class="menu-icon" (click)="sidebarAction()">menu</mat-icon>
-        <!-- <span class="app-title">Data Management</span> -->
+        <i class="fa-solid fa-bars menu-icon" (click)="sidebarAction()"></i>
+        <span class="app-title">Dashboard</span>
     </div>
 
     <div class="nav-right">
-         <i class="fa fa-user nav-icon"></i>
-        <i class="fa fa-sign-out logout-icon " (click)="logoutAction()"></i>
+        <div class="usernamediv">
+            <i class="fa fa-user nav-icon"></i>
+
+            <span class="username" *ngIf="currentUser">
+                {{ currentUser.firstname }}
+            </span>
+                    <i  class="fa fa-sign-out logout-icon" (click)="logoutAction()"></i>
+
+        </div>
+
+
     </div>
 
 </mat-toolbar>

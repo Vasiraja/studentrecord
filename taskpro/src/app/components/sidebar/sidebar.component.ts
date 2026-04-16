@@ -122,7 +122,11 @@ export class SidebarComponent implements OnInit, AfterViewInit {
             },
             {
               text: "productsDB", icon: "fa-solid fa-store", type: "productdb",
-              children: this.dbProducts.map((items) => ({ text: items.title, id: items._id, icon: "fa-solid fa-cart-shopping", type: "productsdbapi" }))
+              children: this.dbProducts.map((items) => ({
+                text: items.title, id: items._id, icon: items.bulk
+                  ? "fa-solid fa-box"
+                  : "fa-solid fa-cart-shopping", type: "productsdbapi"
+              }))
             },
 
             ]
