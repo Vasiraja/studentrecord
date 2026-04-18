@@ -1,3 +1,4 @@
+import { test } from './test/test'
 import { products } from './products/products'
 import { students } from './students/students'
 import { user } from './users/users'
@@ -5,6 +6,7 @@ import { user } from './users/users'
 import type { Application } from '../declarations'
 
 export const services = (app: Application) => {
+  app.configure(test)
   app.configure(products)
   app.configure(students)
   app.configure(user)

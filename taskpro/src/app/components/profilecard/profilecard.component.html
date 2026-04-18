@@ -39,27 +39,27 @@
         </div>
         <div class="rightcard">
             <mat-card-content>
-                <mat-list>
-                    <mat-list-item>
-                        <span matListItemTitle>Date of Birth :</span>
-                        <span matListItemLine>{{ profileData.dob }}</span>
-                    </mat-list-item>
+                <div class="list">
+                    <div class = "detail-list">
+                        <span >Date of Birth :</span>
+                        <span >{{ profileData.dob }}</span>
+                    </div>
                     <mat-divider></mat-divider>
-                    <mat-list-item>
-                        <span matListItemTitle>Age :</span>
-                        <span matListItemLine>{{ profileData.age }}</span>
-                    </mat-list-item>
+                    <div class = "detail-list">
+                        <span >Age :</span>
+                        <span >{{ profileData.age }}</span>
+                    </div>
                     <mat-divider></mat-divider>
-                    <mat-list-item>
-                        <span matListItemTitle>Class :</span>
-                        <span matListItemLine>{{ profileData.class }}</span>
-                    </mat-list-item> 
+                    <div class = "detail-list">
+                        <span >Class :</span>
+                        <span >{{ profileData.class }}</span>
+                    </div> 
                     <mat-divider></mat-divider>
-                    <mat-list-item>
-                        <span matListItemTitle>Gender :</span>
-                        <span matListItemLine>{{ profileData.gender }}</span>
-                    </mat-list-item>
-                </mat-list>
+                    <div class = "detail-list">
+                        <span >Gender :</span>
+                        <span >{{ profileData.gender }}</span>
+                    </div>
+                </div>
             </mat-card-content>
         </div>
     </ng-container>
@@ -101,35 +101,35 @@
         </div>
         <div class="rightcard">
             <mat-card-content>
-                <mat-list>
-                    <mat-list-item>
-                        <span matListItemTitle>Category :</span>
-                        <span matListItemLine>{{ profileData.category }}</span>
-                    </mat-list-item>
+                <div class="list">
+                    <div class = "detail-list">
+                        <span >Category :</span>
+                        <span >{{ profileData.category }}</span>
+                    </div>
                     <mat-divider></mat-divider>
-                    <mat-list-item>
-                        <span matListItemTitle>Stock :</span>
-                        <span matListItemLine>{{ profileData.stock }}</span>
-                    </mat-list-item>
+                    <div class = "detail-list">
+                        <span >Stock :</span>
+                        <span >{{ profileData.stock }}</span>
+                    </div>
                     <mat-divider></mat-divider>
-                    <mat-list-item>
-                        <span matListItemTitle>Over All Rating :</span>
+                    <div class = "detail-list">
+                        <span >Over All Rating :</span>
                         <ng-container *ngIf="profileData.overAllRating">
-                            <span matListItemLine>{{ profileData.overAllRating }}</span>
+                            <span >{{ profileData.overAllRating }}</span>
 
                         </ng-container>
                         <ng-container *ngIf="profileData.rating">
-                            <span matListItemLine>{{ profileData.rating }}</span>
+                            <span >{{ profileData.rating }}</span>
 
                         </ng-container>
 
-                    </mat-list-item>
+                    </div>
                     <mat-divider></mat-divider>
-                    <mat-list-item>
-                        <span matListItemTitle>Price :</span>
-                        <span matListItemLine>{{ profileData.price }}</span>
-                    </mat-list-item>
-                </mat-list>
+                    <div class = "detail-list">
+                        <span >Price :</span>
+                        <span >{{ profileData.price }}</span>
+                    </div>
+                </div>
             </mat-card-content>
         </div>
     </ng-container>

@@ -111,7 +111,7 @@ calculateAge(value: any): any {
 
     this.currentage = this.calculateAge(value);
 
-    console.log('AGE:', this.currentage);
+    console.log('age', this.currentage);
 
     this.filteredClass = this.studentClass.filter((cls: string) => {
       const range = this.classAgeMap[cls];

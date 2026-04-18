@@ -25,12 +25,12 @@ import { SnackbarService } from '../../services/snackbar.service';
     MatCardContent,
     MatCardTitle,
     MatCardSubtitle,
-    MatCardActions,
-    MatListItem,
-    MatList,
+    // MatCardActions,
+    // MatListItem,
+    // MatList,
     MatDivider,
     CommonModule,
-    MatIcon
+    // MatIcon
   ],
   templateUrl: './profilecard.component.html',
   styleUrl: './profilecard.component.css'

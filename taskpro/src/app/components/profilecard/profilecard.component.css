@@ -66,17 +66,7 @@
 mat-card-content {
     width: 100%;
 }
-
-mat-list-item {
-    display: flex;
-    gap: 2rem;
-    width: 100%;
-}
-
-mat-list-item span:nth-child(even) {
-    margin-left:3rem;
-}
-
+  
 i {
     color: #1565c0;
     cursor: pointer;
@@ -88,17 +78,15 @@ i {
     align-items: center;
     width: 100%;
 }
+.detail-list{
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
 
-.rightcard mat-list-item span[matListItemTitle] {
-    font-weight: 500;
+     
 }
-
-.rightcard mat-list-item span[matListItemLine] {
-   
-}   
-mat-list-item span{
+ 
+.list{
     display: flex;
-
-    justify-content: space-between;
-     align-items: center;
+    flex-direction: column;
+    gap: 0.5rem;
 }

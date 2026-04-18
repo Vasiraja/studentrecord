@@ -4,6 +4,9 @@ import type { TransportConnection, Application } from '@feathersjs/feathers'
 import authenticationClient from '@feathersjs/authentication-client'
 import type { AuthenticationClientOptions } from '@feathersjs/authentication-client'
 
+import { testClient } from './services/test/test.shared'
+export type { Test, TestData, TestQuery, TestPatch } from './services/test/test.shared'
+
 import { productsClient } from './services/products/products.shared'
 export type {
   Products,
@@ -52,5 +55,6 @@ export const createClient = <Configuration = any,>(
   client.configure(userClient)
   client.configure(studentsClient)
   client.configure(productsClient)
+  client.configure(testClient)
   return client
 }

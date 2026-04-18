@@ -52,20 +52,23 @@ table {}
    display: block;
    position:relative;
  }
-.mat-table-container .addbutton{
+/* .mat-table-container .addbutton{
    position:fixed;
    top:100px
    
-}
+} */
 .full-width-table{
    margin-top: 5rem;
 }
 .addbutton {
    /* margin: 3rem 0; */
-   justify-self: right;
+   /* justify-self: right;
    display: flex;
-   align-items: center;
+   align-items: center; */
 
+}
+.matheaderapply{
+   background-color: red;
 }
  
 #uploadicon{
@@ -99,10 +102,17 @@ table {}
 .table-toolbar button {
    margin-right: 3rem;
 }
+mat-header-cell{
+   position:fixed;
+   top:30px;
+}
 .insidetool{
    display: flex;
    flex-direction: row;
    margin-right: 2rem;
    background-color: red;
 
+}
+th [mat-header-cell]{
+   background-color: red;
 }

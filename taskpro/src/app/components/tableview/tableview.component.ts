@@ -24,6 +24,7 @@ import * as XLSX from 'xlsx';
 export class TableviewComponent implements OnInit {
 
 
+
   photoUrl!: SafeUrl;
 
   productsArrayBulk: any[] = [
@@ -39,7 +40,7 @@ export class TableviewComponent implements OnInit {
 
   productApiColumns: string[] = ['id', 'title', 'rating', 'category', 'stock', 'price'];
   productDbColumns: string[] = ['photo', 'id', 'name', 'category', 'stock', 'overallrating', 'price', 'actions'];
-  studentColumns: string[] = ['photo', 'id', 'name', 'dob', 'class', 'gender', 'age', 'actions'];
+  studentColumns: string[] = ['photo', 'id', 'name', 'dob', 'class', 'gender', 'age', 'actions','addstudent'];
 
   sortingtoggle: boolean | undefined;
 
@@ -181,7 +182,8 @@ export class TableviewComponent implements OnInit {
 
   deleteStudent(id: any) {
     this.studentservice.delStudents(id).subscribe({
-      next: () => {
+      next: (res: any) => {
+        console.log(res)
         this.snackbar.openSnackBar('user deleted');
         this.initialAllData();
       }
@@ -190,7 +192,8 @@ export class TableviewComponent implements OnInit {
 
   deleteProducts(id: any) {
     this.productservice.deleteProducts(id).subscribe({
-      next: () => {
+      next: (res: any) => {
+        console.log(res)
         this.snackbar.openSnackBar('product deleted');
         this.initialAllData();
       }
@@ -198,6 +201,7 @@ export class TableviewComponent implements OnInit {
   }
 
   editProducts(data: any) {
+    console.log(data);
     this.productservice.sendProducts(data);
   }
 
@@ -214,7 +218,7 @@ export class TableviewComponent implements OnInit {
         this.products = res.productDbFetch.data;
         this.students = res.studentfetch.data;
         const currentUser = res.studentfetch.loggedUser;
-        console.log("currentuser", currentUser)
+        console.log("currentuser-->", currentUser)
 
         this.sidebarservice.currentLoggedIn(currentUser);
 

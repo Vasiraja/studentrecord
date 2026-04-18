@@ -7,9 +7,9 @@
         <div class="mat-table-container">
 
             <mat-card-header class="table-toolbar">
-                <button mat-raised-button color="primary" class="addbutton" (click)="addStudent()">
-                    + Add Student </button>
+
             </mat-card-header>
+
 
             <table mat-table [dataSource]="students" class="full-width-table">
 
@@ -27,37 +27,37 @@
                 </ng-container>
 
                 <ng-container matColumnDef="id">
-                    <th mat-header-cell *matHeaderCellDef>ID</th>
+                    <th mat-header-cell  *matHeaderCellDef class="matheaderapply">ID</th>
                     <td mat-cell *matCellDef="let student">{{ student._id }}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="name">
-                    <th mat-header-cell *matHeaderCellDef>Name</th>
+                    <th mat-header-cell *matHeaderCellDef  class="matheaderapply">Name</th>
                     <td mat-cell *matCellDef="let student">{{ student.studentname }}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="dob">
-                    <th mat-header-cell *matHeaderCellDef>DOB</th>
+                    <th mat-header-cell *matHeaderCellDef  class="matheaderapply">DOB</th>
                     <td mat-cell *matCellDef="let student">{{ student.dob }}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="class">
-                    <th mat-header-cell *matHeaderCellDef>Class</th>
+                    <th mat-header-cell *matHeaderCellDef  class="matheaderapply">Class</th>
                     <td mat-cell *matCellDef="let student">{{ student.class }}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="gender">
-                    <th mat-header-cell *matHeaderCellDef>Gender</th>
+                    <th mat-header-cell *matHeaderCellDef  class="matheaderapply">Gender</th>
                     <td mat-cell *matCellDef="let student">{{ student.gender }}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="age">
-                    <th mat-header-cell *matHeaderCellDef>Age</th>
+                    <th mat-header-cell *matHeaderCellDef  class="matheaderapply">Age</th>
                     <td mat-cell *matCellDef="let student">{{ student.age }}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="actions">
-                    <th mat-header-cell *matHeaderCellDef>Actions</th>
+                    <th mat-header-cell *matHeaderCellDef  class="matheaderapply">Actions</th>
                     <td class="buttoncontainer" mat-cell *matCellDef="let student">
                         <button class="editBut" (click)="editStudent(student)">
                             <i class="fa fa-edit" style="color: #1976d2"></i>
@@ -66,6 +66,14 @@
                             <i class="fa fa-trash" style="color: #f44336"></i>
                         </button>
                     </td>
+                </ng-container>
+                <ng-container matColumnDef="addstudent">
+                    <th mat-header-cell *matHeaderCellDef  class="matheaderapply" >
+
+                        <button mat-raised-button color="primary" class="addbutton" (click)="addStudent()">
+                            + Add Student </button>
+                    </th>
+                    <td mat-cell  *matCellDef="let student"></td>
                 </ng-container>
 
                 <tr mat-header-row *matHeaderRowDef="studentColumns"></tr>

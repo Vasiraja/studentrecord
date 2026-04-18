@@ -6,7 +6,7 @@
         <i class="fa fa-times" (click)="cancelForm()"></i>
     </mat-card-header>
 
-    <mat-card-content *ngIf="student?.studentname">
+    <mat-card-content *ngIf="student?.age">
         <form class="student-form">
 
             <mat-form-field appearance="outline">
@@ -77,7 +77,7 @@
 
             <mat-form-field appearance="outline">
                 <mat-label>Rating</mat-label>
-                <input matInput type="number" [(ngModel)]="products.overallrating" name="overallrating">
+                <input matInput type="number" [(ngModel)]="products.overAllRating" name="overAllRating">
 
             </mat-form-field>
             <mat-form-field appearance="outline" *ngIf="!student?._id && !products._id">
