@@ -56,9 +56,10 @@ calculateAge(value: any): any {
   products: any = {};
   studentClass: any = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
   productCategories: any = ['Grocery', 'Gadgets', 'Electronics', 'Furniture'];
+  currentage: any;
   updatedDOB: boolean = false;
   filteredClass: any[] = [];
-  currentage: any;
+
   classAgeMap: any = {
     '1': { min: 5, max: 7 },
     '2': { min: 6, max: 8 },
