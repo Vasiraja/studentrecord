@@ -13,6 +13,7 @@ import type { UserService } from './users.class'
 export const userSchema = Type.Object(
   {
     _id: ObjectIdSchema(),
+    
     email: Type.String({ format: "email" }),
     password: Type.Optional(Type.String()),
     firstname: Type.Optional(Type.String())

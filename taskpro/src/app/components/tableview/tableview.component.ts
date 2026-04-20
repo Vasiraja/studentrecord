@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { MatTable, MatTableModule } from '@angular/material/table';
 import { MatToolbar } from '@angular/material/toolbar';
 import { ProductsService } from '../../services/products.service';
@@ -10,18 +10,27 @@ import { MatButton } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { MatCardHeader } from '@angular/material/card';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatFormField, MatFormFieldControl, MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import * as Papa from 'papaparse';
 import * as XLSX from 'xlsx';
+import { ɵEmptyOutletComponent } from "@angular/router";
+import { FormsModule } from '@angular/forms';
+import { MatInput } from '@angular/material/input';
 
 @Component({
   selector: 'app-tableview',
   standalone: true,
-  imports: [MatTableModule, MatTable, MatToolbar, MatButton, CommonModule, MatCardHeader, MatFormField, MatLabel],
+  imports: [MatTableModule, MatTable, MatToolbar, MatButton, CommonModule, MatCardHeader, MatFormField, MatLabel, FormsModule, MatFormFieldModule, MatFormField, MatInput],
   templateUrl: './tableview.component.html',
   styleUrl: './tableview.component.css'
 })
 export class TableviewComponent implements OnInit {
+  cancelEdit() {
+    throw new Error('Method not implemented.');
+  }
+  saveStudent() {
+    throw new Error('Method not implemented.');
+  }
 
 
 
@@ -40,9 +49,14 @@ export class TableviewComponent implements OnInit {
 
   productApiColumns: string[] = ['id', 'title', 'rating', 'category', 'stock', 'price'];
   productDbColumns: string[] = ['photo', 'id', 'name', 'category', 'stock', 'overallrating', 'price', 'actions'];
-  studentColumns: string[] = ['photo', 'id', 'name', 'dob', 'class', 'gender', 'age', 'actions','addstudent'];
+  studentColumns: string[] = ['photo', 'id', 'name', 'dob', 'class', 'gender', 'age', 'actions', 'addstudent'];
 
   sortingtoggle: boolean | undefined;
+  @Input() tableData: any = {};
+  editedStudent: any = {};
+  editedId: string = "";
+
+
 
   constructor(
     private productservice: ProductsService,
@@ -53,24 +67,25 @@ export class TableviewComponent implements OnInit {
   ) { }
   ngOnInit(): void {
     this.initialAllData();
-    this.sidebarservice.profileCardTrigger$.next(false);
-    this.sidebarservice.selectedNode$.subscribe((data: any) => {
-      console.log(data.type);
-      if (data?.type === 'products') {
-        this.selectedView = 'products';
-      }
-      else if (data?.type === 'productdb') {
-        this.selectedView = 'productdb';
-      }
-      else if (data?.type === 'students') {
-        this.selectedView = 'students';
-      }
-    })
+    console.log("Table data");
+    console.log(this.tableData);
+
+    if (this.tableData?.type === 'products') {
+      this.selectedView = 'products';
+    }
+    else if (this.tableData?.type === 'productdb') {
+      this.selectedView = 'productdb';
+    }
+    else if (this.tableData?.type === 'students') {
+      this.selectedView = 'students';
+    }
 
 
 
 
   }
+
+
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
@@ -134,8 +149,6 @@ export class TableviewComponent implements OnInit {
         console.log(res);
         this.snackbar.openSnackBar("bulk data imported")
         this.selectedFile = null;
-
-
       },
       error: (err: any) => {
         console.error(err)
@@ -176,8 +189,11 @@ export class TableviewComponent implements OnInit {
     this.studentservice.addTrigger();
   }
 
-  editStudent(data: any) {
-    this.studentservice.setStudents(data);
+  editStudent(students: any) {
+    // this.studentservice.setStudents(data);
+
+    this.editedId = students._id;
+    this.editedStudent = { ...students };
   }
 
   deleteStudent(id: any) {

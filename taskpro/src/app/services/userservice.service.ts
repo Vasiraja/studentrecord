@@ -15,7 +15,8 @@ export class UserserviceService {
 
   }
 
-  loginUser(email: string, password: string): Observable<any> {
+  loginUser(emailin: string, password: string): Observable<any> {
+    let email = emailin.toLowerCase();
     return this.http.post(this.apiAuthentication, { email, password, strategy: "local" });
   }
   signupUser(email: string, password: string, firstname: string): Observable<any> {

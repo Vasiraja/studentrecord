@@ -3,6 +3,7 @@ import { authenticate } from '@feathersjs/authentication'
 
 import { hooks as schemaHooks } from '@feathersjs/schema'
 
+
 import {
   studentsDataValidator,
   studentsPatchValidator,
@@ -17,6 +18,7 @@ import {
 import type { Application, HookContext } from '../../declarations'
 import { StudentsService, getOptions } from './students.class'
 import { studentsPath, studentsMethods } from './students.shared'
+import { idGenerate } from '../../hooks/id-generate'
 
 export * from './students.class'
 export * from './students.schema'
@@ -37,18 +39,21 @@ export const students = (app: Application) => {
         authenticate('jwt'),
         schemaHooks.resolveExternal(studentsExternalResolver),
         schemaHooks.resolveResult(studentsResolver)
-      ]
-    },
+      ],
+     },
     before: {
       all: [
         schemaHooks.validateQuery(studentsQueryValidator),
-        schemaHooks.resolveQuery(studentsQueryResolver)
+        schemaHooks.resolveQuery(studentsQueryResolver),
+         
       ],
       find: [],
       get: [],
       create: [
+        idGenerate,
         schemaHooks.validateData(studentsDataValidator),
-        schemaHooks.resolveData(studentsDataResolver)
+        schemaHooks.resolveData(studentsDataResolver),
+          
       ],
       patch: [
         schemaHooks.validateData(studentsPatchValidator),

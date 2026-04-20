@@ -111,11 +111,7 @@
                 <span class="errorstyle" *ngIf="studentname.errors?.['required']">
                     Student name is required
                 </span>
-            </div>
-
-
-
-            <mat-form-field appearance="outline">
+            </div>   <mat-form-field appearance="outline">
                 <mat-label>Date of Birth</mat-label>
                 <input matInput type="date" name="dob" [(ngModel)]="student.dob" (ngModelChange)="dobchange()"
                     #dob="ngModel" required />
@@ -151,6 +147,7 @@
                 <mat-label>Age</mat-label>
                 <input matInput type="number" [value]="calculateAge(student.dob)" required disabled="true" />
             </mat-form-field>
+            
 
             
 

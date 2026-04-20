@@ -1,4 +1,4 @@
-import { Component, OnInit, SecurityContext } from '@angular/core';
+import { Component, Input, OnInit, SecurityContext } from '@angular/core';
 import { SidebarService } from '../../services/sidebar.service';
 import {
   MatCard,
@@ -36,6 +36,8 @@ import { SnackbarService } from '../../services/snackbar.service';
   styleUrl: './profilecard.component.css'
 })
 export class ProfilecardComponent implements OnInit {
+
+
   downloadPhoto(event: Event, profilePhotoSafe: any) {
     event.stopPropagation();
     console.log("download");
@@ -78,7 +80,7 @@ export class ProfilecardComponent implements OnInit {
     })
   }
   base64String: string = '';
-  profileData: any = {};
+  @Input() profileData: any = {};
   profilePhotoSafe: SafeUrl | null = null;
 
   constructor(
@@ -90,24 +92,25 @@ export class ProfilecardComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeProfile()
+    console.log(this.profileData)
 
   }
   initializeProfile() {
-    this.sidebarservice.profileCardData$.subscribe({
-      next: (res: any) => {
-        this.profileData = res;
+    // this.sidebarservice.profileCardData$.subscribe({
+    //   next: (res: any) => {
+    //     // this.profileData = res;
 
-        let photoStr = "";
-        if (res.studentname || res.title) {
-          photoStr = res.profilePhoto || "";
-        }
+    //     let photoStr = "";
+    //     if (res.studentname || res.title) {
+    //       photoStr = res.profilePhoto || "";
+    //     }
 
-        this.profilePhotoSafe = this.sanitizer.bypassSecurityTrustUrl(photoStr);
-      },
-      error: (err: any) => {
-        console.error(err);
-      }
-    });
+    //     this.profilePhotoSafe = this.sanitizer.bypassSecurityTrustUrl(photoStr);
+    //   },
+    //   error: (err: any) => {
+    //     console.error(err);
+    //   }
+    // });
   }
   onPhotoSelected(event: any, id: any, type: any) {
     console.log(type)

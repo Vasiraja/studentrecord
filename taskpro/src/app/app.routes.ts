@@ -6,6 +6,7 @@ import { TableviewComponent } from './components/tableview/tableview.component';
 import { EditComponent } from './components/edit/edit.component';
 import { protectGuard } from './protect.guard';
 import { AddComponent } from './components/add/add.component';
+import { ProductsideComponent } from './components/productside/productside.component';
 
 export const routes: Routes = [
 
@@ -14,5 +15,6 @@ export const routes: Routes = [
     // { path: "edit", component: EditComponent },
     { path: "", component: HomeComponent, canActivate: [protectGuard] },
     // { path: "add", component: AddComponent },
+    { path: 'pro', component: ProductsideComponent },
     { path: "**", component: LoginComponent }
 ];

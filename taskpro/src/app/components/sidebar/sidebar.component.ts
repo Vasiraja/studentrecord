@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, AfterViewInit, ViewChild, Output, EventEmitter } from '@angular/core';
 import { SidebarService } from '../../services/sidebar.service';
 import { CommonModule } from '@angular/common';
 import { StudentsService } from '../../services/students.service';
@@ -22,6 +22,8 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   constructor(private studentservice: StudentsService, private productservice: ProductsService, private sidebarservice: SidebarService) { }
 
   expandState: boolean = false;
+  @Output() selectItem = new EventEmitter<any>();
+  @Output() selectTable = new EventEmitter<any>();
   toggleState() {
     this.expandState = !this.expandState;
   }
@@ -83,10 +85,8 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 
 
   }
-
   // students = [
   //   {
-
   //     name: "rakesh", age: 12, class: "IV"
   //   },
   //   {
@@ -155,11 +155,12 @@ export class SidebarComponent implements OnInit, AfterViewInit {
         this.sidebarservice.profileCardTrigger(false);
 
         // if (!checkDouble) {
-        this.sidebarservice.sendNode({
+        const sendTable = {
           id: node.id,
           text: node.text,
           type: node.original?.type
-        })
+        }
+        this.selectTable.emit(sendTable)
         console.log("entered...")
         // }
 
@@ -168,6 +169,9 @@ export class SidebarComponent implements OnInit, AfterViewInit {
       }
 
       console.log(value.node);
+
+
+
       this.sidebarservice.individualNodeGet({
         id: node.id,
         type: node.original?.type
@@ -175,8 +179,8 @@ export class SidebarComponent implements OnInit, AfterViewInit {
       }).subscribe({
         next: (res: any) => {
           console.log(res);
-          this.sidebarservice.profileDataObserve(res);
-          this.sidebarservice.profileCardTrigger(true);
+
+          this.selectItem.emit(res);
         },
         error: (err: any) => {
           console.log(err)
@@ -184,7 +188,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
       })
 
     })
-   
+
 
 
 

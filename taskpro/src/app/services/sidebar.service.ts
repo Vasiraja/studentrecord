@@ -23,10 +23,10 @@ export class SidebarService {
     this.sidebarState$.next(!this.sidebarState$)
 
   }
-  sendNode(data: any) {
-    this.selectedNode$.next(data);
+  // sendNode(data: any) {
+  //   this.selectedNode$.next(data);
 
-  }
+  // }
   individualNodeGet(data: any): Observable<any> {
 
     switch (data?.type) {
