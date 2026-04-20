@@ -68,13 +68,13 @@ export class StudentsService {
     console.log(this.AddComponent$.value)
     this.AddComponentState$.next("");
   }
-  updateStudents(id: any, data: any) {
+    updateStudents(id: any, data: any) {
 
-    return this.http.patch(`${this.apiUrl}/${id}`, data);
+      return this.http.patch(`${this.apiUrl}/${id}`, data);
 
 
 
-  }
+    }
   delStudents(id: any) {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }

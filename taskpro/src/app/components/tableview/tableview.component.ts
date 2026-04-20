@@ -28,10 +28,34 @@ export class TableviewComponent implements OnInit {
   cancelEdit() {
     throw new Error('Method not implemented.');
   }
-  saveStudent() {
-    throw new Error('Method not implemented.');
-  }
 
+  saveStudent(student: any) {
+
+    delete this.editedStudent.age;
+    
+
+    this.studentservice.updateStudents(student._id, this.editedStudent).subscribe({
+      next: (res: any) => {
+        this.snackbar.openSnackBar("Updated Successfully");
+        console.log(res);
+        this.cancelEdit();
+      },
+      error: (err: any) => {
+        console.error(err);
+      }
+    });
+  }
+  saveProduct(product: any) {
+    this.productservice.updateProducts(product._id, this.editedProduct).subscribe({
+      next: (res: any) => {
+        this.snackbar.openSnackBar("Product Updated");
+        this.productservice.productEditStatus$.next(false);
+      },
+      error: (err: any) => {
+        console.error(err);
+      }
+    });
+  }
 
 
   photoUrl!: SafeUrl;
@@ -49,11 +73,12 @@ export class TableviewComponent implements OnInit {
 
   productApiColumns: string[] = ['id', 'title', 'rating', 'category', 'stock', 'price'];
   productDbColumns: string[] = ['photo', 'id', 'name', 'category', 'stock', 'overallrating', 'price', 'actions'];
-  studentColumns: string[] = ['photo', 'id', 'name', 'dob', 'class', 'gender', 'age', 'actions', 'addstudent'];
+  studentColumns: string[] = ['photo', 'id', 'name', 'dob', 'class', 'gender', 'age', 'actions'];
 
   sortingtoggle: boolean | undefined;
   @Input() tableData: any = {};
   editedStudent: any = {};
+  editedProduct: any = {};
   editedId: string = "";
 
 
@@ -181,6 +206,7 @@ export class TableviewComponent implements OnInit {
     return this.sanitizer.bypassSecurityTrustUrl(imgString);
   }
 
+
   addProduct() {
     this.studentservice.addProductTrigger();
   }
@@ -189,11 +215,14 @@ export class TableviewComponent implements OnInit {
     this.studentservice.addTrigger();
   }
 
-  editStudent(students: any) {
-    // this.studentservice.setStudents(data);
+  editStudent(student: any) {
+    this.editedId = student._id;
+    this.editedStudent = { ...student };
+  }
 
-    this.editedId = students._id;
-    this.editedStudent = { ...students };
+  editProducts(product: any) {
+    this.editedId = product._id;
+    this.editedProduct = { ...product };
   }
 
   deleteStudent(id: any) {
@@ -216,10 +245,6 @@ export class TableviewComponent implements OnInit {
     });
   }
 
-  editProducts(data: any) {
-    console.log(data);
-    this.productservice.sendProducts(data);
-  }
 
 
   initialAllData() {

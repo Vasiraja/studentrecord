@@ -1,311 +1,297 @@
 <div class="dashboard-container">
 
     <div class="tab-content" *ngIf="selectedView === 'students'">
-
-
-
         <div class="mat-table-container">
 
-            <mat-card-header class="table-toolbar">
-                <!-- <p>students</p>
-                <button>add students</button> -->
+            <div class="table-toolbar">
+                <span class="table-title">Students</span>
+                <button mat-raised-button color="primary" (click)="addStudent()">+ Add Student</button>
+            </div>
 
-            </mat-card-header>
+            <div class="table-scroll-wrapper">
+                <table mat-table [dataSource]="students" class="full-width-table">
 
+                    <ng-container matColumnDef="photo">
+                        <th mat-header-cell *matHeaderCellDef></th>
+                        <td mat-cell *matCellDef="let student">
+                            <img *ngIf="student?.profilePhoto; else intialsdiv" class="student-avatar"
+                                [src]="formateImg(student?.profilePhoto)" alt="photo" />
+                            <ng-template #intialsdiv>
+                                <div class="student-initials">
+                                    {{ student.studentname.slice(0,2).toUpperCase() }}
+                                </div>
+                            </ng-template>
+                        </td>
+                    </ng-container>
 
-            <table mat-table [dataSource]="students" class="full-width-table">
+                    <ng-container matColumnDef="id">
+                        <th mat-header-cell *matHeaderCellDef class="matheaderapply">ID</th>
+                        <td mat-cell *matCellDef="let student">{{ student.studentId }}</td>
+                    </ng-container>
 
-                <ng-container matColumnDef="photo">
-                    <th mat-header-cell *matHeaderCellDef></th>
-                    <td mat-cell *matCellDef="let student">
-                        <img *ngIf="student?.profilePhoto; else intialsdiv" class="student-avatar"
-                            [src]="formateImg(student?.profilePhoto)" alt="photo" />
-                        <ng-template #intialsdiv>
-                            <div class="student-initials">
-                                {{ student.studentname.slice(0,2).toUpperCase() }}
-                            </div>
-                        </ng-template>
-                    </td>
-                </ng-container>
+                    <ng-container matColumnDef="name">
+                        <th mat-header-cell *matHeaderCellDef class="matheaderapply">Name</th>
+                        <td mat-cell *matCellDef="let student">
+                            <ng-container *ngIf="editedId === student._id; else showName">
+                                <mat-form-field appearance="outline" class="inline-field">
+                                    <input matInput [(ngModel)]="editedStudent.studentname">
+                                </mat-form-field>
+                            </ng-container>
+                            <ng-template #showName>{{ student.studentname }}</ng-template>
+                        </td>
+                    </ng-container>
 
-                <ng-container matColumnDef="id">
-                    <th mat-header-cell *matHeaderCellDef class="matheaderapply">ID</th>
-                    <td mat-cell *matCellDef="let student">
-                        {{ student.studentId }}
-                    </td>
-                </ng-container>
+                    <ng-container matColumnDef="dob">
+                        <th mat-header-cell *matHeaderCellDef class="matheaderapply">DOB</th>
+                        <td mat-cell *matCellDef="let student">
+                            <ng-container *ngIf="editedId === student._id; else showDob">
+                                <mat-form-field appearance="outline" class="inline-field">
+                                    <input matInput [(ngModel)]="editedStudent.dob">
+                                </mat-form-field>
+                            </ng-container>
+                            <ng-template #showDob>{{ student.dob }}</ng-template>
+                        </td>
+                    </ng-container>
 
-                <ng-container matColumnDef="name">
-                    <th mat-header-cell *matHeaderCellDef class="matheaderapply">Name</th>
-                    <td mat-cell *matCellDef="let student">
+                    <ng-container matColumnDef="class">
+                        <th mat-header-cell *matHeaderCellDef class="matheaderapply">Class</th>
+                        <td mat-cell *matCellDef="let student">
+                            <ng-container *ngIf="editedId === student._id; else showClass">
+                                <mat-form-field appearance="outline" class="inline-field">
+                                    <input matInput [(ngModel)]="editedStudent.class">
+                                </mat-form-field>
+                            </ng-container>
+                            <ng-template #showClass>{{ student.class }}</ng-template>
+                        </td>
+                    </ng-container>
 
-                        <ng-container *ngIf="editedId === student._id; else showName">
-                            <mat-form-field>
-                                <input matInput [(ngModel)]="editedStudent.studentname">
-                            </mat-form-field>
-                        </ng-container>
+                    <ng-container matColumnDef="gender">
+                        <th mat-header-cell *matHeaderCellDef class="matheaderapply">Gender</th>
+                        <td mat-cell *matCellDef="let student">
+                            <ng-container *ngIf="editedId === student._id; else showGender">
+                                <mat-form-field appearance="outline" class="inline-field">
+                                    <input matInput [(ngModel)]="editedStudent.gender">
+                                </mat-form-field>
+                            </ng-container>
+                            <ng-template #showGender>{{ student.gender }}</ng-template>
+                        </td>
+                    </ng-container>
 
-                        <ng-template #showName>
-                            {{ student.studentname }}
-                        </ng-template>
+                    <ng-container matColumnDef="age">
+                        <th mat-header-cell *matHeaderCellDef class="matheaderapply">Age</th>
+                        <td mat-cell *matCellDef="let student">
+                            <ng-container *ngIf="editedId === student._id; else showAge">
+                                <mat-form-field appearance="outline" class="inline-field">
+                                    <input matInput  [disabled]="true" [value]="student.age">
+                                </mat-form-field>
+                            </ng-container>
+                            <ng-template #showAge>{{ student.age }}</ng-template>
+                        </td>
+                    </ng-container>
 
-                    </td>
-                </ng-container>
+                    <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef class="matheaderapply">Actions</th>
+                        <td mat-cell *matCellDef="let student" class="buttoncontainer">
+                            <ng-container *ngIf="editedId === student._id; else normalButtons">
+                                <button class="editBut" (click)="saveStudent(student)">
+                                    save
+                                </button>
+                                <button class="deleteBut" (click)="cancelEdit()">
+                                    cancel
+                                </button>
+                            </ng-container>
+                            <ng-template #normalButtons>
+                                <button class="editBut" (click)="editStudent(student)">
+                                    <i class="fa fa-edit" style="color: #1976d2"></i>
+                                </button>
+                                <button class="deleteBut" (click)="deleteStudent(student._id)">
+                                    <i class="fa fa-trash" style="color: #f44336"></i>
+                                </button>
+                            </ng-template>
+                        </td>
+                    </ng-container>
 
-                <ng-container matColumnDef="dob">
-                    <th mat-header-cell *matHeaderCellDef class="matheaderapply">DOB</th>
-                    <td mat-cell *matCellDef="let student">
+                    <tr mat-header-row *matHeaderRowDef="studentColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: studentColumns;"></tr>
 
-                        <ng-container *ngIf="editedId === student._id; else showDoB">
-                            <mat-form-field>
-                                <input matInput [(ngModel)]="editedStudent.dob">
-                            </mat-form-field>
-                        </ng-container>
-
-                        <ng-template #showDoB>
-                            {{ student.dob }}
-                        </ng-template>
-
-                    </td>
-                </ng-container>
-
-                <ng-container matColumnDef="class">
-                    <th mat-header-cell *matHeaderCellDef class="matheaderapply">Class</th>
-                    <td mat-cell *matCellDef="let student">
-
-                        <ng-container *ngIf="editedId === student._id; else showClass">
-                            <mat-form-field>
-                                <input matInput [(ngModel)]="editedStudent.class">
-                            </mat-form-field>
-                        </ng-container>
-
-                        <ng-template #showClass>
-                            {{ student.class }}
-                        </ng-template>
-
-                    </td>
-                </ng-container>
-
-                <ng-container matColumnDef="gender">
-                    <th mat-header-cell *matHeaderCellDef class="matheaderapply">Gender</th>
-                    <td mat-cell *matCellDef="let student">
-
-                        <ng-container *ngIf="editedId === student._id; else showGender">
-                            <mat-form-field>
-                                <input matInput [(ngModel)]="editedStudent.gender">
-                            </mat-form-field>
-                        </ng-container>
-
-                        <ng-template #showGender>
-                            {{ student.gender }}
-                        </ng-template>
-
-                    </td>
-                </ng-container>
-
-                <ng-container matColumnDef="age">
-                    <th mat-header-cell *matHeaderCellDef class="matheaderapply">Age</th>
-                    <td mat-cell *matCellDef="let student">
-
-                        <ng-container *ngIf="editedId === student._id; else showAge">
-                            <mat-form-field>
-                                <input matInput [disabled]="true">
-                            </mat-form-field>
-                        </ng-container>
-
-                        <ng-template #showAge>
-                            {{ student.age }}
-                        </ng-template>
-
-                    </td>
-                </ng-container>
-
-                <ng-container matColumnDef="actions">
-                    <th mat-header-cell *matHeaderCellDef class="matheaderapply">Actions</th>
-                    <td class="buttoncontainer" mat-cell *matCellDef="let student">
-
-                        <ng-container *ngIf="editedId === student._id; else normalButtons">
-
-                            <button (click)="saveStudent()">save</button>
-                            <button (click)="cancelEdit()">cancel</button>
-
-                        </ng-container>
-
-                        <ng-template #normalButtons>
-                            <button class="editBut" (click)="editStudent(student)">
-                                <i class="fa fa-edit" style="color: #1976d2"></i>
-                            </button>
-                            <button class="deleteBut" (click)="deleteStudent(student._id)">
-                                <i class="fa fa-trash" style="color: #f44336"></i>
-                            </button>
-                        </ng-template>
-
-                    </td>
-                </ng-container>
-
-                 <ng-container matColumnDef="addstudent">
-                    <th mat-header-cell *matHeaderCellDef class="matheaderapply">
-                        <button mat-raised-button color="primary" class="addbutton" (click)="addStudent()">
-                            + Add Student
-                        </button>
-                    </th>
-                    <td mat-cell *matCellDef="let student"></td>
-                </ng-container>
-
-                <tr mat-header-row *matHeaderRowDef="studentColumns; sticky: true"></tr>
-                <tr mat-row *matRowDef="let row; columns: studentColumns;"></tr>
-
-            </table>
-
+                </table>
+            </div>
 
         </div>
-
     </div>
 
     <div class="tab-content" *ngIf="selectedView === 'products'">
-
         <div class="mat-table-container">
 
-            <table mat-table [dataSource]="productsApi" class="full-width-table">
+            <div class="table-scroll-wrapper">
+                <table mat-table [dataSource]="productsApi" class="full-width-table">
 
-                <ng-container matColumnDef="id">
-                    <th mat-header-cell *matHeaderCellDef>ID</th>
-                    <td mat-cell *matCellDef="let product">{{ product.id }}</td>
-                </ng-container>
+                    <ng-container matColumnDef="id">
+                        <th mat-header-cell *matHeaderCellDef>ID</th>
+                        <td mat-cell *matCellDef="let product">{{ product.id }}</td>
+                    </ng-container>
 
-                <ng-container matColumnDef="title">
-                    <th mat-header-cell *matHeaderCellDef>Title</th>
-                    <td mat-cell *matCellDef="let product">{{ product.title }}</td>
-                </ng-container>
+                    <ng-container matColumnDef="title">
+                        <th mat-header-cell *matHeaderCellDef>Title</th>
+                        <td mat-cell *matCellDef="let product">{{ product.title }}</td>
+                    </ng-container>
 
-                <ng-container matColumnDef="rating">
-                    <th mat-header-cell *matHeaderCellDef>Rating</th>
-                    <td mat-cell *matCellDef="let product">{{ product.rating }}</td>
-                </ng-container>
+                    <ng-container matColumnDef="rating">
+                        <th mat-header-cell *matHeaderCellDef>Rating</th>
+                        <td mat-cell *matCellDef="let product">{{ product.rating }}</td>
+                    </ng-container>
 
-                <ng-container matColumnDef="category">
-                    <th mat-header-cell *matHeaderCellDef>Category</th>
-                    <td mat-cell *matCellDef="let product">{{ product.category }}</td>
-                </ng-container>
+                    <ng-container matColumnDef="category">
+                        <th mat-header-cell *matHeaderCellDef>Category</th>
+                        <td mat-cell *matCellDef="let product">{{ product.category }}</td>
+                    </ng-container>
 
-                <ng-container matColumnDef="stock">
-                    <th mat-header-cell *matHeaderCellDef>Stock</th>
-                    <td mat-cell *matCellDef="let product">{{ product.stock }}</td>
-                </ng-container>
+                    <ng-container matColumnDef="stock">
+                        <th mat-header-cell *matHeaderCellDef>Stock</th>
+                        <td mat-cell *matCellDef="let product">{{ product.stock }}</td>
+                    </ng-container>
 
-                <ng-container matColumnDef="price">
-                    <th mat-header-cell *matHeaderCellDef>Price</th>
-                    <td mat-cell *matCellDef="let product">₹ {{ product.price }}</td>
-                </ng-container>
+                    <ng-container matColumnDef="price">
+                        <th mat-header-cell *matHeaderCellDef>Price</th>
+                        <td mat-cell *matCellDef="let product">₹ {{ product.price }}</td>
+                    </ng-container>
 
-                <tr mat-header-row *matHeaderRowDef="productApiColumns,sticky:true"></tr>
-                <tr mat-row *matRowDef="let row; columns: productApiColumns;"></tr>
+                    <tr mat-header-row *matHeaderRowDef="productApiColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: productApiColumns;"></tr>
 
-            </table>
+                </table>
+            </div>
 
         </div>
-
     </div>
 
     <div class="tab-content" *ngIf="selectedView === 'productdb'">
-
-
-
-
         <div class="mat-table-container">
-            <mat-card-header class="table-toolbar">
 
-                <mat-card-header class="table-toolbar">
-
-                    <div class="addbutton">
-                        <button mat-raised-button color="primary" (click)="addProduct()">
-                            + Add Product </button>
-
-                        <input type="file" #fileinput (change)="onFileSelected($event)" style="display:none;">
-
-                        <i class="fa fa-upload" id="uploadicon" (click)="fileinput.click()">
-                        </i>
-                    </div>
-
-
-                    <div *ngIf="selectedFile" class="upload-actions">
+            <div class="table-toolbar">
+                <span class="table-title">Products</span>
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <button mat-raised-button color="primary" (click)="addProduct()">+ Add Product</button>
+                    <input type="file" #fileinput (change)="onFileSelected($event)" style="display:none;">
+                    <i class="fa fa-upload" id="uploadicon" (click)="fileinput.click()"></i>
+                    <ng-container *ngIf="selectedFile">
                         <span class="filename">{{ selectedFile.name }}</span>
-
                         <button mat-button color="primary" (click)="uploadFile()">Upload</button>
                         <button mat-button color="warn" (click)="cancelUpload()">Cancel</button>
+                    </ng-container>
+                </div>
+            </div>
 
-                    </div>
+            <div class="table-scroll-wrapper">
+                <table mat-table [dataSource]="products" class="full-width-table">
 
-                </mat-card-header>
+                    <ng-container matColumnDef="photo">
+                        <th mat-header-cell *matHeaderCellDef></th>
+                        <td mat-cell *matCellDef="let product">
+                            <img *ngIf="product?.profilePhoto; else intialsdiv2" class="student-avatar"
+                                [src]="formateImg(product?.profilePhoto)" alt="photo" />
+                            <ng-template #intialsdiv2>
+                                <div class="student-initials">
+                                    {{ product.title.slice(0,2).toUpperCase() }}
+                                </div>
+                            </ng-template>
+                        </td>
+                    </ng-container>
 
+                    <ng-container matColumnDef="id">
+                        <th mat-header-cell *matHeaderCellDef>ID</th>
+                        <td mat-cell *matCellDef="let product">{{ product._id }}</td>
+                    </ng-container>
 
+                    <ng-container matColumnDef="name">
+                        <th mat-header-cell *matHeaderCellDef>Name</th>
+                        <td mat-cell *matCellDef="let product">
+                            <ng-container *ngIf="editedId === product._id; else showName">
+                                <mat-form-field appearance="outline" style="width:100px;">
+                                    <input matInput [(ngModel)]="editedProduct.title">
+                                </mat-form-field>
+                            </ng-container>
+                            <ng-template #showName>{{ product.title }}</ng-template>
+                        </td>
+                    </ng-container>
 
-            </mat-card-header>
-            <table mat-table [dataSource]="products" class="full-width-table">
+                    <ng-container matColumnDef="category">
+                        <th mat-header-cell *matHeaderCellDef>Category</th>
+                        <td mat-cell *matCellDef="let product">
+                            <ng-container *ngIf="editedId === product._id; else showCategory">
+                                <mat-form-field appearance="outline" style="width:100px;">
+                                    <input matInput [(ngModel)]="editedProduct.category">
+                                </mat-form-field>
+                            </ng-container>
+                            <ng-template #showCategory>{{ product.category }}</ng-template>
+                        </td>
+                    </ng-container>
 
-                <ng-container matColumnDef="photo">
-                    <th mat-header-cell *matHeaderCellDef></th>
-                    <td mat-cell *matCellDef="let product">
-                        <img *ngIf="product?.profilePhoto; else intialsdiv2" class="student-avatar"
-                            [src]="formateImg(product?.profilePhoto)" alt="photo" />
-                        <ng-template #intialsdiv2>
-                            <div class="student-initials">
-                                {{ product.title.slice(0,2).toUpperCase() }}
-                            </div>
-                        </ng-template>
-                        
-                    </td>
-                </ng-container>
+                    <ng-container matColumnDef="stock">
+                        <th mat-header-cell *matHeaderCellDef>Stock</th>
+                        <td mat-cell *matCellDef="let product">
+                            <ng-container *ngIf="editedId === product._id; else showStock">
+                                <mat-form-field appearance="outline" style="width:100px;">
+                                    <input matInput type="number" [(ngModel)]="editedProduct.stock">
+                                </mat-form-field>
+                            </ng-container>
+                            <ng-template #showStock>{{ product.stock }}</ng-template>
+                        </td>
+                    </ng-container>
 
-                <ng-container matColumnDef="id">
-                    <th mat-header-cell *matHeaderCellDef>ID</th>
-                    <td mat-cell *matCellDef="let product">{{ product._id }}</td>
-                </ng-container>
+                    <ng-container matColumnDef="overallrating">
+                        <th mat-header-cell *matHeaderCellDef>Overall Rating</th>
+                        <td mat-cell *matCellDef="let product">
+                            <ng-container *ngIf="editedId === product._id; else showRating">
+                                <mat-form-field appearance="outline" style="width:100px;">
+                                    <input matInput type="number" [(ngModel)]="editedProduct.overAllRating">
+                                </mat-form-field>
+                            </ng-container>
+                            <ng-template #showRating>{{ product.overAllRating }}</ng-template>
+                        </td>
+                    </ng-container>
 
-                <ng-container matColumnDef="name">
-                    <th mat-header-cell *matHeaderCellDef>Name</th>
-                    <td mat-cell *matCellDef="let product">{{ product.title }}</td>
-                </ng-container>
+                    <ng-container matColumnDef="price">
+                        <th mat-header-cell *matHeaderCellDef>Price</th>
+                        <td mat-cell *matCellDef="let product">
+                            <ng-container *ngIf="editedId === product._id; else showPrice">
+                                <mat-form-field appearance="outline" style="width:100px;">
+                                    <input matInput type="number" [(ngModel)]="editedProduct.price">
+                                </mat-form-field>
+                            </ng-container>
+                            <ng-template #showPrice>₹ {{ product.price }}</ng-template>
+                        </td>
+                    </ng-container>
 
-                <ng-container matColumnDef="category">
-                    <th mat-header-cell *matHeaderCellDef>Category</th>
-                    <td mat-cell *matCellDef="let product">{{ product.category }}</td>
-                </ng-container>
+                    <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef>Actions</th>
+                        <td mat-cell *matCellDef="let product" class="buttoncontainer">
+                            <ng-container *ngIf="editedId === product._id; else normalProductButtons">
+                                <button class="editBut" (click)="saveProduct(product)">
+                                   save
+                                </button>
+                                <button class="deleteBut" (click)="cancelEdit()">
+                                    cancel
+                                </button>
+                            </ng-container>
+                            <ng-template #normalProductButtons>
+                                <button class="editBut" (click)="editProducts(product)">
+                                    <i class="fa fa-edit" style="color: #1976d2"></i>
+                                </button>
+                                <button class="deleteBut" (click)="deleteProducts(product._id)">
+                                    <i class="fa fa-trash" style="color: #f44336"></i>
+                                </button>
+                            </ng-template>
+                        </td>
+                    </ng-container>
 
-                <ng-container matColumnDef="stock">
-                    <th mat-header-cell *matHeaderCellDef>Stock</th>
-                    <td mat-cell *matCellDef="let product">{{ product.stock }}</td>
-                </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="productDbColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: productDbColumns;"></tr>
 
-                <ng-container matColumnDef="overallrating">
-                    <th mat-header-cell *matHeaderCellDef>Overall Rating</th>
-                    <td mat-cell *matCellDef="let product">{{ product.overAllRating }}</td>
-                </ng-container>
-
-                <ng-container matColumnDef="price">
-                    <th mat-header-cell *matHeaderCellDef>Price</th>
-                    <td mat-cell *matCellDef="let product">₹ {{ product.price }}</td>
-                </ng-container>
-
-                <ng-container matColumnDef="actions">
-                    <th mat-header-cell *matHeaderCellDef>Actions</th>
-                    <td class="buttoncontainer" mat-cell *matCellDef="let product">
-                        <button class="editBut" (click)="editProducts(product)">
-                            <i class="fa fa-edit" style="color: #1976d2"></i>
-                        </button>
-                        <button class="deleteBut" (click)="deleteProducts(product._id)">
-                            <i class="fa fa-trash" style="color: #f44336"></i>
-                        </button>
-                    </td>
-                </ng-container>
-
-                <tr mat-header-row *matHeaderRowDef="productDbColumns,sticky:true"></tr>
-                <tr mat-row *matRowDef="let row; columns: productDbColumns;"></tr>
-
-            </table>
+                </table>
+            </div>
 
         </div>
-
     </div>
 
 </div>
