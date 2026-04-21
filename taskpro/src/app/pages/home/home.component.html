@@ -3,7 +3,7 @@
 <app-sidebar *ngIf="sidebarStatus" (selectTable)="tableSelect($event)" (selectItem)="itemSelect($event)"></app-sidebar>
 
 
- 
+
 <app-tableview *ngIf="!profileCard" [tableData]="tableH"></app-tableview>
 
 <app-edit *ngIf="editStatus"></app-edit>
@@ -11,3 +11,13 @@
 
 
 <app-add *ngIf="addStatus"></app-add>
+
+
+<app-studentside *ngIf="studentSideView &&  addState === 'student'">
+
+</app-studentside>
+
+
+<app-productside *ngIf="productSideView &&  addState === 'product'">
+
+</app-productside>

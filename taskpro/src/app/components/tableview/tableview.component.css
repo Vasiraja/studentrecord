@@ -12,6 +12,8 @@ mat-toolbar {
    border: none;
    padding: 0.3rem;
    box-shadow: 1px 1px 2px rgb(198, 198, 199);
+   height: 30px;
+   width: 60px;
 }
 
 table {}
@@ -132,35 +134,33 @@ th [mat-header-cell] {
    cursor: pointer;
 }
 
- .student-avatar,
-.student-initials {
-   width: 100%;
-   height: 100%;
-   border-radius: 50%;
-   object-fit: cover;
+.inline-field {
+   width: 100px;
+   margin-bottom: -1.2rem;
 }
 
-.overlay {
+.inline-field input {
+   height: 20px;
+}
+
+.student-avatar,
+.student-initials {
+   position: relative;
+
+}
+
+.student-avatar::after,
+.student-initials::after {
+   content: "";
    position: absolute;
    top: 0;
    left: 0;
    width: 100%;
    height: 100%;
-   background: rgba(0, 0, 0, 0.4);
    border-radius: 50%;
-   display: flex;
-   align-items: center;
-   justify-content: center;
-
+   z-index: 100;
+    background-color: rgba(0, 0, 0, 0.4);
+ 
    opacity: 0;
-   transition: 0.3s;
-}
-
-.camera-icon {
-   color: white;
-   font-size: 18px;
-}
-
-.photo-wrapper:hover .overlay {
-   opacity: 1;
+   transition: opacity 0.3s ease;
 }

@@ -13,6 +13,8 @@ export class StudentsService {
   studentEditData$ = new BehaviorSubject<any>(null);
   studentEditComponent$ = new BehaviorSubject<boolean>(false);
 
+  studentEdit$ = new BehaviorSubject<any>(null);
+
 
   AddComponent$ = new BehaviorSubject<boolean>(false);
   AddComponentState$ = new BehaviorSubject<string>('');
@@ -51,10 +53,35 @@ export class StudentsService {
 
   }
   addTrigger() {
+    // const AddComponent = this.AddComponent$.value;
     this.AddComponent$.next(true);
+
+
     this.AddComponentState$.next("student");
+    this.studentEdit$.next(null)
+  }
+  editTrigger(editedStudent: any) {
+    console.log(editedStudent)
+
+    // const AddComponent = this.AddComponent$.value;
+    this.AddComponent$.next(true);
+
+
+    this.AddComponentState$.next("student");
+    this.studentEdit$.next({ ...editedStudent });
     console.log(this.AddComponent$.value)
 
+
+  }
+  deleteTrigger(deletedStudent: any) {
+    this.AddComponent$.next(true);
+    this.AddComponentState$.next("student");
+    this.studentEdit$.next({ ...deletedStudent, delete: true });
+
+
+  }
+  cancelTrigger() {
+    this.AddComponent$.next(false);
   }
   addProductTrigger() {
     this.AddComponent$.next(true);

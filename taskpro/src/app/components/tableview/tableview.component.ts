@@ -16,23 +16,81 @@ import * as XLSX from 'xlsx';
 import { ɵEmptyOutletComponent } from "@angular/router";
 import { FormsModule } from '@angular/forms';
 import { MatInput } from '@angular/material/input';
+import { MatOption } from '@angular/material/core';
+import { MatSelect } from '@angular/material/select';
+
 
 @Component({
   selector: 'app-tableview',
   standalone: true,
-  imports: [MatTableModule, MatTable, MatToolbar, MatButton, CommonModule, MatCardHeader, MatFormField, MatLabel, FormsModule, MatFormFieldModule, MatFormField, MatInput],
+  imports: [MatTableModule, MatTable, MatToolbar, MatButton, CommonModule, MatCardHeader, MatFormField, MatLabel, FormsModule, MatFormFieldModule, MatFormField, MatInput, MatOption, MatSelect],
   templateUrl: './tableview.component.html',
   styleUrl: './tableview.component.css'
 })
 export class TableviewComponent implements OnInit {
   cancelEdit() {
-    throw new Error('Method not implemented.');
-  }
-  saveStudent() {
-    throw new Error('Method not implemented.');
+    this.editedId = '';
+    this.editedStudent = null;
+    this.editedProduct = null;
   }
 
 
+  saveStudent(student: any) {
+
+    delete this.editedStudent.age;
+
+
+    this.studentservice.updateStudents(student._id, this.editedStudent).subscribe({
+      next: (res: any) => {
+        this.snackbar.openSnackBar(res.studentname + " updated");
+        console.log(res);
+
+        this.cancelEdit();
+      },
+      error: (err: any) => {
+        console.error(err);
+      }
+    });
+  }
+
+  saveProduct(product: any) {
+    this.productservice.updateProducts(product._id, this.editedProduct).subscribe({
+      next: (res: any) => {
+        this.snackbar.openSnackBar("Product Updated");
+        this.productservice.productEditStatus$.next(false);
+        this.cancelEdit()
+      },
+      error: (err: any) => {
+        console.error(err);
+      }
+    });
+  }
+
+  calculateAge(dob: string): number {
+    if (!dob) return 0;
+
+    const birthDate = new Date(dob);
+    const today = new Date();
+
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+
+    return age;
+  }
+  filterClassesByAge(age: number) {
+    this.filteredClass = this.studentClass.filter((cls: string) => {
+      const range = this.classAgeMap[cls];
+      return age >= range.min && age <= range.max;
+    });
+  }
+  onDobChange() {
+    const age = this.calculateAge(this.editedStudent.dob);
+    this.filterClassesByAge(age);
+  }
 
   photoUrl!: SafeUrl;
 
@@ -46,14 +104,36 @@ export class TableviewComponent implements OnInit {
   products: any[] = [];
   students: any[] = [];
   selectedFile: any;
+  filteredClass: any[] = [];
+
+  productCategories: any = ['Grocery', 'Gadgets', 'Electronics', 'Furniture'];
+
+
+  classAgeMap: any = {
+    '1': { min: 5, max: 7 },
+    '2': { min: 6, max: 8 },
+    '3': { min: 7, max: 9 },
+    '4': { min: 8, max: 10 },
+    '5': { min: 9, max: 11 },
+    '6': { min: 10, max: 12 },
+    '7': { min: 11, max: 13 },
+    '8': { min: 12, max: 14 },
+    '9': { min: 13, max: 15 },
+    '10': { min: 14, max: 16 },
+    '11': { min: 15, max: 17 },
+    '12': { min: 16, max: 18 }
+  };
+  studentClass: any[] = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
+
 
   productApiColumns: string[] = ['id', 'title', 'rating', 'category', 'stock', 'price'];
   productDbColumns: string[] = ['photo', 'id', 'name', 'category', 'stock', 'overallrating', 'price', 'actions'];
-  studentColumns: string[] = ['photo', 'id', 'name', 'dob', 'class', 'gender', 'age', 'actions', 'addstudent'];
+  studentColumns: string[] = ['photo', 'id', 'name', 'dob', 'class', 'gender', 'age', 'actions'];
 
   sortingtoggle: boolean | undefined;
   @Input() tableData: any = {};
   editedStudent: any = {};
+  editedProduct: any = {};
   editedId: string = "";
 
 
@@ -79,10 +159,7 @@ export class TableviewComponent implements OnInit {
     else if (this.tableData?.type === 'students') {
       this.selectedView = 'students';
     }
-
-
-
-
+ 
   }
 
 
@@ -181,6 +258,7 @@ export class TableviewComponent implements OnInit {
     return this.sanitizer.bypassSecurityTrustUrl(imgString);
   }
 
+
   addProduct() {
     this.studentservice.addProductTrigger();
   }
@@ -189,11 +267,17 @@ export class TableviewComponent implements OnInit {
     this.studentservice.addTrigger();
   }
 
-  editStudent(students: any) {
-    // this.studentservice.setStudents(data);
+  editStudent(student: any) {
+    this.editedId = student._id;
+    this.editedStudent = { ...student };
 
-    this.editedId = students._id;
-    this.editedStudent = { ...students };
+    const age = this.calculateAge(this.editedStudent.dob);
+    this.filterClassesByAge(age);
+  }
+
+  editProducts(product: any) {
+    this.editedId = product._id;
+    this.editedProduct = { ...product };
   }
 
   deleteStudent(id: any) {
@@ -216,10 +300,6 @@ export class TableviewComponent implements OnInit {
     });
   }
 
-  editProducts(data: any) {
-    console.log(data);
-    this.productservice.sendProducts(data);
-  }
 
 
   initialAllData() {

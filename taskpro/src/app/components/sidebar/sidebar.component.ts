@@ -24,6 +24,9 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   expandState: boolean = false;
   @Output() selectItem = new EventEmitter<any>();
   @Output() selectTable = new EventEmitter<any>();
+
+
+  editedStudent: any = {};
   toggleState() {
     this.expandState = !this.expandState;
   }
@@ -80,6 +83,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   apiProducts: any[] = [];
   dbProducts: any[] = [];
   treeState: boolean = false;
+  deletedStudent: any = {};
 
   ngOnInit(): void {
 
@@ -103,48 +107,109 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 
     $(treeView).jstree({
       core: {
+        check_callback: true,
         data: [
           {
-            text: "Home", icon: "fa-solid fa-home",
-            children: [{
-              text: "students", icon: "fa-solid fa-user", type: "students",
-              children: this.students.map(per => ({
-                text: per.studentname,
-                id: per._id,
-                icon: "fa-regular fa-id-badge", type: "studentsapi"
+            text: "Home",
+            icon: "fa-solid fa-home",
+            children: [
+              {
+                text: "students",
+                icon: "fa-solid fa-user",
+                type: "students",
+                children: this.students.map(per => ({
+                  text: per.studentname,
+                  id: per._id,
+                  icon: "fa-regular fa-id-badge",
+                  type: "studentsapi"
+                }))
+              },
+              {
+                text: "External (products)",
+                icon: "fa-solid fa-store",
+                type: "products",
+                children: this.apiProducts.map(items => ({
+                  text: items.title.length > 15
+                    ? items.title.slice(0, 15) + '...'
+                    : items.title,
+                  id: items.id,
+                  icon: "fa-solid fa-cart-shopping",
+                  type: "productsapi"
+                }))
+              },
 
-
-
+              {
+                text: "Internal (products)",
+                icon: "fa-solid fa-store",
+                type: "productdb",
+                children: this.dbProducts.map(items => ({
+                  text: items.title,
+                  id: items._id,
+                  icon: items.bulk
+                    ? "fa-solid fa-box"
+                    : "fa-solid fa-cart-shopping",
+                  type: "productsdbapi"
+                }))
               }
-
-              ))
-
-            }, {
-              text: "products", icon: "fa-solid fa-store", type: "products",
-              children: this.apiProducts.map((items) => (
-                { text: items.title.length > 15 ? items.title.slice(0, 15) + '...' : items.title, id: items.id, icon: "fa-solid fa-cart-shopping", type: "productsapi" }
-              ))
-            },
-            {
-              text: "productsDB", icon: "fa-solid fa-store", type: "productdb",
-              children: this.dbProducts.map((items) => ({
-                text: items.title, id: items._id, icon: items.bulk
-                  ? "fa-solid fa-box"
-                  : "fa-solid fa-cart-shopping", type: "productsdbapi"
-              }))
-            },
-
             ]
           }
-
         ]
       },
 
+      plugins: ["contextmenu"],
 
-    })
+      contextmenu: {
+        items: (node: any) => {
+          console.log(node);
+          if (node.original?.type === 'students' || node.original?.type === 'productdb') {
+            return {
+              create: {
+                label: "Create",
+                action: () => {
+                  console.log(node);
+                  this.studentservice.addTrigger();
+                }
+              }
+            };
+          }
 
+          if (
+            node.original?.type === 'studentsapi' ||
+            node.original?.type === 'productsdbapi'
+          ) {
+            return {
+              rename: {
+                label: "Edit",
+                action: () => {
+                  console.log("edit:---");
+                  console.log(node?.original.id)
+                  this.editedStudent = this.students.find((items) => items._id === node?.original.id);
+                  this.studentservice.editTrigger(this.editedStudent);
+                }
+              },
+              remove: {
+                label: "Delete",
+                action: () => {
+                  console.log(node);
+                  this.deletedStudent = this.students.find((items) => items._id === node.original.id);
+                  this.studentservice.deleteTrigger(this.deletedStudent);
+                }
+              }
+            };
+          }
+
+          return {
+            info: {
+              label: "No actions available",
+              _disabled: true
+            }
+          }
+        }
+      }
+    });
     $(treeView).on('select_node.jstree', (e: any, value: any) => {
 
+      this.studentservice.cancelTrigger();
 
 
       const node = value.node;
@@ -188,6 +253,19 @@ export class SidebarComponent implements OnInit, AfterViewInit {
       })
 
     })
+    $('treeView')
+      .on('create_node.jstree', (e: any, data: any) => {
+        console.log("Created:", data.node);
+
+      })
+      .on('rename_node.jstree', (e: any, data: any) => {
+        console.log("Renamed:", data.text);
+
+      })
+      .on('delete_node.jstree', (e: any, data: any) => {
+        console.log("Deleted:", data.node);
+
+      });
 
 
 

@@ -26,7 +26,6 @@ export class AddComponent implements OnInit {
     this.studentservice.removeAddTrigger()
   }
 
-  classList = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
   categories = ['Electronics', 'Groceries', 'Gadgets']
 
   products: any = {
@@ -43,6 +42,9 @@ export class AddComponent implements OnInit {
     dob: '',
     gender: '',
   };
+
+    classList = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
+
   classAgeMap: any = {
     '1': { min: 5, max: 7 },
     '2': { min: 6, max: 8 },

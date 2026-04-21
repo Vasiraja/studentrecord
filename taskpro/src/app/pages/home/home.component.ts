@@ -10,11 +10,14 @@ import { ProductsService } from '../../services/products.service';
 import { ProfilecardComponent } from "../../components/profilecard/profilecard.component";
 import { AddComponent } from "../../components/add/add.component";
 import { NavbarComponent } from '../../components/navbar/navbar.component';
+import { StudentsideComponent } from '../../components/studentside/studentside.component';
+import { ProductsideComponent } from "../../components/productside/productside.component";
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [SidebarComponent, CommonModule, CardComponent, TableviewComponent, EditComponent, ProfilecardComponent, AddComponent,NavbarComponent],
+  imports: [SidebarComponent, CommonModule, CardComponent, TableviewComponent, EditComponent, ProfilecardComponent, AddComponent, NavbarComponent,
+    StudentsideComponent, ProductsideComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -49,17 +52,25 @@ export class HomeComponent implements OnInit {
       this.profileCard = data;
     })
     this.studentservice.AddComponent$.subscribe((data) => {
-      this.addStatus = data;
+      this.studentSideView = data;
     })
-    
+    this.studentservice.AddComponentState$.subscribe((data) => {
+      this.addState = data;
+    })
+
   }
 
   sidebarStatus: boolean | undefined;
   editStatus: boolean | undefined;
   profileCard: boolean | undefined;
   addStatus: boolean | undefined;
+  addState: any = "";
   profileDataH: any | undefined;
   tableH: any | undefined;
+
+
+  studentSideView: boolean | undefined;
+  productSideView: boolean | undefined;
   constructor(private sidebarservice: SidebarService, private studentservice: StudentsService, private productservice: ProductsService) { }
 
 

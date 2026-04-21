@@ -1,0 +1,54 @@
+.studentform,
+.additional-container-delete {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 40%;
+    margin-left: 30%;
+    background-color: #fff;
+    position: absolute;
+    top: 5%;
+    padding: 1.5rem;
+    box-shadow: 0px 0px 3px #000;
+    margin-top: 1rem;
+    border-radius: 10px;
+
+}
+
+.additional-container-delete {
+    top: 20%;
+}
+
+.buttons-container {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+mat-card-header {
+    width: 100%
+}
+
+mat-card-header p {
+    border-bottom: 0.5px solid rgb(202, 196, 196);
+    padding-bottom: 0.5rem;
+    font-size: 1.3rem;
+    width: 100%;
+}
+
+.studentform mat-form-field {
+    width: 100%;
+}
+
+.errorss {
+    color: red;
+    margin-left: 0;
+}
+
+.profile-upload-container {
+    display: flex;
+    flex-direction: column;
+    margin: 1rem 0;
+
+}
