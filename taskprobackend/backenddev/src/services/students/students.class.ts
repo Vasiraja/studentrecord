@@ -58,6 +58,17 @@ export class StudentsService<ServiceParams extends Params = StudentsParams> exte
   }
 
 
+  // async setup(app: Application) {
+  //   app.service('students').publish('created', () => {
+  //     return app.channel('everybody')
+
+  //   })
+  //   app.service('students').publish('patched', () => {
+  //     return app.channel('everybody')
+
+  //   })
+  // }
+
 
 
 

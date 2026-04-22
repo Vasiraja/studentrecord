@@ -40,7 +40,7 @@ export const studentsExternalResolver = resolve<Students, HookContext<StudentsSe
     const birthyear = birthDate.getFullYear();
     const currentYear = newDate.getFullYear();
     let ageCalc = currentYear - birthyear;
-
+ 
     const birthMonth = birthDate.getMonth() + 1
     const currentMonth = newDate.getMonth() + 1;
     if (birthMonth > currentMonth) {

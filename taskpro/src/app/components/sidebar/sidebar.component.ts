@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, AfterViewInit, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, ElementRef, OnInit, AfterViewInit, ViewChild, Output, EventEmitter, NgZone } from '@angular/core';
 import { SidebarService } from '../../services/sidebar.service';
 import { CommonModule } from '@angular/common';
 import { StudentsService } from '../../services/students.service';
@@ -6,6 +6,7 @@ import { ProductsService } from '../../services/products.service';
 import { forkJoin } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { TableviewComponent } from "../tableview/tableview.component";
+import { ConnectionclientService } from '../../services/connectionclient.service';
 
 declare var $: any;
 
@@ -19,7 +20,11 @@ declare var $: any;
 })
 export class SidebarComponent implements OnInit, AfterViewInit {
 
-  constructor(private studentservice: StudentsService, private productservice: ProductsService, private sidebarservice: SidebarService) { }
+  constructor(private studentservice: StudentsService, private productservice: ProductsService, private sidebarservice: SidebarService,
+    private feathersClient: ConnectionclientService,
+    private ngzone: NgZone
+
+  ) { }
 
   expandState: boolean = false;
   @Output() selectItem = new EventEmitter<any>();
@@ -85,10 +90,6 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   treeState: boolean = false;
   deletedStudent: any = {};
 
-  ngOnInit(): void {
-
-
-  }
   // students = [
   //   {
   //     name: "rakesh", age: 12, class: "IV"
@@ -102,6 +103,37 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   //     name: "arkash", age: 12, class: "IV"
   //   },
   // ]
+
+  async ngOnInit() {
+
+    const studentsserv = this.feathersClient.getStudentClient();
+    await this.feathersClient.authenticate();
+    studentsserv.on("created", (newstudent: any) => {
+      this.ngzone.run(() => {
+
+        this.students.push(newstudent);
+
+        const tree = $(this.treeElem.nativeElement).jstree(true);
+
+        if (tree) {
+          const newNode = tree.create_node("students", {
+            text: newstudent.studentname,
+            id: "students",
+            icon: "fa-regular fa-id-badge",
+            type: "students"
+          });
+
+          tree.deselect_all();
+          tree.select_node(newNode);
+
+          tree.open_node("students");
+        }
+
+      });
+    });
+
+
+  }
   initializeTreeView() {
     const treeView = this.treeElem.nativeElement;
 
@@ -211,6 +243,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 
       this.studentservice.cancelTrigger();
 
+      
 
       const node = value.node;
 
@@ -225,7 +258,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
           text: node.text,
           type: node.original?.type
         }
-        this.selectTable.emit(sendTable)
+        this.selectTable.emit(sendTable);
         console.log("entered...")
         // }
 
@@ -253,7 +286,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
       })
 
     })
-    $('treeView')
+    $(treeView)
       .on('create_node.jstree', (e: any, data: any) => {
         console.log("Created:", data.node);
 
@@ -278,6 +311,16 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     if (tree) {
       tree.close_all();
     }
+  }
+
+  refreshtree() {
+    const treeview = this.treeElem.nativeElement;
+
+    if ($(treeview).jstree(true)) {
+      $(treeview).jstree("destroy");
+    }
+    this.initializeTreeView();
+
   }
   expandAll() {
     this.expandState = true;

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, NgZone, OnInit } from '@angular/core';
 import { MatTable, MatTableModule } from '@angular/material/table';
 import { MatToolbar } from '@angular/material/toolbar';
 import { ProductsService } from '../../services/products.service';
@@ -18,6 +18,8 @@ import { FormsModule } from '@angular/forms';
 import { MatInput } from '@angular/material/input';
 import { MatOption } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
+import { ConnectionclientService } from '../../services/connectionclient.service';
+import { UserserviceService } from '../../services/userservice.service';
 
 
 @Component({
@@ -143,9 +145,12 @@ export class TableviewComponent implements OnInit {
     private studentservice: StudentsService,
     private sidebarservice: SidebarService,
     private snackbar: SnackbarService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private clientfeathers: ConnectionclientService,
+    private userservice: UserserviceService,
+    private ngzone: NgZone
   ) { }
-  ngOnInit(): void {
+  async ngOnInit() {
     this.initialAllData();
     console.log("Table data");
     console.log(this.tableData);
@@ -159,7 +164,23 @@ export class TableviewComponent implements OnInit {
     else if (this.tableData?.type === 'students') {
       this.selectedView = 'students';
     }
- 
+
+
+    const studentsserv = this.clientfeathers.getStudentClient();
+    this.clientfeathers.authenticate();
+
+    studentsserv.on("created", () => {
+
+      this.initialAllData();
+
+    });
+    studentsserv.on("patched", () => {
+      console.log("patched started.................>")
+
+    });
+
+
+
   }
 
 
@@ -168,6 +189,9 @@ export class TableviewComponent implements OnInit {
     if (file) {
       this.selectedFile = file;
     }
+    // event.target.value = null;
+    console.log("event target value");
+    event.target.value = null;
   }
 
   uploadFile() {

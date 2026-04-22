@@ -53,9 +53,12 @@ export class HomeComponent implements OnInit {
     })
     this.studentservice.AddComponent$.subscribe((data) => {
       this.studentSideView = data;
+      this.profileCard = false;;
+      this.tableH=false;
     })
     this.studentservice.AddComponentState$.subscribe((data) => {
       this.addState = data;
+
     })
 
   }

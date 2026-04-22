@@ -23,20 +23,16 @@ app.use(serveStatic(app.get('public')))
 app.use(errorHandler())
 app.use(parseAuthentication())
 app.use(bodyParser(
-  {
+  { 
     jsonLimit: '10mb',
-    formLimit: '10mb'
+    formLimit: '10mb' 
   }
 ))
 
 // Configure services and transports
 app.configure(rest())
 app.configure(
-  socketio({
-    cors: {
-      origin: app.get('origins')
-    }
-  })
+  socketio()
 )
 app.configure(mongodb)
 app.configure(authentication)

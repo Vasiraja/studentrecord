@@ -17,6 +17,7 @@ import {
 import type { Application } from '../../declarations'
 import { ProductsService, getOptions } from './products.class'
 import { productsPath, productsMethods } from './products.shared'
+import { pidGenerate } from '../../hooks/pid-generate'
 
 export * from './products.class'
 export * from './products.schema'
@@ -47,6 +48,7 @@ export const products = (app: Application) => {
       find: [],
       get: [],
       create: [
+        pidGenerate,
         schemaHooks.validateData(productsDataValidator),
         schemaHooks.resolveData(productsDataResolver)
       ],

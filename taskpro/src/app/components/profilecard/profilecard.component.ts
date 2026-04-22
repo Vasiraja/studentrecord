@@ -126,7 +126,6 @@ export class ProfilecardComponent implements OnInit {
         next: (res: any) => {
           this.profileData.profilePhoto = this.base64String;
           this.profilePhotoSafe = this.sanitizer.bypassSecurityTrustUrl(this.base64String);
-
           this.snackbar.openSnackBar("Photo updated successfully");
           this.resetFileInput(event);
         },
@@ -137,6 +136,9 @@ export class ProfilecardComponent implements OnInit {
       });
     };
 
+
+
+    
     fileReader.readAsDataURL(file);
   }
   resetFileInput(event: any) {

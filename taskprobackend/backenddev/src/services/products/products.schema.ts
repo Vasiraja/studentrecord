@@ -12,6 +12,12 @@ import type { ProductsService } from './products.class'
 export const productsSchema = Type.Object(
   {
     _id: ObjectIdSchema(),
+    productId: Type.Union([
+      Type.String(),
+      Type.Object({
+        $regex: Type.String()
+      })
+    ]),
     title: Type.String(),
     price: Type.Number(),
     category: Type.String(),
@@ -29,7 +35,7 @@ export const productsResolver = resolve<ProductsQuery, HookContext<ProductsServi
 export const productsExternalResolver = resolve<Products, HookContext<ProductsService>>({})
 
 // Schema for creating new entries
-export const productsDataSchema = Type.Pick(productsSchema, ['title', 'price', 'category', 'stock', 'overAllRating','bulk'], {
+export const productsDataSchema = Type.Pick(productsSchema, ['title', 'price', 'category', 'stock', 'overAllRating', 'bulk'], {
   $id: 'ProductsData'
 })
 export type ProductsData = Static<typeof productsDataSchema>
@@ -45,14 +51,14 @@ export const productsPatchValidator = getValidator(productsPatchSchema, dataVali
 export const productsPatchResolver = resolve<ProductsPatch, HookContext<ProductsService>>({})
 
 // Schema for allowed query properties
-export const productsQueryProperties = Type.Pick(productsSchema, ['_id'])
+export const productsQueryProperties = Type.Pick(productsSchema, ['_id','productId'])
 export const productsQuerySchema = Type.Intersect(
   [
     querySyntax(productsQueryProperties),
-    // Add additional query properties here
-    Type.Object({}, { additionalProperties: false })
-  ],
-  { additionalProperties: false }
+    // Add additional query properties here 
+    Type.Object({}, { additionalProperties: true })
+  ], 
+  { additionalProperties: true }
 )
 export type ProductsQuery = Static<typeof productsQuerySchema>
 export const productsQueryValidator = getValidator(productsQuerySchema, queryValidator)
