@@ -3,7 +3,7 @@ import type { HookContext } from '@feathersjs/feathers';
 export const idGenerate = async (context: HookContext)=> {
   const students = context.app.service('students');
 
-  const yearShort = String(new Date().getFullYear()).slice(-2);
+  const yearShort = String(new Date().getFullYear()).slice(2,4);
 
   const result = await students.find({
     query: {

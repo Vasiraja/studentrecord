@@ -4,12 +4,12 @@ import type { HookContext, NextFunction } from '../declarations'
 export const pidGenerate = async (context: HookContext) => {
   const products = context.app.service('products');
 
-  const yearShort = String(new Date().getFullYear()).slice(-2);
+  const yearShort = String(new Date().getFullYear()).slice(2,4);
 
   const result = await products.find({
     query: {  
       productId: {
-        $regex: `^PID${yearShort}`
+        $regex: `^PID${yearShort}` 
       },
       $sort: {
         productId: -1
