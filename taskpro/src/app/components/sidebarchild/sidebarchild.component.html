@@ -1,0 +1,26 @@
+<div class="receiveddiv">
+    <p>child</p>
+
+    @if (selectedInput?.studentname) {
+    <div class="student-block">
+        <h3>{{ selectedInput.studentname }}</h3>
+        <span>{{ selectedInput.class }}</span>
+    </div>
+    }
+
+    @else if (selectedInput?.rating) {
+    <div class="rating-block">
+        <h3>{{ selectedInput.title }}</h3>
+        <span>{{ selectedInput.rating }}</span>
+    </div>
+    }
+
+    @else if (selectedInput?.overAllRating) {
+    <div class="overall-rating-block">
+        <h3>{{ selectedInput.title }}</h3>
+        <span>{{ selectedInput.overAllRating }}</span>
+    </div>
+    }
+
+    <button type="button" (click)="clickConfirm()">Confirm</button>
+</div>

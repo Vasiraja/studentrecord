@@ -19,6 +19,7 @@ import type { Application, HookContext } from '../../declarations'
 import { StudentsService, getOptions } from './students.class'
 import { studentsPath, studentsMethods } from './students.shared'
 import { idGenerate } from '../../hooks/id-generate'
+import { bulkEdit } from '../../hooks/bulk-edit'
 
 export * from './students.class'
 export * from './students.schema'
@@ -40,12 +41,12 @@ export const students = (app: Application) => {
         schemaHooks.resolveExternal(studentsExternalResolver),
         schemaHooks.resolveResult(studentsResolver)
       ],
-     },
+    },
     before: {
       all: [
         schemaHooks.validateQuery(studentsQueryValidator),
         schemaHooks.resolveQuery(studentsQueryResolver),
-         
+
       ],
       find: [],
       get: [],
@@ -53,12 +54,14 @@ export const students = (app: Application) => {
         idGenerate,
         schemaHooks.validateData(studentsDataValidator),
         schemaHooks.resolveData(studentsDataResolver),
-          
+
       ],
       patch: [
         schemaHooks.validateData(studentsPatchValidator),
         schemaHooks.resolveData(studentsPatchResolver),
-    
+        bulkEdit
+
+
       ],
       remove: []
     },

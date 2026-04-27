@@ -52,5 +52,37 @@
  .controls {
    display: flex;
 
-   
-}
+
+ }
+
+ .explain-box {
+   padding: 8px 10px;
+   border-bottom: 1px solid #e0e0e0;
+   background: #fafafa;
+ }
+
+ .explain-section {
+   font-size: 11px;
+   font-weight: 600;
+   color: #888;
+
+   letter-spacing: 0.5px;
+ }
+
+ .explain-item {
+   display: flex;
+   align-items: center;
+   gap: 8px;
+   font-size: 13px;
+   color: #555;
+ }
+
+ .explain-item i {
+   width: 16px;
+   text-align: center;
+   color: #555;
+ }
+
+ .explain-item p {
+   margin-top: 0.5rem;
+ }

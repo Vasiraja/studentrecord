@@ -1,19 +1,19 @@
 <mat-card class="student-card" appearance="outlined">
 
-    <ng-container *ngIf="profileData.studentname">
+    <ng-container *ngIf="profileData?.studentname">
         <div class="leftcard">
             <mat-card-header>
 
-                <mat-card-title> {{ profileData.studentname }}</mat-card-title>
-                <mat-card-subtitle>{{ profileData.class }} | {{ profileData.gender }}</mat-card-subtitle>
+                <mat-card-title> {{ profileData?.studentname }}</mat-card-title>
+                <mat-card-subtitle>{{ profileData?.class }} | {{ profileData?.gender }}</mat-card-subtitle>
             </mat-card-header>
 
             <div class="photo-wrapper" (click)="fileInput.click()">
 
-                <ng-container *ngIf="profilePhotoSafe && profileData.profilePhoto; else largInitials"> <img
+                <ng-container *ngIf="profilePhotoSafe && profileData?.profilePhoto; else largInitials"> <img
                         class="profile-img" [src]="profilePhotoSafe" alt="Profile Photo" />
                     <div class="photodeldownload">
-                        <i class="fa fa-trash delete" (click)="delPhoto($event,profileData._id,'students')"></i>
+                        <i class="fa fa-trash delete" (click)="delPhoto($event,profileData?._id,'students')"></i>
                         <i class="fa fa-download download" (click)="downloadPhoto($event,profilePhotoSafe)"></i>
 
                     </div>
@@ -22,7 +22,7 @@
 
                 <ng-template #largInitials>
                     <div class="large-initials-block">
-                        {{ profileData.studentname?.slice(0, 2)?.toUpperCase() }}
+                        {{ profileData?.studentname?.slice(0, 2)?.toUpperCase() }}
                     </div>
                 </ng-template>
 
@@ -34,7 +34,7 @@
             </div>
 
             <input #fileInput type="file" accept="image/*" style="display:none"
-                (change)="onPhotoSelected($event,profileData._id,'students')" />
+                (change)="onPhotoSelected($event,profileData?._id,'students')" />
 
         </div>
         <div class="rightcard">
@@ -42,40 +42,40 @@
                 <div class="list">
                     <div class="detail-list">
                         <span>Date of Birth :</span>
-                        <span>{{ profileData.dob }}</span>
+                        <span>{{ profileData?.dob }}</span>
                     </div>
                     <mat-divider></mat-divider>
                     <div class="detail-list">
                         <span>Age :</span>
-                        <span>{{ profileData.age }}</span>
+                        <span>{{ profileData?.age }}</span>
                     </div>
                     <mat-divider></mat-divider>
                     <div class="detail-list">
                         <span>Class :</span>
-                        <span>{{ profileData.class }}</span>
+                        <span>{{ profileData?.class }}</span>
                     </div>
                     <mat-divider></mat-divider>
                     <div class="detail-list">
                         <span>Gender :</span>
-                        <span>{{ profileData.gender }}</span>
+                        <span>{{ profileData?.gender }}</span>
                     </div>
                 </div>
             </mat-card-content>
         </div>
     </ng-container>
-    <ng-container *ngIf="profileData.title">
+    <ng-container *ngIf="profileData?.title">
         <div class="leftcard">
             <mat-card-header>
 
-                <mat-card-title> {{ profileData.title }}</mat-card-title>
+                <mat-card-title> {{ profileData?.title }}</mat-card-title>
             </mat-card-header>
 
-            <div class="photo-wrapper" (click)="profileData.overAllRating && fileInput.click()">
+            <div class="photo-wrapper" (click)="profileData?.overAllRating && fileInput.click()">
 
-                <ng-container *ngIf="profilePhotoSafe && profileData.profilePhoto  else largInitials">
+                <ng-container *ngIf="profilePhotoSafe && profileData?.profilePhoto  else largInitials">
                     <img class="profile-img" [src]="profilePhotoSafe" alt="Profile Photo" />
                     <div class="photodeldownload">
-                        <i class="fa fa-trash delete" (click)="delPhoto($event,profileData._id,'products')"></i>
+                        <i class="fa fa-trash delete" (click)="delPhoto($event,profileData?._id,'products')"></i>
                         <i class="fa fa-download download" (click)="downloadPhoto($event,profilePhotoSafe)"></i>
 
                     </div>
@@ -84,11 +84,11 @@
 
                 <ng-template #largInitials>
                     <div class="large-initials-block">
-                        {{ profileData.title?.slice(0, 2)?.toUpperCase() }}
+                        {{ profileData?.title?.slice(0, 2)?.toUpperCase() }}
                     </div>
                 </ng-template>
 
-                <div *ngIf="profileData.overAllRating" class="photo-overlay">
+                <div *ngIf="profileData?.overAllRating" class="photo-overlay">
                     <i class="fa-solid fa-upload"></i>
                     <span>Change Photo</span>
                 </div>
@@ -96,7 +96,7 @@
             </div>
 
             <input #fileInput type="file" accept="image/*" style="display:none"
-                (change)="onPhotoSelected($event,profileData._id,'products')" />
+                (change)="onPhotoSelected($event,profileData?._id,'products')" />
 
         </div>
         <div class="rightcard">
@@ -104,22 +104,22 @@
                 <div class="list">
                     <div class="detail-list">
                         <span>Category :</span>
-                        <span>{{ profileData.category }}</span>
+                        <span>{{ profileData?.category }}</span>
                     </div>
                     <mat-divider></mat-divider>
                     <div class="detail-list">
                         <span>Stock :</span>
-                        <span>{{ profileData.stock }}</span>
+                        <span>{{ profileData?.stock }}</span>
                     </div>
                     <mat-divider></mat-divider>
                     <div class="detail-list">
                         <span>Over All Rating :</span>
-                        <ng-container *ngIf="profileData.overAllRating">
-                            <span>{{ profileData.overAllRating }}</span>
+                        <ng-container *ngIf="profileData?.overAllRating">
+                            <span>{{ profileData?.overAllRating }}</span>
 
                         </ng-container>
-                        <ng-container *ngIf="profileData.rating">
-                            <span>{{ profileData.rating }}</span>
+                        <ng-container *ngIf="profileData?.rating">
+                            <span>{{ profileData?.rating }}</span>
 
                         </ng-container>
 
@@ -127,7 +127,7 @@
                     <mat-divider></mat-divider>
                     <div class="detail-list">
                         <span>Price :</span>
-                        <span>{{ profileData.price }}</span>
+                        <span>{{ profileData?.price }}</span>
                     </div>
                 </div>
             </mat-card-content>

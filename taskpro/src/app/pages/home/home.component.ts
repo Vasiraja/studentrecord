@@ -29,15 +29,20 @@ export class HomeComponent implements OnInit {
     this.profileDataH = data;
   }
   tableSelect(data: any) {
+    console.log("table H")
+    console.log(this.tableH)
     this.profileCard = false;
     console.log("hh",)
-
     this.tableH = data;
     console.log(this.tableH)
 
   }
   ngOnInit(): void {
     this.profileCard = false;
+    // this.tableH = false;
+
+
+    // this.tableH = "students";
     this.sidebarservice.sidebarState$.subscribe((data) => {
       this.sidebarStatus = data;
     });
@@ -52,9 +57,17 @@ export class HomeComponent implements OnInit {
       this.profileCard = data;
     })
     this.studentservice.AddComponent$.subscribe((data) => {
+      console.log("studentside")
+      console.log(data);
+      console.log("student side view");
+      console.log(this.studentSideView)
+      console.log("addstate")
+      console.log(this.addState)
+      console.log(data);
       this.studentSideView = data;
-      this.profileCard = false;;
-      this.tableH=false;
+      this.profileCard = false;
+      this.tableH = false;
+      // this.tableH = false;
     })
     this.studentservice.AddComponentState$.subscribe((data) => {
       this.addState = data;
@@ -74,7 +87,10 @@ export class HomeComponent implements OnInit {
 
   studentSideView: boolean | undefined;
   productSideView: boolean | undefined;
-  constructor(private sidebarservice: SidebarService, private studentservice: StudentsService, private productservice: ProductsService) { }
+  constructor(private sidebarservice: SidebarService, private studentservice: StudentsService, private productservice: ProductsService) {
+
+
+  }
 
 
 }

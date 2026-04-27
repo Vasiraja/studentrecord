@@ -33,10 +33,13 @@ export class ConnectionclientService {
     console.log("sockeeee")
     return this.client.service('students');
   }
+  getProductClient() {
+    return this.client.service('products');
+  }
 
   async authenticate() {
     const token = localStorage.getItem('token');
-    console.log("TOKENNNN",token)
+    console.log("TOKENNNN", token)
 
     if (token) {
       try {

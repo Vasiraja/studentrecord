@@ -1,4 +1,50 @@
 <div class="sidebar">
+    <div class="explain-box">
+
+        <div class="explain-section">Data</div>
+
+        <div class="explain-item">
+            <i class="fa-solid fa-user"></i>
+            <p> Students </p>
+        </div>
+
+        <div class="explain-item">
+            <i class="fa-solid fa-globe"></i>
+            <p> External Products </p>
+        </div>
+
+        <div class="explain-item">
+            <i class="fa-solid fa-store"></i>
+            <p> Internal Products </p>
+        </div>
+
+
+        <div class="explain-section">Product Types</div>
+
+        <div class="explain-item">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <p> Single Product</p>
+        </div>
+
+        <div class="explain-item">
+            <i class="fa-solid fa-box"></i>
+            <p> Group / bulk quantity product</p>
+        </div>
+
+
+        <div class="explain-section">Actions</div>
+
+        <div class="explain-item">
+            <i class="fa-solid fa-file-import"></i>
+            <p> Import </p>
+        </div>
+
+        <div class="explain-item">
+            <i class="fa-solid fa-file-export"></i>
+            <p> Export </p>
+        </div>
+
+    </div>
     <div class="controls">
         <button *ngIf="!expandState" (click)="expandAll()">
             <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
@@ -12,4 +58,21 @@
     <div class="tree-wrapper">
         <div #treeElem id="treeElem"></div>
     </div>
+    @if (finalTakenValues?.studentname) {
+    <p>  {{finalTakenValues?.studentname}} confirmed  </p>
+
+    }
+    @else if(finalTakenValues?.rating){
+    <p>  {{finalTakenValues?.title }} confirmed  </p>
+    }
+    @else if(finalTakenValues?.overAllRating){
+    <p>  {{finalTakenValues?.title}} confirmed  </p>
+    }
+
+    <app-sidebarchild [selectedInput]='selectedSharedItem' (selectedConfirmation)="finalTaken($event)">
+
+
+    </app-sidebarchild>
+
+
 </div>

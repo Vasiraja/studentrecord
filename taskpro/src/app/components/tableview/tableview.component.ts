@@ -1,9 +1,9 @@
-import { AfterViewInit, Component, Input, NgZone, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, NgZone, OnChanges, OnInit } from '@angular/core';
 import { MatTable, MatTableModule } from '@angular/material/table';
 import { MatToolbar } from '@angular/material/toolbar';
 import { ProductsService } from '../../services/products.service';
 import { StudentsService } from '../../services/students.service';
-import { forkJoin } from 'rxjs';
+import { catchError, forkJoin, of } from 'rxjs';
 import { SidebarService } from '../../services/sidebar.service';
 import { SnackbarService } from '../../services/snackbar.service';
 import { MatButton } from '@angular/material/button';
@@ -29,8 +29,27 @@ import { UserserviceService } from '../../services/userservice.service';
   templateUrl: './tableview.component.html',
   styleUrl: './tableview.component.css'
 })
-export class TableviewComponent implements OnInit {
+export class TableviewComponent implements OnInit, OnChanges {
+
+
+
+  onProductPhotoSelected(event: any) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      this.editedProduct.profilePhoto = reader.result;
+    };
+
+    reader.readAsDataURL(file);
+  }
+
   cancelEdit() {
+    this.isEditing = false;
+    this.editingRecordId = null;
+
     this.editedId = '';
     this.editedStudent = null;
     this.editedProduct = null;
@@ -45,6 +64,7 @@ export class TableviewComponent implements OnInit {
     this.studentservice.updateStudents(student._id, this.editedStudent).subscribe({
       next: (res: any) => {
         this.snackbar.openSnackBar(res.studentname + " updated");
+
         console.log(res);
 
         this.cancelEdit();
@@ -86,7 +106,10 @@ export class TableviewComponent implements OnInit {
   filterClassesByAge(age: number) {
     this.filteredClass = this.studentClass.filter((cls: string) => {
       const range = this.classAgeMap[cls];
-      return age >= range.min && age <= range.max;
+      if (age > range.max) {
+        this.snackbar.openSnackBar(`Age higher than recommended for class ${cls}`);
+      }
+      return age >= range.min;
     });
   }
   onDobChange() {
@@ -107,6 +130,11 @@ export class TableviewComponent implements OnInit {
   students: any[] = [];
   selectedFile: any;
   filteredClass: any[] = [];
+  errorType: any = '';
+  hasError = false;
+
+
+
 
   productCategories: any = ['Grocery', 'Gadgets', 'Electronics', 'Furniture'];
 
@@ -139,6 +167,19 @@ export class TableviewComponent implements OnInit {
   editedId: string = "";
 
 
+  editingRecordId: string | null = null;
+  isEditing = false;
+  originalRecord: any = null;
+  selectedRecord: any = null;
+
+
+  apiErrorMsg: string = "";
+  apiError: boolean = false;
+
+
+  // students: any[] = [];
+
+
 
   constructor(
     private productservice: ProductsService,
@@ -154,6 +195,30 @@ export class TableviewComponent implements OnInit {
     this.initialAllData();
     console.log("Table data");
     console.log(this.tableData);
+
+
+
+    this.clientfeathers.authenticate();
+    let serviceStude = this.clientfeathers.getStudentClient();
+    let productStude = this.clientfeathers.getProductClient();
+
+    serviceStude.on("created", () => {
+      this.initialAllData();
+
+    })
+    serviceStude.on("patched", (updateStudents: any) => {
+      this.handleRealtimeUpdate(updateStudents);
+    })
+    productStude.on("patched", (updatedProducts: any) => {
+      this.handleRealtimeUpdate(updatedProducts);
+    })
+
+
+
+
+
+
+
 
     if (this.tableData?.type === 'products') {
       this.selectedView = 'products';
@@ -182,8 +247,54 @@ export class TableviewComponent implements OnInit {
 
 
   }
+  ngOnChanges() {
+    if (this.tableData?.type === 'products') {
+      this.selectedView = 'products';
+    }
+    else if (this.tableData?.type === 'productdb') {
+      this.selectedView = 'productdb';
+    }
+    else if (this.tableData?.type === 'students') {
+      this.selectedView = 'students';
+    }
+  }
+  handleRealtimeUpdate(updated: any) {
+    const isSame = this.editingRecordId === updated._id;
+
+    if (this.isEditing && isSame && this.originalRecord) {
+      this.cancelEdit();
+      this.snackbar.openSnackBar(
+        "Another user updated this record. Your changes were discarded."
+      );
+    }
+
+    if (updated.title) {
+      this.products = this.products.map(p =>
+        p._id === updated._id ? updated : p
+      );
+    } else if (updated.studentname) {
+      this.students = this.students.map(s =>
+        s._id === updated._id ? updated : s
+      );
+    }
+  }
 
 
+  onPhotoSelected(event: any) {
+    const file = event.target.files[0];
+    console.log("****")
+    console.log(event.target.files)
+
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      this.editedStudent.profilePhoto = reader.result;
+    };
+
+    reader.readAsDataURL(file);
+  }
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
@@ -198,9 +309,8 @@ export class TableviewComponent implements OnInit {
     if (!this.selectedFile) return;
 
     console.log("uploadd--------" + this.selectedFile);
+
     this.snackbar.openSnackBar("file uploaded");
-
-
 
 
     // Papa.parse(this.selectedFile,
@@ -292,16 +402,23 @@ export class TableviewComponent implements OnInit {
   }
 
   editStudent(student: any) {
+    this.isEditing = true;
+    this.editingRecordId = student._id;
     this.editedId = student._id;
     this.editedStudent = { ...student };
-
+    this.originalRecord = { ...student };
     const age = this.calculateAge(this.editedStudent.dob);
     this.filterClassesByAge(age);
+
   }
 
   editProducts(product: any) {
+    this.isEditing = true;
+    this.editingRecordId = product._id;
+
     this.editedId = product._id;
     this.editedProduct = { ...product };
+    this.originalRecord = { ...product };
   }
 
   deleteStudent(id: any) {
@@ -326,25 +443,47 @@ export class TableviewComponent implements OnInit {
 
 
 
-  initialAllData() {
-    const productfetch = this.productservice.getThirdpartyProducts();
-    const productDbFetch = this.productservice.getProducts();
-    const studentfetch = this.studentservice.getStudents();
+initialAllData() {
 
-    forkJoin({ productfetch, productDbFetch, studentfetch }).subscribe({
-      next: (res: any) => {
-        console.log(res);
-        this.productsApi = res.productfetch.products;
-        this.products = res.productDbFetch.data;
-        this.students = res.studentfetch.data;
-        const currentUser = res.studentfetch.loggedUser;
-        console.log("currentuser-->", currentUser)
+  const productfetch = this.productservice.getThirdpartyProducts().pipe(
+    catchError(err => {
+      this.apiError = true;
 
-        this.sidebarservice.currentLoggedIn(currentUser);
-
-
-
+      if (err.status === 0) {
+        this.apiErrorMsg = 'External API not reachable';
+      } else if (err.status >= 500) {
+        this.apiErrorMsg = 'External API server error';
+      } else {
+        this.apiErrorMsg = 'Failed to load external products';
       }
-    });
-  }
+
+      return of(null);
+    })
+  );
+
+  const productDbFetch = this.productservice.getProducts();
+  const studentfetch = this.studentservice.getStudents();
+
+  forkJoin({ productfetch, productDbFetch, studentfetch }).subscribe({
+    next: (res: any) => {
+
+      console.log(res);
+
+       if (res.productfetch && res.productfetch.products) {
+        this.productsApi = res.productfetch.products;
+      } else {
+        this.productsApi = []; 
+      }
+
+      this.products = res.productDbFetch?.data || [];
+      this.students = res.studentfetch?.data || [];
+
+      const currentUser = res.studentfetch?.loggedUser;
+      if (currentUser) {
+        this.sidebarservice.currentLoggedIn(currentUser);
+      }
+
+    }
+  });
+}
 }

@@ -134,4 +134,7 @@ export class StudentsService {
     }
     return apiOverwrite;
   }
+  getStudentById(id: any): Observable<any> {
+    return this.http.get(`${this.apiUrl}/students/${id}`);
+  }
 }

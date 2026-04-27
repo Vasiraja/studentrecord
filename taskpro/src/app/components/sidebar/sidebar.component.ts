@@ -1,12 +1,14 @@
-import { Component, ElementRef, OnInit, AfterViewInit, ViewChild, Output, EventEmitter, NgZone } from '@angular/core';
+import { Component, ElementRef, OnInit, AfterViewInit, ViewChild, Output, EventEmitter, NgZone, Input, ChangeDetectorRef } from '@angular/core';
 import { SidebarService } from '../../services/sidebar.service';
 import { CommonModule } from '@angular/common';
 import { StudentsService } from '../../services/students.service';
 import { ProductsService } from '../../services/products.service';
-import { forkJoin } from 'rxjs';
+import { catchError, forkJoin, of } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { TableviewComponent } from "../tableview/tableview.component";
 import { ConnectionclientService } from '../../services/connectionclient.service';
+import { SidebarchildComponent } from '../sidebarchild/sidebarchild.component';
+import { SnackbarService } from '../../services/snackbar.service';
 
 declare var $: any;
 
@@ -14,15 +16,17 @@ declare var $: any;
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule, TableviewComponent],
+  imports: [CommonModule, TableviewComponent, SidebarchildComponent],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css'
 })
 export class SidebarComponent implements OnInit, AfterViewInit {
+  finalTakenValues: any = {};
+
 
   constructor(private studentservice: StudentsService, private productservice: ProductsService, private sidebarservice: SidebarService,
     private feathersClient: ConnectionclientService,
-    private ngzone: NgZone
+    private ngzone: NgZone, private snackbar: SnackbarService, private cdr: ChangeDetectorRef
 
   ) { }
 
@@ -30,55 +34,80 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   @Output() selectItem = new EventEmitter<any>();
   @Output() selectTable = new EventEmitter<any>();
 
+  apiErrorMsg: string = "";
+  apiError: boolean = false;
 
+  // @Input() selectedSharedItem: any = {};
+
+  selectedSharedItem: any = {};
   editedStudent: any = {};
   toggleState() {
     this.expandState = !this.expandState;
   }
   ngAfterViewInit(): void {
-    // this.studentservice.getStudents().subscribe({
-    //   next: (res: any) => {
-    //     console.log(res);
-    //     this.students = res.data;
-    //     // console.log(this.students.map((items)=>items.studentname))
 
-    //     this.productservice.getThirdpartyProducts().subscribe({
-    //       next: (res: any) => {
+    const productFetch = this.productservice.getThirdpartyProducts().pipe(
+      catchError(err => {
+        this.apiError = true;
 
-    //         this.apiProducts = res.products;
-    //         console.log(this.apiProducts);
-    //         this.treeState = true;
+        if (err.status === 0) {
+          this.apiErrorMsg = 'External API not reachable';
+        } else if (err.status >= 500) {
+          this.apiErrorMsg = 'External API server error';
+        } else {
+          this.apiErrorMsg = 'Failed to load external products';
+        }
 
-    //         if (this.treeState) {
-    //           this.initializeTreeView();
-    //         }
+        return of(null);
+      })
+    );
 
-    //       }
-    //     }) 
-    //   },
-    //   error: (err: any) => {
-    //     console.error(err);
-    //   }
-    // })
-    const productFetch = this.productservice.getThirdpartyProducts();
     const studentFetch = this.studentservice.getStudents();
     const productDbFetch = this.productservice.getProducts();
 
-    forkJoin({ products: productFetch, students: studentFetch, productsDB: productDbFetch }).subscribe({
+    forkJoin({
+      products: productFetch,
+      students: studentFetch,
+      productsDB: productDbFetch
+    }).subscribe({
       next: (res: any) => {
-        this.apiProducts = res.products.products;
-        this.students = res.students.data;
-        this.dbProducts = res.productsDB.data;
+
+        this.apiProducts = res.products?.products || [];
+        this.students = res.students?.data || [];
+        this.dbProducts = res.productsDB?.data || [];
+
         this.treeState = true;
         if (this.treeState) {
           this.initializeTreeView();
         }
 
-      }, error: (err: any) => {
-        console.error(err)
+      },
+      error: (err: any) => {
+        console.error(err);
       }
-    })
+    });
 
+    const studentsserv = this.feathersClient.getStudentClient();
+
+    studentsserv.on("created", (newstudent: any) => {
+      this.ngzone.run(() => {
+
+        const tree = $(this.treeElem.nativeElement).jstree(true);
+
+        if (!tree.get_node(newstudent._id)) {
+          tree.create_node("student_root", {
+            id: newstudent._id,
+            text: newstudent.studentname,
+            icon: "fa-regular fa-id-badge",
+            type: "studentsapi"
+          });
+        }
+
+        this.students.push(newstudent);
+        tree.open_node("student_root");
+
+      });
+    });
   }
 
 
@@ -108,32 +137,59 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 
     const studentsserv = this.feathersClient.getStudentClient();
     await this.feathersClient.authenticate();
-    studentsserv.on("created", (newstudent: any) => {
+
+    studentsserv.on("patched", (student: any) => {
       this.ngzone.run(() => {
-
-        this.students.push(newstudent);
-
         const tree = $(this.treeElem.nativeElement).jstree(true);
 
-        if (tree) {
-          const newNode = tree.create_node("students", {
-            text: newstudent.studentname,
-            id: "students",
-            icon: "fa-regular fa-id-badge",
-            type: "students"
-          });
-
-          tree.deselect_all();
-          tree.select_node(newNode);
-
-          tree.open_node("students");
+        if (tree && tree.get_node(student._id)) {
+          tree.rename_node(student._id, student.studentname);
         }
+      });
+    });
 
+
+    studentsserv.on("removed", (student: any) => {
+      this.ngzone.run(() => {
+        const tree = $(this.treeElem.nativeElement).jstree(true);
+
+        if (tree && tree.get_node(student._id)) {
+          tree.delete_node(student._id);
+        }
       });
     });
 
 
   }
+  finalTaken(msg: any) {
+    console.log(msg);
+
+    this.finalTakenValues = msg;
+    console.log(this.finalTakenValues);
+    this.cdr.detectChanges();
+    const tree = $(this.treeElem.nativeElement).jstree(true);
+    if (tree) {
+
+
+      if (this.finalTakenValues.studentname) {
+
+        tree.set_icon(this.finalTakenValues._id, 'fa-solid fa-check');
+      }
+      else if (this.finalTakenValues.rating) {
+        tree.set_icon(this.finalTakenValues.id, 'fa-solid fa-check');
+
+
+      }
+      else if (this.finalTakenValues.overAllRating) {
+        tree.set_icon(this.finalTakenValues._id, 'fa-solid fa-check');
+      }
+    }
+
+
+
+  }
+
+
   initializeTreeView() {
     const treeView = this.treeElem.nativeElement;
 
@@ -146,42 +202,73 @@ export class SidebarComponent implements OnInit, AfterViewInit {
             icon: "fa-solid fa-home",
             children: [
               {
+                id: "student_root",
                 text: "students",
+
                 icon: "fa-solid fa-user",
                 type: "students",
-                children: this.students.map(per => ({
-                  text: per.studentname,
-                  id: per._id,
-                  icon: "fa-regular fa-id-badge",
-                  type: "studentsapi"
-                }))
+                children: [
+                  {
+                    text: "Select the students",
+                    icon: "fa-solid fa-circle-info",
+                    type: "helper",
+                    state: { disabled: true }
+                  },
+                  ...this.students.map(per => ({
+                    text: per.studentname,
+                    id: per._id,
+                    icon: "fa-regular fa-id-badge",
+                    type: "studentsapi"
+                  }))
+                ]
               },
               {
-                text: "External (products)",
-                icon: "fa-solid fa-store",
+                text: "External products",
+                icon: "fa-solid fa-globe",
                 type: "products",
-                children: this.apiProducts.map(items => ({
-                  text: items.title.length > 15
-                    ? items.title.slice(0, 15) + '...'
-                    : items.title,
-                  id: items.id,
-                  icon: "fa-solid fa-cart-shopping",
-                  type: "productsapi"
-                }))
+                children: [
+                  {
+                    id: "external_product_root",
+                    text: "Select the products",
+                    icon: "fa-solid fa-circle-info",
+                    type: "helper",
+                    state: { disabled: true }
+                  },
+                  ...this.apiProducts.map(items => ({
+                    text: items.title.length > 15
+                      ? items.title.slice(0, 15) + '...'
+                      : items.title,
+                    id: items.id,
+                    icon: "fa-solid fa-cart-shopping",
+                    type: "productsapi"
+                  }))
+                ]
               },
 
               {
-                text: "Internal (products)",
+                text: "Internal products",
                 icon: "fa-solid fa-store",
                 type: "productdb",
-                children: this.dbProducts.map(items => ({
-                  text: items.title,
-                  id: items._id,
-                  icon: items.bulk
-                    ? "fa-solid fa-box"
-                    : "fa-solid fa-cart-shopping",
-                  type: "productsdbapi"
-                }))
+
+                children:
+                  [
+                    {
+                      id: "internal_product_root",
+                      text: "Select the products",
+                      icon: "fa-solid fa-circle-info",
+                      type: "helper",
+                      state: { disabled: true }
+                    },
+                    ...this.dbProducts.map(items => ({
+                      text: items.title,
+                      id: items._id,
+                      icon: items.bulk
+                        ? "fa-solid fa-box"
+                        : "fa-solid fa-cart-shopping",
+                      type: "productsdbapi"
+                    }))
+                  ]
+
               }
             ]
           }
@@ -214,8 +301,8 @@ export class SidebarComponent implements OnInit, AfterViewInit {
                 label: "Edit",
                 action: () => {
                   console.log("edit:---");
-                  console.log(node?.original.id)
-                  this.editedStudent = this.students.find((items) => items._id === node?.original.id);
+                  console.log(node?.original?.id)
+                  this.editedStudent = this.students.find((items) => items._id === node?.original?.id);
                   this.studentservice.editTrigger(this.editedStudent);
                 }
               },
@@ -223,7 +310,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
                 label: "Delete",
                 action: () => {
                   console.log(node);
-                  this.deletedStudent = this.students.find((items) => items._id === node.original.id);
+                  this.deletedStudent = this.students.find((items) => items._id === node.original?.id);
                   this.studentservice.deleteTrigger(this.deletedStudent);
                 }
               }
@@ -242,9 +329,6 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     $(treeView).on('select_node.jstree', (e: any, value: any) => {
 
       this.studentservice.cancelTrigger();
-
-      
-
       const node = value.node;
 
       if (node.original?.type === "students" || node.original?.type === "products" || node.original?.type === "productdb") {
@@ -269,7 +353,6 @@ export class SidebarComponent implements OnInit, AfterViewInit {
       console.log(value.node);
 
 
-
       this.sidebarservice.individualNodeGet({
         id: node.id,
         type: node.original?.type
@@ -277,6 +360,16 @@ export class SidebarComponent implements OnInit, AfterViewInit {
       }).subscribe({
         next: (res: any) => {
           console.log(res);
+          console.log("res")
+          this.selectedSharedItem = res;
+
+          // console.log(this.selectedSharedItem)
+
+          // this.selectedSharedItem.id = node.id;
+          // this.selectedSharedItem.type = node;
+
+          // console.log("this.selectedSharedItem" + this.selectedSharedItem.id, this.selectedSharedItem);
+
 
           this.selectItem.emit(res);
         },

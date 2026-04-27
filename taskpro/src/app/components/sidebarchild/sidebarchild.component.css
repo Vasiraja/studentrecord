@@ -1,0 +1,12 @@
+/* *{
+    background-color: red;
+} */
+
+.receiveddiv{
+    border:0.3rem dashed rgb(160, 158, 158);
+    width:200px;
+    height: fit-content;
+    padding: 0.4rem;
+    margin: 7rem 0;
+
+}

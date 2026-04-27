@@ -4,10 +4,17 @@
 
 
 
-<app-tableview *ngIf="!profileCard" [tableData]="tableH"></app-tableview>
+<app-tableview [hidden]="!tableH" [tableData]="tableH">
 
-<app-edit *ngIf="editStatus"></app-edit>
-<app-profilecard *ngIf="profileCard" [profileData]="profileDataH"></app-profilecard>
+</app-tableview>
+
+<app-edit *ngIf="editStatus">
+
+</app-edit>
+<app-profilecard [hidden]="!profileCard " [profileData]="profileDataH">
+
+
+</app-profilecard>
 
 
 <app-add *ngIf="addStatus"></app-add>

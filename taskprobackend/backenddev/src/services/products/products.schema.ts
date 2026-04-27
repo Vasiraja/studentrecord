@@ -58,8 +58,9 @@ export const productsQuerySchema = Type.Intersect(
     // Add additional query properties here 
     Type.Object({}, { additionalProperties: true })
   ], 
-  { additionalProperties: true }
+  { additionalProperties: true } 
 )
 export type ProductsQuery = Static<typeof productsQuerySchema>
-export const productsQueryValidator = getValidator(productsQuerySchema, queryValidator)
+export  const productsQueryValidator = getValidator(productsQuerySchema, queryValidator)
 export const productsQueryResolver = resolve<ProductsQuery, HookContext<ProductsService>>({})
+  
