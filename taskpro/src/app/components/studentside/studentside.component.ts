@@ -8,6 +8,7 @@ import { MatOption, MatSelect } from '@angular/material/select';
 import { StudentsService } from '../../services/students.service';
 import { SnackbarService } from '../../services/snackbar.service';
 import { MatCardHeader } from '@angular/material/card';
+import { ConnectionclientService } from '../../services/connectionclient.service';
 
 @Component({
   selector: 'app-studentside',
@@ -18,6 +19,10 @@ import { MatCardHeader } from '@angular/material/card';
 })
 export class StudentsideComponent implements OnInit {
 
+  editingRecordId: string | null = null;
+  isEditing = false;
+  originalRecord: any = null;
+  selectedRecord: any = null;
 
   confirmDelete(id: any) {
 
@@ -25,7 +30,7 @@ export class StudentsideComponent implements OnInit {
       next: (res: any) => {
         console.log("res====>", res);
         this.snackbar.openSnackBar(res.studentname + " deleted");
-        this.cancelForm();
+
       },
       error: (err: any) => {
         console.log("err---------------->", err);
@@ -62,17 +67,42 @@ export class StudentsideComponent implements OnInit {
   // @Output() formSubmit = new EventEmitter<any>();
   base64String: any = "";
 
-  constructor(private studentserv: StudentsService, private snackbar: SnackbarService) { }
+  constructor(private studentserv: StudentsService, private snackbar: SnackbarService,
+    private clientfeathers: ConnectionclientService
+  ) { }
   ngOnInit(): void {
+    this.clientfeathers.authenticate();
+    let serviceStude = this.clientfeathers.getStudentClient();
+    let productStude = this.clientfeathers.getProductClient();
+
+    // serviceStude.on("created", () => {
+    //   this.initialAllData();
+
+    // })
+    serviceStude.on("patched", (updateStudents: any) => {
+      this.handleRealtimeUpdate(updateStudents);
+    })
+    productStude.on("patched", (updatedProducts: any) => {
+      this.handleRealtimeUpdate(updatedProducts);
+    })
 
     this.studentserv.studentEdit$.subscribe({
       next: (res: any) => {
         console.log(res);
         if (res) {
-          this.student = { ...res }
+          this.student = { ...res };
+          this.isEditing = true;
+          this.originalRecord = { ...res };
+          this.editingRecordId = res._id;
+
+
+          this.selectedRecord = res;
+
         }
         else {
           this.student = {};
+          this.originalRecord = {};
+
         }
 
       },
@@ -84,12 +114,38 @@ export class StudentsideComponent implements OnInit {
     this.filterClasses();
 
   }
+  cancelEdit() {
+    this.isEditing = false;
+    this.editingRecordId = null;
+
+    this.editingRecordId = '';
+  }
+  handleRealtimeUpdate(updated: any) {
+    const check = updated._id === this.editingRecordId;
+
+    if (this.isEditing && check) {
+      this.snackbar.openSnackBar("Already user editing this record so this process discarded");
+
+    }
+    this.cancelEdit();
+    this.cancelForm();
+    this.studentserv.cancelTrigger();
+
+       this.student = this.student.map((items: any) => items._id === updated._id ? updated : items)
+
+    
+   
+
+
+  }
   student: any = {};
 
 
-  classList = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
+  classList = ['LKG', 'UKG', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
 
   classAgeMap: any = {
+    'LKG': { min: 3, max: 4 },
+    'UKG': { min: 4, max: 5 },
     '1': { min: 5, max: 7 },
     '2': { min: 6, max: 8 },
     '3': { min: 7, max: 9 },
@@ -139,6 +195,11 @@ export class StudentsideComponent implements OnInit {
 
   filterClasses() {
     const age = this.calculateAge(this.student.dob);
+
+    if (age >= 17) {
+      this.filteredClasses = ['10', '11', '12'];
+      return;
+    }
 
     this.filteredClasses = this.classList.filter(cls => {
       const range = this.classAgeMap[cls];

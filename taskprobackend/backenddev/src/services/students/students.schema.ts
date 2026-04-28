@@ -14,7 +14,7 @@ export const studentsSchema = Type.Object(
     _id: ObjectIdSchema(),
     studentId: Type.Union([
       Type.String(),
-      Type.Object({
+      Type.Object({ 
         $regex: Type.String()
       })
     ]),

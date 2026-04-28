@@ -1,298 +1,113 @@
-<!-- <p>productside works!</p>
+<form *ngIf="!product.delete"
+      #productForm="ngForm"
+      (ngSubmit)="product?._id ? onUpdate(product._id, productForm) : onSubmit(productForm)"
+      class="studentform">
 
-<table>
-    <tr>
-        <th>22</th>
-        <th>21</th>
-        <th>32</th>
-        <th>44</th>
-        <th>23</th>
-    </tr>
-    <tr>
-        <td>hi</td>
-        <td>lsdk</td>
-        <td>sd</td>
-        <td>sdf</td>
-        <td>we</td>
-    </tr>
-    <tr>
-        <td>hi</td>
-        <td>lsdk</td>
-        <td>sd</td>
-        <td>sdf</td>
-        <td>we</td>
-    </tr>
-    <tr>
-        <td>hi</td>
-        <td>lsdk</td>
-        <td>sd</td>
-        <td>sdf</td>
-        <td>we</td>
-    </tr>
-    <tr>
-        <td>hi</td>
-        <td>lsdk</td>
-        <td>sd</td>
-        <td>sdf</td>
-        <td>we</td>
-    </tr>
-    <tr>
-        <td>hi</td>
-        <td>lsdk</td>
-        <td>sd</td>
-        <td>sdf</td>
-        <td>we</td>
-    </tr>
-    <tr>
-        <td>hi</td>
-        <td>lsdk</td>
-        <td>sd</td>
-        <td>sdf</td>
-        <td>we</td>
-    </tr>
-    <tr>
-        <td>hi</td>
-        <td>lsdk</td>
-        <td>sd</td>
-        <td>sdf</td>
-        <td>we</td>
-    </tr>
-    <tr>
-        <td>hi</td>
-        <td>lsdk</td>
-        <td>sd</td>
-        <td>sdf</td>
-        <td>we</td>
-    </tr>
-    <tr>
-        <td>hi</td>
-        <td>lsdk</td>
-        <td>sd</td>
-        <td>sdf</td>
-        <td>we</td>
-    </tr>
-    <tr>
-        <td>hi</td>
-        <td>lsdk</td>
-        <td>sd</td>
-        <td>sdf</td>
-        <td>we</td>
-    </tr>
-    <tr>
-        <td>hi</td>
-        <td>lsdk</td>
-        <td>sd</td>
-        <td>sdf</td>
-        <td>we</td>
-    </tr>
-    <tr>
-        <td>hi</td>
-        <td>lsdk</td>
-        <td>sd</td>
-        <td>sdf</td>
-        <td>we</td>
-    </tr>
-    <tr>
-        <td>hi</td>
-        <td>lsdk</td>
-        <td>sd</td>
-        <td>sdf</td>
-        <td>we</td>
-    </tr>
-    <tr>
-        <td>hi</td>
-        <td>lsdk</td>
-        <td>sd</td>
-        <td>sdf</td>
-        <td>we</td>
-    </tr>
-    <tr>
-        <td>hi</td>
-        <td>lsdk</td>
-        <td>sd</td>
-        <td>sdf</td>
-        <td>we</td>
-    </tr>
-    <tr>
-        <td>hi</td>
-        <td>lsdk</td>
-        <td>sd</td>
-        <td>sdf</td>
-        <td>we</td>
-    </tr>
-    <tr>
-        <td>hi</td>
-        <td>lsdk</td>
-        <td>sd</td>
-        <td>sdf</td>
-        <td>we</td>
-    </tr>
-    <tr>
-        <td>hi</td>
-        <td>lsdk</td>
-        <td>sd</td>
-        <td>sdf</td>
-        <td>we</td>
-    </tr>
-    <tr>
-        <td>hi</td>
-        <td>lsdk</td>
-        <td>sd</td>
-        <td>sdf</td>
-        <td>we</td>
-    </tr>
-    <tr>
-        <td>hi</td>
-        <td>lsdk</td>
-        <td>sd</td>
-        <td>sdf</td>
-        <td>we</td>
-    </tr>
-    <tr>
-        <td>hi</td>
-        <td>lsdk</td>
-        <td>sd</td>
-        <td>sdf</td>
-        <td>we</td>
-    </tr>
-    <tr>
-        <td>hi</td>
-        <td>lsdk</td>
-        <td>sd</td>
-        <td>sdf</td>
-        <td>we</td>
-    </tr>
-    <tr>
-        <td>hi</td>
-        <td>lsdk</td>
-        <td>sd</td>
-        <td>sdf</td>
-        <td>we</td>
-    </tr>
-    <tr>
-        <td>hi</td>
-        <td>lsdk</td>
-        <td>sd</td>
-        <td>sdf</td>
-        <td>we</td>
-    </tr>
-    <tr>
-        <td>hi</td>
-        <td>lsdk</td>
-        <td>sd</td>
-        <td>sdf</td>
-        <td>we</td>
-    </tr>
-    <tr>
-        <td>hi</td>
-        <td>lsdk</td>
-        <td>sd</td>
-        <td>sdf</td>
-        <td>we</td>
-    </tr>
-    <tr>
-        <td>hi</td>
-        <td>lsdk</td>
-        <td>sd</td>
-        <td>sdf</td>
-        <td>we</td>
-    </tr>
-    <tr>
-        <td>hi</td>
-        <td>lsdk</td>
-        <td>sd</td>
-        <td>sdf</td>
-        <td>we</td>
-    </tr>
-    <tr>
-        <td>hi</td>
-        <td>lsdk</td>
-        <td>sd</td>
-        <td>sdf</td>
-        <td>we</td>
-    </tr>
-    <tr>
-        <td>hi</td>
-        <td>lsdk</td>
-        <td>sd</td>
-        <td>sdf</td>
-        <td>we</td>
-    </tr>
-    <tr>
-        <td>hi</td>
-        <td>lsdk</td>
-        <td>sd</td>
-        <td>sdf</td>
-        <td>we</td>
-    </tr>
-    <tr>
-        <td>hi</td>
-        <td>lsdk</td>
-        <td>sd</td>
-        <td>sdf</td>
-        <td>we</td>
-    </tr>
-    <tr>
-        <td>hi</td>
-        <td>lsdk</td>
-        <td>sd</td>
-        <td>sdf</td>
-        <td>we</td>
-    </tr>
-    <tr>
-        <td>hi</td>
-        <td>lsdk</td>
-        <td>sd</td>
-        <td>sdf</td>
-        <td>we</td>
-    </tr>
-    <tr>
-        <td>hi</td>
-        <td>lsdk</td>
-        <td>sd</td>
-        <td>sdf</td>
-        <td>we</td>
-    </tr>
-    <tr>
-        <td>hi</td>
-        <td>lsdk</td>
-        <td>sd</td>
-        <td>sdf</td>
-        <td>we</td>
-    </tr>
-    <tr>
-        <td>hi</td>
-        <td>lsdk</td>
-        <td>sd</td>
-        <td>sdf</td>
-        <td>we</td>
-    </tr>
-    <tr>
-        <td>hi</td>
-        <td>lsdk</td>
-        <td>sd</td>
-        <td>sdf</td>
-        <td>we</td>
-    </tr>
-    <tr>
-        <td>hi</td>
-        <td>lsdk</td>
-        <td>sd</td>
-        <td>sdf</td>
-        <td>we</td>
-    </tr>
-    <tr>
-        <td>hi</td>
-        <td>lsdk</td>
-        <td>sd</td>
-        <td>sdf</td>
-        <td>we</td>
-    </tr>
-    <tr>
-        <td>hi</td>
-        <td>lsdk</td>
-        <td>sd</td>
-        <td>sdf</td>
-        <td>we</td>
-    </tr>
-</table> -->
+  <mat-card-header>
+    <p *ngIf="product?._id; else addMode">Edit Product</p>
+    <ng-template #addMode>
+      <p>Add Product</p>
+    </ng-template>
+  </mat-card-header>
+
+  <div class="profile-upload-container">
+    <div class="image-preview">
+      <img *ngIf="product.image; else noImage" [src]="product.image" />
+      <ng-template #noImage>
+        <div class="placeholder">
+          <span>Product Image</span>
+        </div>
+      </ng-template>
+    </div>
+
+    <input type="file" accept="image/*" (change)="onFileSelect($event)" hidden #fileInput />
+
+    <button mat-stroked-button color="primary" type="button" (click)="fileInput.click()">
+      Upload Image
+    </button>
+  </div>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Title</mat-label>
+    <input matInput name="title" [(ngModel)]="product.title" #title="ngModel" required />
+  </mat-form-field>
+
+  <div *ngIf="title.invalid && title.touched">
+    <span class="errorss">Title is required</span>
+  </div>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Price</mat-label>
+    <input matInput type="number" name="price" [(ngModel)]="product.price" #price="ngModel" required min="1" />
+  </mat-form-field>
+
+  <div *ngIf="price.invalid && price.touched">
+    <span class="errorss" *ngIf="price.errors?.['required']">Price is required</span>
+    <span class="errorss" *ngIf="price.errors?.['min']">Price must be greater than 0</span>
+  </div>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Category</mat-label>
+    <mat-select name="category" [(ngModel)]="product.category" #category="ngModel" required>
+      <mat-option *ngFor="let categ of categories" [value]="categ">
+        {{ categ }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <div *ngIf="category.invalid && category.touched">
+    <span class="errorss">Select category</span>
+  </div>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Stock</mat-label>
+    <input matInput type="number" name="stock" [(ngModel)]="product.stock" #stock="ngModel" required min="0" />
+  </mat-form-field>
+
+  <div *ngIf="stock.invalid && stock.touched">
+    <span class="errorss" *ngIf="stock.errors?.['required']">Stock is required</span>
+    <span class="errorss" *ngIf="stock.errors?.['min']">Stock cannot be negative</span>
+  </div>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Overall Rating</mat-label>
+    <input matInput type="number"
+           name="overAllRating"
+           [(ngModel)]="product.overAllRating"
+           #overallrating="ngModel"
+           required
+           min="1"
+           max="5" />
+  </mat-form-field>
+
+  <div *ngIf="overallrating.invalid && overallrating.touched">
+    <span class="errorss" *ngIf="overallrating.errors?.['required']">Rating is required</span>
+    <span class="errorss" *ngIf="overallrating.errors?.['min']">Minimum rating is 1</span>
+    <span class="errorss" *ngIf="overallrating.errors?.['max']">Maximum rating is 5</span>
+  </div>
+
+  <div class="buttons-container">
+    <button mat-raised-button color="primary" type="submit">
+      {{ product?._id ? 'Update Product' : 'Add Product' }}
+    </button>
+
+    <button mat-raised-button type="button" (click)="cancelForm()">
+      Cancel
+    </button>
+  </div>
+
+</form>
+
+<div *ngIf="product.delete" class="additional-container-delete">
+  <p>Are you sure you want to delete this product?</p>
+
+  <div class="buttons-container">
+    <button mat-raised-button color="warn" (click)="confirmDelete(product._id)">
+      Confirm Delete {{product.title}}
+    </button>
+
+    <button mat-raised-button color="primary" (click)="cancelForm()">
+      Cancel
+    </button>
+  </div>
+</div>

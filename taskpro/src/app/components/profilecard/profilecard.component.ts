@@ -38,6 +38,11 @@ import { SnackbarService } from '../../services/snackbar.service';
 export class ProfilecardComponent implements OnInit {
 
 
+
+  formateImg(imgString: any): SafeUrl {
+    return this.sanitizer.bypassSecurityTrustUrl(imgString);
+  }
+
   downloadPhoto(event: Event, profilePhotoSafe: any) {
     event.stopPropagation();
     console.log("download");
@@ -87,7 +92,8 @@ export class ProfilecardComponent implements OnInit {
     private sidebarservice: SidebarService,
     private studentservice: StudentsService,
     private sanitizer: DomSanitizer,
-    private snackbar: SnackbarService
+    private snackbar: SnackbarService,
+
   ) { }
 
   ngOnInit(): void {
@@ -96,21 +102,13 @@ export class ProfilecardComponent implements OnInit {
 
   }
   initializeProfile() {
-    // this.sidebarservice.profileCardData$.subscribe({
-    //   next: (res: any) => {
-    //     // this.profileData = res;
+    const photoStr =
+      this.profileData.profilePhoto ||
+      this.profileData.image ||
+      "";
 
-    //     let photoStr = "";
-    //     if (res.studentname || res.title) {
-    //       photoStr = res.profilePhoto || "";
-    //     }
-
-    //     this.profilePhotoSafe = this.sanitizer.bypassSecurityTrustUrl(photoStr);
-    //   },
-    //   error: (err: any) => {
-    //     console.error(err);
-    //   }
-    // });
+    this.profilePhotoSafe =
+      this.sanitizer.bypassSecurityTrustUrl(photoStr);
   }
   onPhotoSelected(event: any, id: any, type: any) {
     console.log(type)
@@ -138,7 +136,7 @@ export class ProfilecardComponent implements OnInit {
 
 
 
-    
+
     fileReader.readAsDataURL(file);
   }
   resetFileInput(event: any) {

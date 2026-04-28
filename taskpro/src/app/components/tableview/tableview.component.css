@@ -172,8 +172,7 @@ th [mat-header-cell] {
    align-items: center;
    justify-content: flex-start;
    gap: 4rem;
-   margin-top: 1rem;
-}
+ }
 
 .mat-mdc-row:nth-of-type(even),
 .mat-row:nth-of-type(even) {
@@ -225,7 +224,6 @@ th [mat-header-cell] {
    display: flex;
    flex-direction: column;
    gap: 6px;
-   margin: 2rem;
 }
 
 .upload-row {

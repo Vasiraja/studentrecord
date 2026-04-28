@@ -41,6 +41,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 
   selectedSharedItem: any = {};
   editedStudent: any = {};
+  editedProduct: any = {};
   toggleState() {
     this.expandState = !this.expandState;
   }
@@ -118,6 +119,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   dbProducts: any[] = [];
   treeState: boolean = false;
   deletedStudent: any = {};
+  deletedProduct: any = {};
 
   // students = [
   //   {
@@ -136,6 +138,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   async ngOnInit() {
 
     const studentsserv = this.feathersClient.getStudentClient();
+    const productsserv = this.feathersClient.getProductClient();
     await this.feathersClient.authenticate();
 
     studentsserv.on("patched", (student: any) => {
@@ -147,6 +150,14 @@ export class SidebarComponent implements OnInit, AfterViewInit {
         }
       });
     });
+    productsserv.on("patched", (product: any) => {
+      this.ngzone.run(() => {
+        const tree = $(this.treeElem.nativeElement).jstree(true);
+        if (tree && tree.get_node(product._id)) {
+          tree.rename_node(product._id, product.title)
+        }
+      })
+    })
 
 
     studentsserv.on("removed", (student: any) => {
@@ -286,7 +297,16 @@ export class SidebarComponent implements OnInit, AfterViewInit {
                 label: "Create",
                 action: () => {
                   console.log(node);
-                  this.studentservice.addTrigger();
+                  console.log(node?.original.type)
+                  if (node.original?.type === "students") {
+                    this.studentservice.addTrigger();
+
+                  }
+                  else if (node.original?.type === "productdb") {
+                    console.log("enter trigger")
+                    this.studentservice.addProductTrigger();
+                  }
+
                 }
               }
             };
@@ -302,16 +322,32 @@ export class SidebarComponent implements OnInit, AfterViewInit {
                 action: () => {
                   console.log("edit:---");
                   console.log(node?.original?.id)
-                  this.editedStudent = this.students.find((items) => items._id === node?.original?.id);
-                  this.studentservice.editTrigger(this.editedStudent);
+                  if (node.original?.type === 'studentsapi') {
+                    this.editedStudent = this.students.find((items) => items._id === node?.original?.id);
+                    this.studentservice.editTrigger(this.editedStudent);
+                  }
+                  else if (node.original?.type === 'productsdbapi') {
+                    this.editedProduct = this.dbProducts.find((items) => items._id === node?.original?.id);
+                    this.studentservice.editProductTrigger(this.editedProduct);
+                    console.log("editeddd....")
+                    console.log(this.editedProduct)
+                  }
+
                 }
               },
               remove: {
                 label: "Delete",
                 action: () => {
                   console.log(node);
-                  this.deletedStudent = this.students.find((items) => items._id === node.original?.id);
-                  this.studentservice.deleteTrigger(this.deletedStudent);
+                  if (node.original?.type === 'studentsapi') {
+                    this.deletedStudent = this.students.find((items) => items._id === node.original?.id);
+                    this.studentservice.deleteTrigger(this.deletedStudent);
+                  }
+                  else if (node.original?.type === 'productsdbapi') {
+                    this.deletedProduct = this.dbProducts.find((items) => items._id === node.original?.id);
+                    this.studentservice.deleteProductTrigger(this.deletedProduct)
+                  }
+
                 }
               }
             };

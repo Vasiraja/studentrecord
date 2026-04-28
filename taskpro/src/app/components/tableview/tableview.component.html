@@ -3,16 +3,24 @@
     <div class="tab-content" *ngIf="selectedView === 'students'">
         <div class="mat-table-container">
 
+            <button (click)="updateSelected()">Bulk Update</button>
+
+
 
 
             <div class="table-scroll-wrapper">
                 <table mat-table [dataSource]="students" class="full-width-table">
-
+                    <ng-container matColumnDef="select">
+                        <th mat-header-cell *matHeaderCellDef>Select</th>
+                        <td mat-cell *matCellDef="let student">
+                            <input type="checkbox" (change)="onSelect(student, $event)">
+                        </td>
+                    </ng-container>
                     <ng-container matColumnDef="photo">
                         <th mat-header-cell *matHeaderCellDef></th>
                         <td mat-cell *matCellDef="let student">
 
-                            <ng-container *ngIf="editedId === student._id; else viewPhoto">
+                            <ng-container *ngIf="editedId === student._id || editedIDs.includes(student._id)  ; else viewPhoto">
 
                                 <div class="photo-wrapper" (click)="fileInput.click()">
 
@@ -23,7 +31,7 @@
                                         <div class="student-initials">
                                             {{ editedStudent.studentname?.slice(0,2).toUpperCase() }}
                                         </div>
-                                    </ng-template>
+                                    </ng-template> 
 
                                     <div class="upload-overlay">
                                         <i class="fa fa-upload"></i>
@@ -239,11 +247,11 @@
 
                     <div class="upload-row">
                         <div class="upload-row-left">
-                            <i class="fa fa-upload upload-icon" (click)="fileinput.click()"></i>
+                            <i class="fa fa-file-import upload-icon" (click)="fileinput.click()"></i>
 
                             <div class="upload-text">
                                 <div class="hint">
-                                    Bulk Upload Products (Excel)
+                                    Bulk Import Products (Excel)
                                 </div>
                                 <div class="sub-hint">
                                     Columns: Name, Category, Stock, Rating, Price
@@ -252,12 +260,12 @@
 
                         </div>
                         <div class="upload-row-right">
-                            <i class="fa fa-download download-icon" (click)="fileinput.click()"></i>
+                            <i class="fa fa-file-export download-icon" (click)="fileinput.click()"></i>
                             <div class="upload-text">
                                 <div class="hint">
-                                    Bulk download Products
+                                    Bulk Export Products
                                 </div>
-                               
+
                             </div>
 
 
@@ -410,7 +418,7 @@
                             <div class="actionbutton">
                                 <button mat-raised-button color="primary" (click)="addProduct()">+ Add Product</button>
                             </div>
- 
+
                         </th>
                         <td mat-cell *matCellDef="let product" class="buttoncontainer">
                             <ng-container *ngIf="editedId === product._id; else normalProductButtons">

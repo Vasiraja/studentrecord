@@ -56,7 +56,7 @@ export class HomeComponent implements OnInit {
     this.sidebarservice.profileCardTrigger$.subscribe((data) => {
       this.profileCard = data;
     })
-    this.studentservice.AddComponent$.subscribe((data) => {
+    this.studentservice.studentComponentReuse$.subscribe((data) => {
       console.log("studentside")
       console.log(data);
       console.log("student side view");
@@ -69,12 +69,24 @@ export class HomeComponent implements OnInit {
       this.tableH = false;
       // this.tableH = false;
     })
-    this.studentservice.AddComponentState$.subscribe((data) => {
+    this.studentservice.productComponentReuse$.subscribe((data) => {
+      this.studentSideView = false;
+      this.productSideView = data;
+      this.profileCard = false;
+      this.tableH = false;
+
+    })
+
+    this.studentservice.componentReuseState$.subscribe((data) => {
       this.addState = data;
+      console.log("--------------------")
+      console.log(this.addState)
+      console.log("--------------------")
 
     })
 
   }
+  
 
   sidebarStatus: boolean | undefined;
   editStatus: boolean | undefined;

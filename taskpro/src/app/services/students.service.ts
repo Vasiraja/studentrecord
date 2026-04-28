@@ -14,10 +14,13 @@ export class StudentsService {
   studentEditComponent$ = new BehaviorSubject<boolean>(false);
 
   studentEdit$ = new BehaviorSubject<any>(null);
+  productEdit$ = new BehaviorSubject<any>(null);
 
 
-  AddComponent$ = new BehaviorSubject<boolean>(false);
-  AddComponentState$ = new BehaviorSubject<string>('');
+  studentComponentReuse$ = new BehaviorSubject<boolean>(false);
+  componentReuseState$ = new BehaviorSubject<string>('');
+
+  productComponentReuse$ = new BehaviorSubject<boolean>(false);
 
 
   constructor(private http: HttpClient) { }
@@ -52,48 +55,75 @@ export class StudentsService {
     return this.http.post(`${this.apiUrl}`, studentdata);
 
   }
+
   addTrigger() {
-    // const AddComponent = this.AddComponent$.value;
-    this.AddComponent$.next(true);
+    // const AddComponent = this.studentComponentReuse$.value;
+    this.studentComponentReuse$.next(true);
 
 
-    this.AddComponentState$.next("student");
+    this.componentReuseState$.next("student");
     this.studentEdit$.next(null)
   }
   editTrigger(editedStudent: any) {
     console.log(editedStudent)
 
-    // const AddComponent = this.AddComponent$.value;
-    this.AddComponent$.next(true);
+    // const AddComponent = this.studentComponentReuse$.value;
+    this.studentComponentReuse$.next(true);
 
 
-    this.AddComponentState$.next("student");
+    this.componentReuseState$.next("student");
     this.studentEdit$.next({ ...editedStudent });
-    console.log(this.AddComponent$.value)
+    console.log(this.studentComponentReuse$.value)
 
 
   }
   deleteTrigger(deletedStudent: any) {
-    this.AddComponent$.next(true);
-    this.AddComponentState$.next("student");
+    this.studentComponentReuse$.next(true);
+    this.componentReuseState$.next("student");
     this.studentEdit$.next({ ...deletedStudent, delete: true });
 
 
   }
   cancelTrigger() {
-    this.AddComponent$.next(false);
+    this.studentComponentReuse$.next(false);
+    this.productComponentReuse$.next(false);
   }
   addProductTrigger() {
-    this.AddComponent$.next(true);
-    this.AddComponentState$.next("product");
+    this.productComponentReuse$.next(true);
+    this.componentReuseState$.next("products");
+    this.productEdit$.next(null);
+
+
+  }
+  editProductTrigger(editedProducts: any) {
+    console.log(editedProducts)
+
+    // const AddComponent = this.studentComponentReuse$.value;
+    this.productComponentReuse$.next(true);
+
+
+    this.componentReuseState$.next("products");
+    this.productEdit$.next({ ...editedProducts });
+    console.log(this.productComponentReuse$.value)
+
+
+  }
+  deleteProductTrigger(deletedProduct: any) {
+    this.productComponentReuse$.next(true);
+    this.componentReuseState$.next("products");
+    this.studentEdit$.next({ ...deletedProduct, delete: true });
 
 
   }
 
   removeAddTrigger() {
-    this.AddComponent$.next(false);
-    console.log(this.AddComponent$.value)
-    this.AddComponentState$.next("");
+    this.studentComponentReuse$.next(false);
+    this.productComponentReuse$.next(false);
+
+    console.log(this.studentComponentReuse$.value)
+    this.componentReuseState$.next("");
+    this.productEdit$.next(null);
+    this.studentEdit$.next(null);
   }
   updateStudents(id: any, data: any) {
 
@@ -136,5 +166,9 @@ export class StudentsService {
   }
   getStudentById(id: any): Observable<any> {
     return this.http.get(`${this.apiUrl}/students/${id}`);
+  }
+  bulkUpdate(data: any) {
+
+    return this.http.patch(`${this.apiUrl}/students`, data);
   }
 }

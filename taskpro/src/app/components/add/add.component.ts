@@ -69,7 +69,7 @@ export class AddComponent implements OnInit {
   ) { }
   ngOnInit(): void {
 
-    this.studentservice.AddComponentState$.subscribe({
+    this.studentservice.componentReuseState$.subscribe({
       next: (res: any) => {
         console.log(res);
         this.viewType = res;

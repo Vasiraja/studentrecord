@@ -31,7 +31,62 @@ import { UserserviceService } from '../../services/userservice.service';
 })
 export class TableviewComponent implements OnInit, OnChanges {
 
+  updateSelected() {
 
+  //   if (!this.selectedStudents.length) {
+  //     this.snackbar.openSnackBar("Select at least one row");
+  //     return;
+  //   }
+
+  //   const updatedStudents = this.selectedStudents.map((item) => ({
+  //     ...item,
+  //     studentname: this.editedStudent.studentname,
+  //     dob: this.editedStudent.dob,
+  //     class: this.editedStudent.class,
+  //     gender: this.editedStudent.gender
+  //   }));
+
+  //   const payload = {
+  //     students: updatedStudents.map((item) => {
+  //       const { age, ...rest } = item;
+  //       return rest;
+  //     })
+  //   };
+
+  //   console.log("payload here", payload);
+
+  //   this.studentservice.bulkUpdate(payload).subscribe({
+  //     next: () => {
+  //       this.snackbar.openSnackBar("Bulk updated");
+  //       this.selectedStudents = [];
+  //       this.editedIDs = [];
+  //       this.editedStudent = {};
+  //       this.initialAllData();
+  //     },
+  //     error: (err: any) => console.error(err)
+  //   });
+  }
+  onSelect(student: any, event: any) {
+  //   if (event.target.checked) {
+  //     if (!this.selectedStudents.find(s => s._id === student._id)) {
+  //       this.selectedStudents.push({ ...student });
+  //     }
+
+  //     if (!this.editedIDs.includes(student._id)) {
+  //       this.editedIDs.push(student._id);
+  //     }
+
+  //     this.editedStudent = { ...student };
+  //   } else {
+  //     this.selectedStudents = this.selectedStudents.filter(
+  //       s => s._id !== student._id
+  //     );
+
+  //     this.editedIDs = this.editedIDs.filter(
+  //       id => id !== student._id
+  //     );
+  //   }
+  }
 
   onProductPhotoSelected(event: any) {
     const file = event.target.files[0];
@@ -104,12 +159,14 @@ export class TableviewComponent implements OnInit, OnChanges {
     return age;
   }
   filterClassesByAge(age: number) {
+    if (age >= 17) {
+      this.filteredClass = ['10', '11', '12'];
+      return
+    }
     this.filteredClass = this.studentClass.filter((cls: string) => {
       const range = this.classAgeMap[cls];
-      if (age > range.max) {
-        this.snackbar.openSnackBar(`Age higher than recommended for class ${cls}`);
-      }
-      return age >= range.min;
+
+      return age >= range.min && age <= range.max;
     });
   }
   onDobChange() {
@@ -158,13 +215,14 @@ export class TableviewComponent implements OnInit, OnChanges {
 
   productApiColumns: string[] = ['id', 'title', 'rating', 'category', 'stock', 'price'];
   productDbColumns: string[] = ['photo', 'id', 'name', 'category', 'stock', 'overallrating', 'price', 'actions'];
-  studentColumns: string[] = ['photo', 'id', 'name', 'dob', 'class', 'gender', 'age', 'actions'];
+  studentColumns: string[] = ['select', 'photo', 'id', 'name', 'dob', 'class', 'gender', 'age', 'actions'];
 
   sortingtoggle: boolean | undefined;
   @Input() tableData: any = {};
   editedStudent: any = {};
   editedProduct: any = {};
   editedId: string = "";
+  editedIDs: string[] = [];
 
 
   editingRecordId: string | null = null;
@@ -176,6 +234,7 @@ export class TableviewComponent implements OnInit, OnChanges {
   apiErrorMsg: string = "";
   apiError: boolean = false;
 
+  selectedStudents: any[] = [];
 
   // students: any[] = [];
 
@@ -195,6 +254,10 @@ export class TableviewComponent implements OnInit, OnChanges {
     this.initialAllData();
     console.log("Table data");
     console.log(this.tableData);
+
+
+
+
 
 
 
@@ -443,47 +506,47 @@ export class TableviewComponent implements OnInit, OnChanges {
 
 
 
-initialAllData() {
+  initialAllData() {
 
-  const productfetch = this.productservice.getThirdpartyProducts().pipe(
-    catchError(err => {
-      this.apiError = true;
+    const productfetch = this.productservice.getThirdpartyProducts().pipe(
+      catchError(err => {
+        this.apiError = true;
 
-      if (err.status === 0) {
-        this.apiErrorMsg = 'External API not reachable';
-      } else if (err.status >= 500) {
-        this.apiErrorMsg = 'External API server error';
-      } else {
-        this.apiErrorMsg = 'Failed to load external products';
+        if (err.status === 0) {
+          this.apiErrorMsg = 'External API not reachable';
+        } else if (err.status >= 500) {
+          this.apiErrorMsg = 'External API server error';
+        } else {
+          this.apiErrorMsg = 'Failed to load external products';
+        }
+
+        return of(null);
+      })
+    );
+
+    const productDbFetch = this.productservice.getProducts();
+    const studentfetch = this.studentservice.getStudents();
+
+    forkJoin({ productfetch, productDbFetch, studentfetch }).subscribe({
+      next: (res: any) => {
+
+        console.log(res);
+
+        if (res.productfetch && res.productfetch.products) {
+          this.productsApi = res.productfetch.products;
+        } else {
+          this.productsApi = [];
+        }
+
+        this.products = res.productDbFetch?.data || [];
+        this.students = res.studentfetch?.data || [];
+
+        const currentUser = res.studentfetch?.loggedUser;
+        if (currentUser) {
+          this.sidebarservice.currentLoggedIn(currentUser);
+        }
+
       }
-
-      return of(null);
-    })
-  );
-
-  const productDbFetch = this.productservice.getProducts();
-  const studentfetch = this.studentservice.getStudents();
-
-  forkJoin({ productfetch, productDbFetch, studentfetch }).subscribe({
-    next: (res: any) => {
-
-      console.log(res);
-
-       if (res.productfetch && res.productfetch.products) {
-        this.productsApi = res.productfetch.products;
-      } else {
-        this.productsApi = []; 
-      }
-
-      this.products = res.productDbFetch?.data || [];
-      this.students = res.studentfetch?.data || [];
-
-      const currentUser = res.studentfetch?.loggedUser;
-      if (currentUser) {
-        this.sidebarservice.currentLoggedIn(currentUser);
-      }
-
-    }
-  });
-}
+    });
+  }
 }
