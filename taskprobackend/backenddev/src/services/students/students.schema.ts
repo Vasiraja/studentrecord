@@ -87,7 +87,7 @@ export const studentsPatchResolver = resolve<StudentsPatch, HookContext<Students
     const birthDate = new Date(data?.dob);
     const birthyear = birthDate.getFullYear();
     const currentYear = newDate.getFullYear();
-    let ageCalc = currentYear - birthyear;
+    let ageCalc = currentYear - birthyear; 
 
     const birthMonth = birthDate.getMonth() + 1
     const currentMonth = newDate.getMonth() + 1;

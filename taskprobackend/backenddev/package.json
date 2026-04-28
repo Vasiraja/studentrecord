@@ -61,6 +61,7 @@
     "@feathersjs/typebox": "^5.0.44",
     "cookie-parser": "^1.4.7",
     "jsonwebtoken": "^9.0.3",
+    "koa-cookie": "^1.0.0",
     "mongodb": "^6.19.0",
     "socket.io-client": "^4.8.3",
     "winston": "^3.19.0"
@@ -70,6 +71,7 @@
     "@feathersjs/rest-client": "^5.0.44",
     "@types/cookie-parser": "^1.4.10",
     "@types/feathersjs__socketio-client": "^1.0.10",
+    "@types/koa-cookie": "^1.0.3",
     "@types/mocha": "^10.0.10",
     "@types/node": "^25.5.0",
     "axios": "^1.14.0",

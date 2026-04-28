@@ -11,6 +11,7 @@ import { mongodb } from './mongodb'
 import { authentication } from './authentication'
 import { services } from './services/index'
 import { channels } from './channels'
+import cookie from 'koa-cookie';
 
 const app: Application = koa(feathers())
 
@@ -23,11 +24,12 @@ app.use(serveStatic(app.get('public')))
 app.use(errorHandler())
 app.use(parseAuthentication())
 app.use(bodyParser(
-  { 
+  {
     jsonLimit: '10mb',
-    formLimit: '10mb' 
+    formLimit: '10mb'
   }
 ))
+app.use(cookie());
 
 // Configure services and transports
 app.configure(rest())
@@ -38,7 +40,6 @@ app.configure(mongodb)
 app.configure(authentication)
 app.configure(services)
 app.configure(channels)
-
 // Register hooks that run on all service methods
 app.hooks({
   around: {
