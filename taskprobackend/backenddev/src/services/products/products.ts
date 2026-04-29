@@ -18,6 +18,7 @@ import type { Application } from '../../declarations'
 import { ProductsService, getOptions } from './products.class'
 import { productsPath, productsMethods } from './products.shared'
 import { pidGenerate } from '../../hooks/pid-generate'
+import { bulkEdit } from '../../hooks/bulk-edit'
 
 export * from './products.class'
 export * from './products.schema'
@@ -54,7 +55,8 @@ export const products = (app: Application) => {
       ],
       patch: [
         schemaHooks.validateData(productsPatchValidator),
-        schemaHooks.resolveData(productsPatchResolver)
+        schemaHooks.resolveData(productsPatchResolver),
+        bulkEdit
       ],
       remove: []
     },

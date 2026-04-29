@@ -20,12 +20,15 @@ import { MatOption } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
 import { ConnectionclientService } from '../../services/connectionclient.service';
 import { UserserviceService } from '../../services/userservice.service';
+import { FilterComponent } from '../../shared/filter/filter.component';
+import { FilterclassesComponent } from '../../shared/filterclasses/filterclasses.component';
+import { FilterapiscategoriesComponent } from '../../shared/filterapiscategories/filterapiscategories.component';
 
 
 @Component({
   selector: 'app-tableview',
   standalone: true,
-  imports: [MatTableModule, MatTable, MatToolbar, MatButton, CommonModule, MatCardHeader, MatFormField, MatLabel, FormsModule, MatFormFieldModule, MatFormField, MatInput, MatOption, MatSelect],
+  imports: [MatTableModule, MatTable, MatToolbar, MatButton, CommonModule, MatCardHeader, MatFormField, MatLabel, FormsModule, MatFormFieldModule, MatFormField, MatInput, MatOption, MatSelect, FilterComponent, FilterclassesComponent, FilterapiscategoriesComponent],
   templateUrl: './tableview.component.html',
   styleUrl: './tableview.component.css'
 })
@@ -33,61 +36,97 @@ export class TableviewComponent implements OnInit, OnChanges {
 
   updateSelected() {
 
-  //   if (!this.selectedStudents.length) {
-  //     this.snackbar.openSnackBar("Select at least one row");
-  //     return;
-  //   }
+    if (!this.selectedStudents.length) {
+      this.snackbar.openSnackBar("Select rows first");
+      return;
+    }
 
-  //   const updatedStudents = this.selectedStudents.map((item) => ({
-  //     ...item,
-  //     studentname: this.editedStudent.studentname,
-  //     dob: this.editedStudent.dob,
-  //     class: this.editedStudent.class,
-  //     gender: this.editedStudent.gender
-  //   }));
+    const payload = {
+      students: this.selectedStudents.map(stu => ({
+        _id: stu._id,
+        studentname: stu.studentname,
+        dob: stu.dob,
+        class: stu.class,
+        gender: stu.gender
+      }))
+    };
 
-  //   const payload = {
-  //     students: updatedStudents.map((item) => {
-  //       const { age, ...rest } = item;
-  //       return rest;
-  //     })
-  //   };
-
-  //   console.log("payload here", payload);
-
-  //   this.studentservice.bulkUpdate(payload).subscribe({
-  //     next: () => {
-  //       this.snackbar.openSnackBar("Bulk updated");
-  //       this.selectedStudents = [];
-  //       this.editedIDs = [];
-  //       this.editedStudent = {};
-  //       this.initialAllData();
-  //     },
-  //     error: (err: any) => console.error(err)
-  //   });
+    this.studentservice.bulkUpdate(payload).subscribe({
+      next: () => {
+        this.snackbar.openSnackBar("Bulk updated");
+        this.selectedStudents = [];
+        this.editedIDs = [];
+        this.initialAllData();
+      }
+    });
   }
   onSelect(student: any, event: any) {
-  //   if (event.target.checked) {
-  //     if (!this.selectedStudents.find(s => s._id === student._id)) {
-  //       this.selectedStudents.push({ ...student });
-  //     }
 
-  //     if (!this.editedIDs.includes(student._id)) {
-  //       this.editedIDs.push(student._id);
-  //     }
+    if (event.target.checked) {
+      this.selectedStudents.push(student);
 
-  //     this.editedStudent = { ...student };
-  //   } else {
-  //     this.selectedStudents = this.selectedStudents.filter(
-  //       s => s._id !== student._id
-  //     );
+      if (!this.editedIDs.includes(student._id)) {
+        this.editedIDs.push(student._id);
+      }
 
-  //     this.editedIDs = this.editedIDs.filter(
-  //       id => id !== student._id
-  //     );
-  //   }
+    } else {
+      this.selectedStudents = this.selectedStudents.filter(
+        stu => stu._id !== student._id
+      );
+
+      this.editedIDs = this.editedIDs.filter(
+        id => id !== student._id
+      );
+    }
   }
+  onSelectProduct(product: any, event: any) {
 
+    if (event.target.checked) {
+      this.selectedProducts.push(product);
+
+      if (!this.productEditedIDs.includes(product._id)) {
+        this.productEditedIDs.push(product._id);
+      }
+
+    } else {
+      this.selectedProducts = this.selectedProducts.filter(
+        pro => pro._id !== product._id
+      );
+
+      this.productEditedIDs = this.productEditedIDs.filter(
+        id => id !== product._id
+      );
+    }
+  }
+  updateSelectedProducts() {
+
+    if (!this.selectedProducts.length) {
+      this.snackbar.openSnackBar("Select rows first");
+      return;
+    }
+
+    const payload = {
+      products: this.selectedProducts.map(pro => ({
+        _id: pro._id,
+        title: pro.title,
+        category: pro.category,
+        stock: pro.stock,
+        overAllRating: pro.overAllRating,
+        price: pro.price
+      }))
+    };
+    console.log("payload product")
+    console.log(payload)
+
+    this.studentservice.bulkUpdate(payload).subscribe({
+      next: () => {
+        this.snackbar.openSnackBar("Bulk updated");
+        this.selectedProducts = [];
+        this.productEditedIDs = [];
+        this.initialAllData();
+      }
+    });
+  }
   onProductPhotoSelected(event: any) {
     const file = event.target.files[0];
     if (!file) return;
@@ -180,7 +219,7 @@ export class TableviewComponent implements OnInit, OnChanges {
 
   ];
 
-  selectedView: any = '';
+  selectedView: any = 'home';
 
   productsApi: any[] = [];
   products: any[] = [];
@@ -211,10 +250,11 @@ export class TableviewComponent implements OnInit, OnChanges {
     '12': { min: 16, max: 18 }
   };
   studentClass: any[] = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
+  apiCategoriesLists: any[] = ['fragrances', 'beauty', 'furniture', 'groceries'];
 
 
   productApiColumns: string[] = ['id', 'title', 'rating', 'category', 'stock', 'price'];
-  productDbColumns: string[] = ['photo', 'id', 'name', 'category', 'stock', 'overallrating', 'price', 'actions'];
+  productDbColumns: string[] = ['select', 'photo', 'id', 'name', 'category', 'stock', 'overallrating', 'price', 'actions'];
   studentColumns: string[] = ['select', 'photo', 'id', 'name', 'dob', 'class', 'gender', 'age', 'actions'];
 
   sortingtoggle: boolean | undefined;
@@ -223,6 +263,9 @@ export class TableviewComponent implements OnInit, OnChanges {
   editedProduct: any = {};
   editedId: string = "";
   editedIDs: string[] = [];
+
+  selectedProducts: any[] = [];
+  productEditedIDs: string[] = [];
 
 
   editingRecordId: string | null = null;
@@ -235,6 +278,12 @@ export class TableviewComponent implements OnInit, OnChanges {
   apiError: boolean = false;
 
   selectedStudents: any[] = [];
+  filteredProducts: any[] = [];
+  filterClassesOut: any[] = [];
+  filterCategoriesApi: any[] = [];
+  isCollapsed = false;
+
+
 
   // students: any[] = [];
 
@@ -254,6 +303,16 @@ export class TableviewComponent implements OnInit, OnChanges {
     this.initialAllData();
     console.log("Table data");
     console.log(this.tableData);
+    this.filteredProducts = this.products;
+    this.filterClassesOut = this.students;
+    this.filterCategoriesApi = this.productsApi;
+    this.sidebarservice.sidebarState$.subscribe(state => {
+      this.isCollapsed = state;
+    });
+
+
+    this.selectedView = "home";
+
 
 
 
@@ -273,6 +332,8 @@ export class TableviewComponent implements OnInit, OnChanges {
       this.handleRealtimeUpdate(updateStudents);
     })
     productStude.on("patched", (updatedProducts: any) => {
+      console.log("product patch started table view")
+
       this.handleRealtimeUpdate(updatedProducts);
     })
 
@@ -283,7 +344,10 @@ export class TableviewComponent implements OnInit, OnChanges {
 
 
 
-    if (this.tableData?.type === 'products') {
+    if (this.tableData?.type === 'home') {
+      this.selectedView = 'home';
+    }
+    else if (this.tableData?.type === 'products') {
       this.selectedView = 'products';
     }
     else if (this.tableData?.type === 'productdb') {
@@ -295,6 +359,7 @@ export class TableviewComponent implements OnInit, OnChanges {
 
 
     const studentsserv = this.clientfeathers.getStudentClient();
+    const productsserv = this.clientfeathers.getProductClient();
     this.clientfeathers.authenticate();
 
     studentsserv.on("created", () => {
@@ -302,15 +367,17 @@ export class TableviewComponent implements OnInit, OnChanges {
       this.initialAllData();
 
     });
-    studentsserv.on("patched", () => {
-      console.log("patched started.................>")
 
-    });
 
 
 
   }
+
   ngOnChanges() {
+    this.filteredProducts = this.products;
+    this.filterClassesOut = this.students;
+    this.filterCategoriesApi = this.productsApi;
+
     if (this.tableData?.type === 'products') {
       this.selectedView = 'products';
     }
@@ -475,10 +542,27 @@ export class TableviewComponent implements OnInit, OnChanges {
 
   }
 
+  filterClassesView(value: any) {
+    console.log(value);
+
+    this.filterClassesOut = value.class ? this.students.filter((item) => item.class === value.class) : this.students;
+
+  }
+  getCategory(value: any) {
+    console.log(value)
+    this.filterCategoriesApi = value.category ? this.productsApi.filter((item) => item.category === value.category) : this.productsApi;
+
+  }
+  onProductFilter(value: any) {
+    console.log(value);
+    this.filteredProducts = value.category
+      ? this.products.filter(p => p.category === value.category)
+      : this.products;
+  }
+
   editProducts(product: any) {
     this.isEditing = true;
     this.editingRecordId = product._id;
-
     this.editedId = product._id;
     this.editedProduct = { ...product };
     this.originalRecord = { ...product };

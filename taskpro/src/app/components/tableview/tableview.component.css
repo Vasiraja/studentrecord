@@ -1,203 +1,120 @@
-.dashboard-container,
-mat-toolbar {
+.dashboard-container {
    margin-left: 310px;
-   position: fixed;
-   top: 20%;
-   width: 80%;
+   padding: 20px;
+   box-sizing: border-box;
+   width: calc(100% - 310px);
+   height: 100vh;
+   overflow: hidden;
+}
+
+.dashboard-container.collapsed {
+   margin-left: 100px;
+   width: calc(100% - 100px);
+}
+
+.tab-content {
+   height: 100%;
+   display: flex;
+   flex-direction: column;
+}
+
+.mat-table-container {
+   display: flex;
+   flex-direction: column;
+   margin-top: 4rem;
+   height: 80%;
+}
+
+.mat-table-container-students {
+   display: flex;
+   flex-direction: column;
+   margin-top: 7rem;
+   height: 80%;
+
+}
+
+.mat-table-container-productapi {
+   display: flex;
+   flex-direction: column;
+   margin-top: 9rem;
+   height: 80%;
+
+}
+
+.table-scroll-wrapper {
+   flex: 1;
+   overflow-y: auto;
+   overflow-x: auto;
+}
+
+.full-width-table {
+   width: 100%;
+   table-layout: fixed;
+}
+
+.table-toolbar {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   margin-bottom: 10px;
+}
+
+.right button {
+   min-width: 150px;
+   margin-right: 20px;
+}
+
+
+.buttoncontainerexpand {
+   display: flex;
+   gap: 8px;
+   align-items: center;
+   height: 102px;
+
+
+}
+
+
+
+::ng-deep .inline-field .mat-mdc-input-element {
+   height: 52px;
+   width: 70%;
+}
+
+::ng-deep .mat-mdc-text-field-wrapper {
+   width: 70%
 }
 
 .editBut,
 .deleteBut {
    background-color: #fff;
    border: none;
-   padding: 0.3rem;
-   box-shadow: 1px 1px 2px rgb(198, 198, 199);
+   padding: 6px;
    height: 30px;
    width: 60px;
-}
-
-table {}
-
-.buttoncontainer {
-   display: flex;
-   margin-top: 28px;
-   gap: 0.5rem;
-   padding-bottom: 1.5rem;
-
-
-}
-
-.buttoncontainer button {
-   border-radius: 4px;
+   box-shadow: 1px 1px 2px rgb(198, 198, 199);
    cursor: pointer;
-}
-
-.student-initials,
-.student-avatar {
-   background-color: #e3f2fd;
-   border-radius: 50%;
-   width: 40px;
-   height: 40px;
-   display: flex;
-   align-items: center;
-   justify-content: center;
-   color: #1565c0;
-
-
-
-}
-
-.mat-table-container {
-   display: flex;
-   flex-direction: column;
-   gap: 8px;
-}
-
-/* .mat-table-container .addbutton{
-   position:fixed;
-   top:100px
-   
-} */
-
-
-.addbutton {
-   /* margin: 3rem 0; */
-   /* justify-self: right;
-   display: flex;
-   align-items: center; */
-
-}
-
-.upload-hint {
-   font-size: 12px;
-   color: #666;
-}
-
-#uploadicon {
-   margin: 0.4rem 5rem;
-   color: #1565c0;
-   border: 0.3px solid #fcfafa;
-   padding: 0.4rem;
-   border-radius: 4px;
-   box-shadow: 0px 0px 1px #c2bfbf;
-   cursor: pointer;
-   background-color: #fff;
-
-}
-
-.upload-actions {
-   margin-bottom: -2rem;
-}
-
-.tab-content,
-.mat-table-container {}
-
-.table-toolbar {
-   display: flex;
-   justify-content: flex-end;
-   align-items: center;
-   /* padding: 8px 0 16px 0;
-   margin: 0 1rem; */
-
-}
-
-.table-toolbar button {
-   margin-right: 3rem;
-}
-
-mat-header-cell {
-   position: fixed;
-   top: 30px;
-}
-
-
-.insidetool {
-   display: flex;
-   flex-direction: row;
-   margin-right: 2rem;
-   background-color: red;
-
-}
-
-th [mat-header-cell] {
-   background-color: red;
-}
-
-.photo-wrapper {
-   position: relative;
-   width: 60px;
-   height: 60px;
-   cursor: pointer;
-}
-
-.inline-field {
-   width: 100px;
-   margin-bottom: -1.2rem;
-}
-
-.inline-field input {
-   height: 20px;
 }
 
 .student-avatar,
 .student-initials {
-   position: relative;
-
-}
-
-.student-avatar::after,
-.student-initials::after {
-   content: "";
-   position: absolute;
-   top: 0;
-   left: 0;
-   width: 100%;
-   height: 100%;
+   width: 40px;
+   height: 40px;
    border-radius: 50%;
-   z-index: 100;
-   background-color: rgba(0, 0, 0, 0.4);
-   opacity: 0;
-   transition: opacity 0.3s ease;
-}
-
-
-.table-scroll-wrapper {
-   height: calc(100vh - 150px);
-   overflow-y: auto;
-
-}
-
-.actionbutton {
+   background-color: #e3f2fd;
    display: flex;
    align-items: center;
-   justify-content: flex-start;
-   gap: 4rem;
- }
-
-.mat-mdc-row:nth-of-type(even),
-.mat-row:nth-of-type(even) {
-   background-color: #f9fafb;
+   justify-content: center;
+   color: #1565c0;
+   object-fit: cover;
 }
-
-.mat-mdc-row:nth-of-type(odd),
-.mat-row:nth-of-type(odd) {
-   background-color: #ffffff;
-}
-
 
 .photo-wrapper {
    position: relative;
-   width: 60px;
-   height: 60px;
+   width: 40px;
+   height: 40px;
    cursor: pointer;
 }
-
-/* .student-avatar,
-.student-initials {
-   width: 100%;
-   height: 100%;
-   border-radius: 50%;
-} */
 
 .upload-overlay {
    position: absolute;
@@ -213,29 +130,67 @@ th [mat-header-cell] {
    opacity: 0;
    transition: 0.3s;
    color: white;
-   font-size: 18px;
 }
 
 .photo-wrapper:hover .upload-overlay {
    opacity: 1;
 }
 
+.inline-field {
+   width: 100px;
+}
+
+.mat-mdc-row:nth-of-type(even),
+.mat-row:nth-of-type(even) {
+   background-color: #f9fafb;
+}
+
+.mat-mdc-row:nth-of-type(odd),
+.mat-row:nth-of-type(odd) {
+   background-color: #ffffff;
+}
+
+.dashboard-cards {
+   display: flex;
+   gap: 20px;
+   margin-bottom: 20px;
+}
+
+.card {
+   flex: 1;
+   padding: 16px;
+   background: #f5f7fa;
+   border-radius: 8px;
+   text-align: center;
+}
+
+.recent-section {
+   margin-top: 20px;
+}
+
+.recent-section ul {
+   padding: 0;
+   list-style: none;
+}
+
 .upload-container {
    display: flex;
    flex-direction: column;
-   gap: 6px;
+   gap: 8px;
+   width: 100%;
 }
 
 .upload-row {
    display: flex;
-   align-items: flex-start;
-   gap: 32rem;
+   justify-content: space-between;
+   align-items: center;
 }
 
 .upload-row-left,
 .upload-row-right {
-   padding: 1rem;
-   height: 104px;
+   display: flex;
+   align-items: center;
+   gap: 10px;
 }
 
 .upload-icon,
@@ -243,10 +198,6 @@ th [mat-header-cell] {
    cursor: pointer;
    font-size: 18px;
    color: #1976d2;
-}
-
-.upload-container {
-   width: 100%;
 }
 
 .upload-text {
@@ -266,22 +217,10 @@ th [mat-header-cell] {
 
 .upload-actions {
    display: flex;
-   align-items: center;
-   gap: 10px;
-   padding: 0.5rem 0;
-}
-
-.filename {
-   font-size: 12px;
-   color: #444;
-}
-
-.upload-actions {
-   display: flex;
-   align-items: center;
    justify-content: space-between;
+   align-items: center;
    background: #f5f7fa;
-   /* padding: 8px 10px; */
+   padding: 10px;
    border-radius: 6px;
 }
 
@@ -293,43 +232,33 @@ th [mat-header-cell] {
 
 .file-icon {
    color: #2e7d32;
-   font-size: 16px;
 }
 
 .filename {
    font-size: 13px;
-   color: #333;
 }
 
 .action-buttons {
    display: flex;
-   gap: 8px;
+   gap: 10px;
 }
 
 .error-box {
-   width: 92%;
-
-   /* margin: 40px auto; */
+   width: 100%;
    padding: 20px;
    border: 1px solid #969393;
    border-radius: 8px;
-   background: #ffffff;
+   background: #fff;
    text-align: center;
 }
 
 .error-title {
    font-size: 16px;
    font-weight: 600;
-   margin-bottom: 10px;
    color: red;
-}
-
-.error-title i {
-   margin-right: 6px;
+   margin-bottom: 10px;
 }
 
 .error-text {
    font-size: 14px;
-   color: #000;
-   margin-bottom: 15px;
 }

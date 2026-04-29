@@ -30,6 +30,7 @@ export class StudentsideComponent implements OnInit {
       next: (res: any) => {
         console.log("res====>", res);
         this.snackbar.openSnackBar(res.studentname + " deleted");
+        this.studentserv.cancelTrigger();
 
       },
       error: (err: any) => {
@@ -83,6 +84,8 @@ export class StudentsideComponent implements OnInit {
       this.handleRealtimeUpdate(updateStudents);
     })
     productStude.on("patched", (updatedProducts: any) => {
+                  console.log("product patch started anoter dependent view")
+
       this.handleRealtimeUpdate(updatedProducts);
     })
 

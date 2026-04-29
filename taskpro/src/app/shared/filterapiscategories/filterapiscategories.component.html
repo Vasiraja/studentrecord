@@ -1,0 +1,7 @@
+<div class="filter-bar">
+    <select (change)="changeCategories($event)">
+        <option value="">Select category</option>
+        <option *ngFor="let c of apicategories" [value]="c">{{c}}</option>
+
+    </select>
+</div>

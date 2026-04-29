@@ -1,53 +1,103 @@
-<div class="dashboard-container">
+<div class="dashboard-container" [class.collapsed]="isCollapsed">
+    <div class="tab-content" *ngIf="selectedView === 'home'">
 
+        <div class="dashboard-cards">
+
+            <div class="card">
+                <h3>Total Students</h3>
+                <p>{{ students.length }}</p>
+            </div>
+
+            <div class="card">
+                <h3>Total Products (DB)</h3>
+                <p>{{ products.length }}</p>
+            </div>
+
+            <div class="card">
+                <h3>Total API Products</h3>
+                <p>{{ productsApi.length }}</p>
+            </div>
+
+
+        </div>
+
+        <div class="recent-section">
+
+            <h3>Recent Students</h3>
+            <ul>
+                <li *ngFor="let s of students.slice(-5)">
+                    {{ s.studentname }}
+                </li>
+            </ul>
+
+            <h3>Recent Products</h3>
+            <ul>
+                <li *ngFor="let p of products.slice(-5)">
+                    {{ p.title }}
+                </li>
+            </ul>
+
+        </div>
+
+    </div>
     <div class="tab-content" *ngIf="selectedView === 'students'">
-        <div class="mat-table-container">
+        <div class="mat-table-container-students">
 
-            <button (click)="updateSelected()">Bulk Update</button>
-
-
-
+            <div class="table-toolbar">
+                <div class="left"></div>
+                <div class="right">
+                    <button mat-raised-button color="accent" (click)="updateSelected()"
+                        [disabled]="!selectedStudents.length">
+                        Bulk Update
+                    </button>
+                </div>
+            </div>
 
             <div class="table-scroll-wrapper">
-                <table mat-table [dataSource]="students" class="full-width-table">
+                <app-filterclasses [classTypes]="studentClass" (triggerClasses)="filterClassesView($event)">
+
+                </app-filterclasses>
+
+                <table mat-table [dataSource]="filterClassesOut" class="full-width-table">
+
                     <ng-container matColumnDef="select">
                         <th mat-header-cell *matHeaderCellDef>Select</th>
                         <td mat-cell *matCellDef="let student">
                             <input type="checkbox" (change)="onSelect(student, $event)">
                         </td>
                     </ng-container>
+
                     <ng-container matColumnDef="photo">
                         <th mat-header-cell *matHeaderCellDef></th>
                         <td mat-cell *matCellDef="let student">
 
-                            <ng-container *ngIf="editedId === student._id || editedIDs.includes(student._id)  ; else viewPhoto">
-
+                            <ng-container
+                                *ngIf="editedId === student._id || editedIDs.includes(student._id); else viewPhoto">
                                 <div class="photo-wrapper" (click)="fileInput.click()">
 
-                                    <img *ngIf="editedStudent?.profilePhoto; else initialsEdit" class="student-avatar"
-                                        [src]="formateImg(editedStudent?.profilePhoto)" />
+                                    <img *ngIf="editedId === student._id ? editedStudent?.profilePhoto : student?.profilePhoto; else initialsEdit"
+                                        class="student-avatar"
+                                        [src]="formateImg(editedId === student._id ? editedStudent?.profilePhoto : student?.profilePhoto)" />
 
                                     <ng-template #initialsEdit>
                                         <div class="student-initials">
-                                            {{ editedStudent.studentname?.slice(0,2).toUpperCase() }}
+                                            {{ (editedId === student._id ? editedStudent.studentname :
+                                            student.studentname)?.slice(0,2).toUpperCase() }}
                                         </div>
-                                    </ng-template> 
+                                    </ng-template>
 
                                     <div class="upload-overlay">
                                         <i class="fa fa-upload"></i>
                                     </div>
 
                                     <input #fileInput type="file" (change)="onPhotoSelected($event)" hidden />
-
                                 </div>
-
                             </ng-container>
 
                             <ng-template #viewPhoto>
-                                <img *ngIf="student?.profilePhoto; else intialsdiv" class="student-avatar"
+                                <img *ngIf="student?.profilePhoto; else initialsView" class="student-avatar"
                                     [src]="formateImg(student?.profilePhoto)" />
-
-                                <ng-template #intialsdiv>
+                                <ng-template #initialsView>
                                     <div class="student-initials">
                                         {{ student.studentname.slice(0,2).toUpperCase() }}
                                     </div>
@@ -65,57 +115,109 @@
                     <ng-container matColumnDef="name">
                         <th mat-header-cell *matHeaderCellDef class="matheaderapply">Name</th>
                         <td mat-cell *matCellDef="let student">
-                            <ng-container *ngIf="editedId === student._id; else showName">
+
+                            <ng-container *ngIf="editedId === student._id; else bulkName">
                                 <mat-form-field appearance="outline" class="inline-field">
-                                    <input matInput [(ngModel)]="editedStudent.studentname" name="studentname">
+                                    <input matInput [(ngModel)]="editedStudent.studentname">
                                 </mat-form-field>
                             </ng-container>
+
+                            <ng-template #bulkName>
+                                <ng-container *ngIf="editedIDs.includes(student._id); else showName">
+                                    <mat-form-field appearance="outline" class="inline-field">
+                                        <input matInput [(ngModel)]="student.studentname">
+                                    </mat-form-field>
+                                </ng-container>
+                            </ng-template>
+
                             <ng-template #showName>{{ student.studentname }}</ng-template>
+
                         </td>
                     </ng-container>
 
                     <ng-container matColumnDef="dob">
                         <th mat-header-cell *matHeaderCellDef class="matheaderapply">DOB</th>
                         <td mat-cell *matCellDef="let student">
-                            <ng-container *ngIf="editedId === student._id; else showDob">
+
+                            <ng-container *ngIf="editedId === student._id; else bulkDob">
                                 <mat-form-field appearance="outline" class="inline-field">
-                                    <input matInput type="date" [(ngModel)]="editedStudent.dob" name="dob"
+                                    <input matInput type="date" [(ngModel)]="editedStudent.dob"
                                         (change)="onDobChange()">
                                 </mat-form-field>
                             </ng-container>
+
+                            <ng-template #bulkDob>
+                                <ng-container *ngIf="editedIDs.includes(student._id); else showDob">
+                                    <mat-form-field appearance="outline" class="inline-field">
+                                        <input matInput type="date" [(ngModel)]="student.dob">
+                                    </mat-form-field>
+                                </ng-container>
+                            </ng-template>
+
                             <ng-template #showDob>{{ student.dob }}</ng-template>
+
                         </td>
                     </ng-container>
 
                     <ng-container matColumnDef="class">
                         <th mat-header-cell *matHeaderCellDef class="matheaderapply">Class</th>
                         <td mat-cell *matCellDef="let student">
-                            <ng-container *ngIf="editedId === student._id; else showClass">
+
+                            <ng-container *ngIf="editedId === student._id; else bulkClass">
                                 <mat-form-field appearance="outline" class="inline-field">
-                                    <mat-select [(ngModel)]="editedStudent.class" name="class">
+                                    <mat-select [(ngModel)]="editedStudent.class">
                                         <mat-option *ngFor="let clss of filteredClass" [value]="clss">
                                             {{ clss }}
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </ng-container>
+
+                            <ng-template #bulkClass>
+                                <ng-container *ngIf="editedIDs.includes(student._id); else showClass">
+                                    <mat-form-field appearance="outline" class="inline-field">
+                                        <mat-select [(ngModel)]="student.class">
+                                            <mat-option *ngFor="let clss of filteredClass" [value]="clss">
+                                                {{ clss }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </ng-container>
+                            </ng-template>
+
                             <ng-template #showClass>{{ student.class }}</ng-template>
+
                         </td>
                     </ng-container>
 
                     <ng-container matColumnDef="gender">
                         <th mat-header-cell *matHeaderCellDef class="matheaderapply">Gender</th>
                         <td mat-cell *matCellDef="let student">
-                            <ng-container *ngIf="editedId === student._id; else showGender">
+
+                            <ng-container *ngIf="editedId === student._id; else bulkGender">
                                 <mat-form-field appearance="outline" class="inline-field">
-                                    <mat-select [(ngModel)]="editedStudent.gender" name="gender">
+                                    <mat-select [(ngModel)]="editedStudent.gender">
                                         <mat-option value="male">Male</mat-option>
                                         <mat-option value="female">Female</mat-option>
                                         <mat-option value="other">Other</mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </ng-container>
+
+                            <ng-template #bulkGender>
+                                <ng-container *ngIf="editedIDs.includes(student._id); else showGender">
+                                    <mat-form-field appearance="outline" class="inline-field">
+                                        <mat-select [(ngModel)]="student.gender">
+                                            <mat-option value="male">Male</mat-option>
+                                            <mat-option value="female">Female</mat-option>
+                                            <mat-option value="other">Other</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </ng-container>
+                            </ng-template>
+
                             <ng-template #showGender>{{ student.gender }}</ng-template>
+
                         </td>
                     </ng-container>
 
@@ -133,41 +235,36 @@
 
                     <ng-container matColumnDef="actions">
                         <th mat-header-cell *matHeaderCellDef class="matheaderapply">
-
                             <div class="actionbutton">
-
                                 <div class="table-toolbar">
-                                    <button mat-raised-button color="primary" (click)="addStudent()">+ Add
-                                        Student</button>
+                                    <div class="left">
+                                        <button mat-raised-button color="primary" (click)="addStudent()">
+                                            +
+                                        </button>
+                                    </div>
                                 </div>
-
                             </div>
-
-
-
-
                         </th>
-                        <td mat-cell *matCellDef="let student" class="buttoncontainer">
+
+                        <td mat-cell *matCellDef="let student" class='buttoncontainerexpand'>
                             <ng-container *ngIf="editedId === student._id; else normalButtons">
-                                <button class="editBut" (click)="saveStudent(student)">
-                                    save
-                                </button>
-                                <button class="deleteBut" (click)="cancelEdit()">
-                                    cancel
-                                </button>
+                                <button class="editBut" (click)="saveStudent(student)">save</button>
+                                <button class="deleteBut" (click)="cancelEdit()">cancel</button>
                             </ng-container>
+
                             <ng-template #normalButtons>
                                 <button class="editBut" (click)="editStudent(student)">
-                                    <i class="fa fa-edit" style="color: #1976d2"></i>
+                                    <i class="fa fa-edit" style="color:#1976d2"></i>
                                 </button>
                                 <button class="deleteBut" (click)="deleteStudent(student._id)">
-                                    <i class="fa fa-trash" style="color: #f44336"></i>
+                                    <i class="fa fa-trash" style="color:#f44336"></i>
                                 </button>
                             </ng-template>
+
                         </td>
                     </ng-container>
 
-                    <tr mat-header-row *matHeaderRowDef="studentColumns; sticky: true"></tr>
+                    <tr mat-header-row *matHeaderRowDef="studentColumns; sticky:true"></tr>
                     <tr mat-row *matRowDef="let row; columns: studentColumns;"></tr>
 
                 </table>
@@ -178,7 +275,7 @@
 
     <div class="tab-content" *ngIf="selectedView === 'products'">
 
-        <div class="mat-table-container">
+        <div class="mat-table-container-productapi">
 
             <div *ngIf="apiError" class="error-box">
 
@@ -196,8 +293,11 @@
             </div>
 
             <div class="table-scroll-wrapper" *ngIf="!apiError">
+                <app-filterapiscategories [apicategories]="apiCategoriesLists" (passCategory)="getCategory($event)">
 
-                <table mat-table [dataSource]="productsApi" class="full-width-table">
+                </app-filterapiscategories>
+
+                <table mat-table [dataSource]="filterCategoriesApi" class="full-width-table">
 
                     <ng-container matColumnDef="id">
                         <th mat-header-cell *matHeaderCellDef>ID</th>
@@ -296,25 +396,47 @@
 
                 </div>
             </div>
+            <div class="table-toolbar">
+                <div class="left"></div>
+                <div class="right">
+                    <button mat-raised-button color="accent" (click)="updateSelectedProducts()"
+                        [disabled]="!selectedProducts.length">
+                        Bulk Update
+                    </button>
+                </div>
+            </div>
 
             <div class="table-scroll-wrapper">
-                <table mat-table [dataSource]="products" class="full-width-table">
+                <app-filter [categories]="productCategories" (filterChange)="onProductFilter($event)">
+                </app-filter>
+
+
+
+                <table mat-table [dataSource]="filteredProducts" class="full-width-table">
+
+                    <ng-container matColumnDef="select">
+                        <th mat-header-cell *matHeaderCellDef>Select</th>
+                        <td mat-cell *matCellDef="let product">
+                            <input type="checkbox" (change)="onSelectProduct(product, $event)">
+                        </td>
+                    </ng-container>
 
                     <ng-container matColumnDef="photo">
                         <th mat-header-cell *matHeaderCellDef></th>
-
                         <td mat-cell *matCellDef="let product">
 
-                            <ng-container *ngIf="editedId === product._id; else viewProductPhoto">
-
+                            <ng-container
+                                *ngIf="editedId === product._id || productEditedIDs.includes(product._id); else viewProductPhoto">
                                 <div class="photo-wrapper" (click)="productFileInput.click()">
 
-                                    <img *ngIf="editedProduct?.profilePhoto; else productInitials"
-                                        class="student-avatar" [src]="formateImg(editedProduct?.profilePhoto)" />
+                                    <img *ngIf="editedId === product._id ? editedProduct?.profilePhoto : product?.profilePhoto; else productInitials"
+                                        class="student-avatar"
+                                        [src]="formateImg(editedId === product._id ? editedProduct?.profilePhoto : product?.profilePhoto)" />
 
                                     <ng-template #productInitials>
                                         <div class="student-initials">
-                                            {{ editedProduct.title?.slice(0,2).toUpperCase() }}
+                                            {{ (editedId === product._id ? editedProduct.title :
+                                            product.title)?.slice(0,2).toUpperCase() }}
                                         </div>
                                     </ng-template>
 
@@ -324,16 +446,13 @@
 
                                     <input #productFileInput type="file" (change)="onProductPhotoSelected($event)"
                                         hidden />
-
                                 </div>
-
                             </ng-container>
 
                             <ng-template #viewProductPhoto>
-                                <img *ngIf="product?.profilePhoto; else intialsdiv2" class="student-avatar"
+                                <img *ngIf="product?.profilePhoto; else initials2" class="student-avatar"
                                     [src]="formateImg(product?.profilePhoto)" />
-
-                                <ng-template #intialsdiv2>
+                                <ng-template #initials2>
                                     <div class="student-initials">
                                         {{ product.title.slice(0,2).toUpperCase() }}
                                     </div>
@@ -351,11 +470,21 @@
                     <ng-container matColumnDef="name">
                         <th mat-header-cell *matHeaderCellDef>Name</th>
                         <td mat-cell *matCellDef="let product">
-                            <ng-container *ngIf="editedId === product._id; else showName">
+
+                            <ng-container *ngIf="editedId === product._id; else bulkName">
                                 <mat-form-field appearance="outline" style="width:100px;">
                                     <input matInput [(ngModel)]="editedProduct.title">
                                 </mat-form-field>
                             </ng-container>
+
+                            <ng-template #bulkName>
+                                <ng-container *ngIf="productEditedIDs.includes(product._id); else showName">
+                                    <mat-form-field appearance="outline" style="width:100px;">
+                                        <input matInput [(ngModel)]="product.title">
+                                    </mat-form-field>
+                                </ng-container>
+                            </ng-template>
+
                             <ng-template #showName>{{ product.title }}</ng-template>
 
                         </td>
@@ -364,83 +493,139 @@
                     <ng-container matColumnDef="category">
                         <th mat-header-cell *matHeaderCellDef>Category</th>
                         <td mat-cell *matCellDef="let product">
-                            <ng-container *ngIf="editedId === product._id; else showCategory">
+
+                            <ng-container *ngIf="editedId === product._id; else bulkCategory">
                                 <mat-form-field appearance="outline" style="width:120px;">
-                                    <mat-select [(ngModel)]="editedProduct.category" name="category">
+                                    <mat-select [(ngModel)]="editedProduct.category">
                                         <mat-option *ngFor="let cat of productCategories" [value]="cat">
                                             {{ cat }}
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </ng-container>
+
+                            <ng-template #bulkCategory>
+                                <ng-container *ngIf="productEditedIDs.includes(product._id); else showCategory">
+                                    <mat-form-field appearance="outline" style="width:120px;">
+                                        <mat-select [(ngModel)]="product.category">
+                                            <mat-option *ngFor="let cat of productCategories" [value]="cat">
+                                                {{ cat }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </ng-container>
+                            </ng-template>
+
                             <ng-template #showCategory>{{ product.category }}</ng-template>
+
                         </td>
                     </ng-container>
 
                     <ng-container matColumnDef="stock">
                         <th mat-header-cell *matHeaderCellDef>Stock</th>
                         <td mat-cell *matCellDef="let product">
-                            <ng-container *ngIf="editedId === product._id; else showStock">
+
+                            <ng-container *ngIf="editedId === product._id; else bulkStock">
                                 <mat-form-field appearance="outline" style="width:100px;">
                                     <input matInput type="number" [(ngModel)]="editedProduct.stock">
                                 </mat-form-field>
                             </ng-container>
+
+                            <ng-template #bulkStock>
+                                <ng-container *ngIf="productEditedIDs.includes(product._id); else showStock">
+                                    <mat-form-field appearance="outline" style="width:100px;">
+                                        <input matInput type="number" [(ngModel)]="product.stock">
+                                    </mat-form-field>
+                                </ng-container>
+                            </ng-template>
+
                             <ng-template #showStock>{{ product.stock }}</ng-template>
+
                         </td>
                     </ng-container>
 
                     <ng-container matColumnDef="overallrating">
                         <th mat-header-cell *matHeaderCellDef>Overall Rating</th>
                         <td mat-cell *matCellDef="let product">
-                            <ng-container *ngIf="editedId === product._id; else showRating">
+
+                            <ng-container *ngIf="editedId === product._id; else bulkRating">
                                 <mat-form-field appearance="outline" style="width:100px;">
                                     <input matInput type="number" [(ngModel)]="editedProduct.overAllRating">
                                 </mat-form-field>
                             </ng-container>
+
+                            <ng-template #bulkRating>
+                                <ng-container *ngIf="productEditedIDs.includes(product._id); else showRating">
+                                    <mat-form-field appearance="outline" style="width:100px;">
+                                        <input matInput type="number" [(ngModel)]="product.overAllRating">
+                                    </mat-form-field>
+                                </ng-container>
+                            </ng-template>
+
                             <ng-template #showRating>{{ product.overAllRating }}</ng-template>
+
                         </td>
                     </ng-container>
 
                     <ng-container matColumnDef="price">
                         <th mat-header-cell *matHeaderCellDef>Price</th>
                         <td mat-cell *matCellDef="let product">
-                            <ng-container *ngIf="editedId === product._id; else showPrice">
+
+                            <ng-container *ngIf="editedId === product._id; else bulkPrice">
                                 <mat-form-field appearance="outline" style="width:100px;">
                                     <input matInput type="number" [(ngModel)]="editedProduct.price">
                                 </mat-form-field>
                             </ng-container>
+
+                            <ng-template #bulkPrice>
+                                <ng-container *ngIf="productEditedIDs.includes(product._id); else showPrice">
+                                    <mat-form-field appearance="outline" style="width:100px;">
+                                        <input matInput type="number" [(ngModel)]="product.price">
+                                    </mat-form-field>
+                                </ng-container>
+                            </ng-template>
+
                             <ng-template #showPrice>₹ {{ product.price }}</ng-template>
+
                         </td>
                     </ng-container>
 
                     <ng-container matColumnDef="actions">
                         <th mat-header-cell *matHeaderCellDef>
+                            <!-- <div class="actionbutton">
+                                <button mat-raised-button color="primary" (click)="addProduct()">+ </button>
+                            </div> -->
                             <div class="actionbutton">
-                                <button mat-raised-button color="primary" (click)="addProduct()">+ Add Product</button>
+                                <div class="table-toolbar">
+                                    <div class="left">
+                                        <button mat-raised-button color="primary" (click)="addProduct()">
+                                            +
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
-
                         </th>
-                        <td mat-cell *matCellDef="let product" class="buttoncontainer">
-                            <ng-container *ngIf="editedId === product._id; else normalProductButtons">
-                                <button class="editBut" (click)="saveProduct(product)">
-                                    save
-                                </button>
-                                <button class="deleteBut" (click)="cancelEdit()">
-                                    cancel
-                                </button>
+
+                        <td mat-cell *matCellDef="let product" class="buttoncontainerexpand">
+
+                            <ng-container *ngIf="editedId === product._id; else normalButtons">
+                                <button class="editBut" (click)="saveProduct(product)">save</button>
+                                <button class="deleteBut" (click)="cancelEdit()">cancel</button>
                             </ng-container>
-                            <ng-template #normalProductButtons>
+
+                            <ng-template #normalButtons>
                                 <button class="editBut" (click)="editProducts(product)">
-                                    <i class="fa fa-edit" style="color: #1976d2"></i>
+                                    <i class="fa fa-edit" style="color:#1976d2"></i>
                                 </button>
                                 <button class="deleteBut" (click)="deleteProducts(product._id)">
-                                    <i class="fa fa-trash" style="color: #f44336"></i>
+                                    <i class="fa fa-trash" style="color:#f44336"></i>
                                 </button>
                             </ng-template>
+
                         </td>
                     </ng-container>
 
-                    <tr mat-header-row *matHeaderRowDef="productDbColumns; sticky: true"></tr>
+                    <tr mat-header-row *matHeaderRowDef="productDbColumns; sticky:true"></tr>
                     <tr mat-row *matRowDef="let row; columns: productDbColumns;"></tr>
 
                 </table>

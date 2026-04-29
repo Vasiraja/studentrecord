@@ -4,6 +4,7 @@ import { MatIcon } from '@angular/material/icon'
 import { SidebarService } from '../../services/sidebar.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { StudentsService } from '../../services/students.service';
 
 @Component({
   selector: 'app-navbar',
@@ -17,7 +18,7 @@ export class NavbarComponent implements OnInit {
   sideBarState: boolean | undefined;
   currentUser: any;
 
-  constructor(private sidebarserv: SidebarService, public router: Router, private cdr: ChangeDetectorRef) { }
+  constructor(private sidebarserv: SidebarService, public router: Router, private cdr: ChangeDetectorRef, private studentserv: StudentsService) { }
   ngOnInit(): void {
     console.log("-------------------------------------")
     this.sidebarserv.currentUser$.subscribe({
@@ -43,18 +44,25 @@ export class NavbarComponent implements OnInit {
 
   }
 
-  async logoutAction() {
-    const token = localStorage.getItem("token");
-    if (token) {
-      await localStorage.removeItem("token");
-      this.router.navigate(['/login'])
-    }
+  // async logoutAction() {
+  //   const token = localStorage.getItem("token");
+  //   if (token) {
+  //     await localStorage.removeItem("token");
+  //     this.router.navigate(['/login'])
+  //   }
 
 
 
 
-  }
-
+  // }
+  logoutAction() {
+  console.log("LOGOUT CLICKED"); 
+  
+  this.studentserv.logout().subscribe(() => {
+    console.log("LOGOUT API CALLED");
+    this.router.navigate(['/login']);
+  });
+}
 
 
 

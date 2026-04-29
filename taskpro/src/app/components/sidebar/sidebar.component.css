@@ -3,10 +3,28 @@
    height: 100vh;
    background: #f8fafc;
    border-right: 1px solid #e2e8f0;
-   padding: 12px 10px;
+   padding: 32px 10px;
    overflow-y: scroll;
    box-shadow: 2px 0 8px rgba(15, 23, 42, 0.04);
-   position: fixed
+   position: fixed;
+   top: 13%;
+   width: 280px;
+   height: 100vh;
+   transition: width 0.3s ease;
+   overflow: hidden;
+
+ }
+
+ .sidebar.collapsed {
+   width: 70px;
+ }
+
+ .sidebar.collapsed span {
+   display: none;
+ }
+
+ .sidebar.collapsed i {
+   margin: auto;
  }
 
  .sidebar .controls {
@@ -61,28 +79,36 @@
    background: #fafafa;
  }
 
+ .explain-group {
+   margin-bottom: 8px;
+ }
+
  .explain-section {
    font-size: 11px;
    font-weight: 600;
    color: #888;
+   margin-bottom: 4px;
+ }
 
-   letter-spacing: 0.5px;
+ .explain-grid {
+   display: grid;
+   grid-template-columns: repeat(2, 1fr);
+   gap: 4px 10px;
  }
 
  .explain-item {
    display: flex;
    align-items: center;
-   gap: 8px;
-   font-size: 13px;
+   gap: 6px;
+   font-size: 12px;
    color: #555;
+   white-space: nowrap;
  }
 
  .explain-item i {
-   width: 16px;
+   width: 14px;
    text-align: center;
-   color: #555;
+   font-size: 12px;
+   color: #666;
  }
-
- .explain-item p {
-   margin-top: 0.5rem;
- }
+ 

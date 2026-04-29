@@ -6,9 +6,9 @@ import { user } from './users/users'
 import type { Application } from '../declarations'
 
 export const services = (app: Application) => {
-  app.configure(test)
+   app.configure(test)
   app.configure(products)
   app.configure(students)
-  app.configure(user)
+  app.configure(user) 
   // All services will be registered here
 }

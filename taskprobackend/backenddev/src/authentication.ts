@@ -12,16 +12,23 @@ declare module './declarations' {
 
 class CookieJWTStrategy extends JWTStrategy {
   async parse(req: any) {
-    const token = req.cookies?.['feathers-jwt']
+    const cookieHeader = req.headers?.cookie;
+
+    if (!cookieHeader) return null;
+
+    const match = cookieHeader.match(/feathers-jwt=([^;]+)/);
+    const token = match ? match[1] : null;
+
+    // console.log('TOKEN:', token);
 
     if (token) {
       return {
         strategy: 'jwt',
-        accessToken: token
-      }
+        accessToken: token 
+      };
     }
 
-    return null
+    return null;
   }
 }
 

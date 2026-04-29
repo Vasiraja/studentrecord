@@ -16,7 +16,7 @@ export class SidebarService {
 
   currentUser$ = new BehaviorSubject<any>(null);
 
-  sidebarState$ = new BehaviorSubject<boolean>(true);
+  sidebarState$ = new BehaviorSubject<boolean>(false);
 
   apiUrl = "http://localhost:3030";
   sidebarOpen() {

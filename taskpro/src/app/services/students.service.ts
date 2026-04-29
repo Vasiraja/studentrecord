@@ -111,7 +111,7 @@ export class StudentsService {
   deleteProductTrigger(deletedProduct: any) {
     this.productComponentReuse$.next(true);
     this.componentReuseState$.next("products");
-    this.studentEdit$.next({ ...deletedProduct, delete: true });
+    this.productEdit$.next({ ...deletedProduct, delete: true });
 
 
   }
@@ -165,10 +165,15 @@ export class StudentsService {
     return apiOverwrite;
   }
   getStudentById(id: any): Observable<any> {
-    return this.http.get(`${this.apiUrl}/students/${id}`);
+    return this.http.get(`${this.apiUrl}/${id}`);
   }
   bulkUpdate(data: any) {
 
-    return this.http.patch(`${this.apiUrl}/students`, data);
+    return this.http.patch(`${this.apiUrl}`, data);
+  }
+  logout() {
+    return this.http.post('http://localhost:3030/logout', {}, {
+      withCredentials: true
+    });
   }
 }

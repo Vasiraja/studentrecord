@@ -69,7 +69,7 @@ export class LoginComponent {
     this.userServ.loginUser(email, password).subscribe({
       next: (res: any) => {
         console.log(res);
-        localStorage.setItem("token", res.accessToken);
+        // localStorage.setItem("token", res.accessToken);
         
 
         console.log("login successfully");

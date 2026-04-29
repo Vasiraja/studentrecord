@@ -1,0 +1,27 @@
+
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.filter-bar select {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: #fff;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.filter-bar select:focus {
+  outline: none;
+  border-color: #1976d2; 
+  box-shadow: 0 0 3px rgba(25, 118, 210, 0.3);
+}
+
+.filter-bar select:hover {
+  border-color: #1976d2;
+}

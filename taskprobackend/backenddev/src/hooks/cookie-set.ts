@@ -1,28 +1,24 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/hook.html
 import type { HookContext, NextFunction } from '../declarations'
-
 export const cookieSet = async (context: HookContext) => {
+  console.log('HOOK RUNNING');
 
   const { accessToken } = context.result;
 
-  const res = context.params.res;
+  if (accessToken) {
+    context.http = context.http || {};
 
-  if (res && accessToken) {
-    res.cookie('feathers-jwt', accessToken, {
-      httpOnly: true,
-      secure: false,
-      samesite: 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000
+    context.http.headers = {
+      ...(context.http.headers || {}),
+      'Set-Cookie': `feathers-jwt=${accessToken}; HttpOnly; Path=/; Max-Age=${7 * 24 * 60 * 60
+        }; SameSite=Lax`
+    };
 
-
-
-    })
     delete context.result.accessToken;
   }
+
   return context;
-
-
-}
+};
 
 export default {
   after: {

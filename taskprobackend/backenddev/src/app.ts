@@ -19,7 +19,11 @@ const app: Application = koa(feathers())
 app.configure(configuration(configurationValidator))
 
 // Set up Koa middleware
-app.use(cors())
+app.use(cors({
+  origin: 'http://localhost:4200',
+  credentials: true
+}))
+
 app.use(serveStatic(app.get('public')))
 app.use(errorHandler())
 app.use(parseAuthentication())
@@ -31,6 +35,25 @@ app.use(bodyParser(
 ))
 app.use(cookie());
 
+(app as any).use('/logout', {
+  async create(data: any, params: any) {
+
+    const ctx = params.koa?.ctx;
+
+    if (ctx) {
+      ctx.cookies.set('feathers-jwt', '', {
+        httpOnly: true,
+        maxAge: 0,
+        path: '/',
+        sameSite: 'lax'
+      });
+    }
+
+    console.log("LOGOUT SUCCESS");
+
+    return { success: true };
+  }
+});
 // Configure services and transports
 app.configure(rest())
 app.configure(

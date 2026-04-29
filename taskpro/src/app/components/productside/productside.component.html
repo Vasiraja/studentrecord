@@ -1,13 +1,8 @@
-<form *ngIf="!product.delete"
-      #productForm="ngForm"
-      (ngSubmit)="product?._id ? onUpdate(product._id, productForm) : onSubmit(productForm)"
-      class="studentform">
+<form *ngIf="!product.delete" #productForm="ngForm"
+  (ngSubmit)="product?._id ? onUpdate(product._id, productForm) : onSubmit(productForm)" class="productform">
 
   <mat-card-header>
-    <p *ngIf="product?._id; else addMode">Edit Product</p>
-    <ng-template #addMode>
-      <p>Add Product</p>
-    </ng-template>
+    @if (product._id) { <p>Edit Product</p> } @else { <p>Add Product</p> }
   </mat-card-header>
 
   <div class="profile-upload-container">
@@ -25,6 +20,7 @@
     <button mat-stroked-button color="primary" type="button" (click)="fileInput.click()">
       Upload Image
     </button>
+
   </div>
 
   <mat-form-field appearance="outline">
@@ -42,55 +38,42 @@
   </mat-form-field>
 
   <div *ngIf="price.invalid && price.touched">
-    <span class="errorss" *ngIf="price.errors?.['required']">Price is required</span>
-    <span class="errorss" *ngIf="price.errors?.['min']">Price must be greater than 0</span>
+    <span class="errorss">Price is required</span>
   </div>
 
   <mat-form-field appearance="outline">
     <mat-label>Category</mat-label>
     <mat-select name="category" [(ngModel)]="product.category" #category="ngModel" required>
-      <mat-option *ngFor="let categ of categories" [value]="categ">
-        {{ categ }}
-      </mat-option>
+      <mat-option *ngFor="let categ of categories" [value]="categ">{{ categ }}</mat-option>
     </mat-select>
   </mat-form-field>
 
   <div *ngIf="category.invalid && category.touched">
-    <span class="errorss">Select category</span>
+    <span class="errorss">Category is required</span>
   </div>
 
   <mat-form-field appearance="outline">
     <mat-label>Stock</mat-label>
-    <input matInput type="number" name="stock" [(ngModel)]="product.stock" #stock="ngModel" required min="0" />
+    <input matInput type="number" name="stock" [(ngModel)]="product.stock" #stock="ngModel" required />
   </mat-form-field>
 
   <div *ngIf="stock.invalid && stock.touched">
-    <span class="errorss" *ngIf="stock.errors?.['required']">Stock is required</span>
-    <span class="errorss" *ngIf="stock.errors?.['min']">Stock cannot be negative</span>
+    <span class="errorss">Stock is required</span>
   </div>
 
   <mat-form-field appearance="outline">
     <mat-label>Overall Rating</mat-label>
-    <input matInput type="number"
-           name="overAllRating"
-           [(ngModel)]="product.overAllRating"
-           #overallrating="ngModel"
-           required
-           min="1"
-           max="5" />
+    <input matInput type="number" name="overAllRating" [(ngModel)]="product.overAllRating" #rating="ngModel" required />
   </mat-form-field>
 
-  <div *ngIf="overallrating.invalid && overallrating.touched">
-    <span class="errorss" *ngIf="overallrating.errors?.['required']">Rating is required</span>
-    <span class="errorss" *ngIf="overallrating.errors?.['min']">Minimum rating is 1</span>
-    <span class="errorss" *ngIf="overallrating.errors?.['max']">Maximum rating is 5</span>
+  <div *ngIf="rating.invalid && rating.touched">
+    <span class="errorss">Rating is required</span>
   </div>
 
   <div class="buttons-container">
     <button mat-raised-button color="primary" type="submit">
       {{ product?._id ? 'Update Product' : 'Add Product' }}
     </button>
-
     <button mat-raised-button type="button" (click)="cancelForm()">
       Cancel
     </button>
@@ -98,14 +81,12 @@
 
 </form>
 
-<div *ngIf="product.delete" class="additional-container-delete">
+<div *ngIf="product.delete" class="product-delete-container">
   <p>Are you sure you want to delete this product?</p>
-
   <div class="buttons-container">
     <button mat-raised-button color="warn" (click)="confirmDelete(product._id)">
-      Confirm Delete {{product.title}}
+      Confirm Delete {{ product.title }}
     </button>
-
     <button mat-raised-button color="primary" (click)="cancelForm()">
       Cancel
     </button>

@@ -1,47 +1,54 @@
-<div class="sidebar">
+<div class="sidebar" [class.collapsed]="isCollapsed">
     <div class="explain-box">
 
-        <div class="explain-section">Data</div>
+        <div class="explain-group">
+            <div class="explain-section">Data</div>
+            <div class="explain-grid">
+                <div class="explain-item">
+                    <i class="fa-solid fa-user"></i>
+                    <span>Students</span>
+                </div>
 
-        <div class="explain-item">
-            <i class="fa-solid fa-user"></i>
-            <p> Students </p>
+                <div class="explain-item">
+                    <i class="fa-solid fa-globe"></i>
+                    <span>External Products</span>
+                </div>
+
+                <div class="explain-item">
+                    <i class="fa-solid fa-store"></i>
+                    <span>Internal Products</span>
+                </div>
+            </div>
         </div>
 
-        <div class="explain-item">
-            <i class="fa-solid fa-globe"></i>
-            <p> External Products </p>
+        <div class="explain-group">
+            <div class="explain-section">Product Types</div>
+            <div class="explain-grid">
+                <div class="explain-item">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span>Single Product</span>
+                </div>
+
+                <div class="explain-item">
+                    <i class="fa-solid fa-box"></i>
+                    <span>Bulk Product</span>
+                </div>
+            </div>
         </div>
 
-        <div class="explain-item">
-            <i class="fa-solid fa-store"></i>
-            <p> Internal Products </p>
-        </div>
+        <div class="explain-group">
+            <div class="explain-section">Actions</div>
+            <div class="explain-grid">
+                <div class="explain-item">
+                    <i class="fa-solid fa-file-import"></i>
+                    <span>Import</span>
+                </div>
 
-
-        <div class="explain-section">Product Types</div>
-
-        <div class="explain-item">
-            <i class="fa-solid fa-cart-shopping"></i>
-            <p> Single Product</p>
-        </div>
-
-        <div class="explain-item">
-            <i class="fa-solid fa-box"></i>
-            <p> Group / bulk quantity product</p>
-        </div>
-
-
-        <div class="explain-section">Actions</div>
-
-        <div class="explain-item">
-            <i class="fa-solid fa-file-import"></i>
-            <p> Import </p>
-        </div>
-
-        <div class="explain-item">
-            <i class="fa-solid fa-file-export"></i>
-            <p> Export </p>
+                <div class="explain-item">
+                    <i class="fa-solid fa-file-export"></i>
+                    <span>Export</span>
+                </div>
+            </div>
         </div>
 
     </div>
@@ -59,14 +66,14 @@
         <div #treeElem id="treeElem"></div>
     </div>
     @if (finalTakenValues?.studentname) {
-    <p>  {{finalTakenValues?.studentname}} confirmed  </p>
+    <p> {{finalTakenValues?.studentname}} confirmed </p>
 
     }
     @else if(finalTakenValues?.rating){
-    <p>  {{finalTakenValues?.title }} confirmed  </p>
+    <p> {{finalTakenValues?.title }} confirmed </p>
     }
     @else if(finalTakenValues?.overAllRating){
-    <p>  {{finalTakenValues?.title}} confirmed  </p>
+    <p> {{finalTakenValues?.title}} confirmed </p>
     }
 
     <app-sidebarchild [selectedInput]='selectedSharedItem' (selectedConfirmation)="finalTaken($event)">

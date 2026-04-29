@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, SecurityContext } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SecurityContext, SimpleChanges } from '@angular/core';
 import { SidebarService } from '../../services/sidebar.service';
 import {
   MatCard,
@@ -35,7 +35,7 @@ import { SnackbarService } from '../../services/snackbar.service';
   templateUrl: './profilecard.component.html',
   styleUrl: './profilecard.component.css'
 })
-export class ProfilecardComponent implements OnInit {
+export class ProfilecardComponent implements OnInit, OnChanges {
 
 
 
@@ -95,6 +95,11 @@ export class ProfilecardComponent implements OnInit {
     private snackbar: SnackbarService,
 
   ) { }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['profileData']) {
+      this.initializeProfile();
+    }
+  }
 
   ngOnInit(): void {
     this.initializeProfile()
@@ -103,12 +108,14 @@ export class ProfilecardComponent implements OnInit {
   }
   initializeProfile() {
     const photoStr =
-      this.profileData.profilePhoto ||
-      this.profileData.image ||
+      this.profileData?.profilePhoto ||
+      this.profileData?.image ||
       "";
 
-    this.profilePhotoSafe =
-      this.sanitizer.bypassSecurityTrustUrl(photoStr);
+    this.profilePhotoSafe = photoStr
+      ? this.sanitizer.bypassSecurityTrustUrl(photoStr)
+      : null;
+
   }
   onPhotoSelected(event: any, id: any, type: any) {
     console.log(type)

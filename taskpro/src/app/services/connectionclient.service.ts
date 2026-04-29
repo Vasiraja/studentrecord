@@ -38,21 +38,11 @@ export class ConnectionclientService {
   }
 
   async authenticate() {
-    const token = localStorage.getItem('token');
-    console.log("TOKENNNN", token)
-
-    if (token) {
-      try {
-        await this.client.authenticate({
-          strategy: "jwt",
-          accessToken: token
-        });
-        console.log("Socket Authenticated ");
-      } catch (err) {
-        console.error("Auth failed ", err);
-      }
-    } else {
-      console.error("No token found ");
+    try {
+      await this.client.reAuthenticate();
+      console.log("Socket Authenticated");
+    } catch (err) {
+      console.error("Auth failed", err);
     }
   }
 }

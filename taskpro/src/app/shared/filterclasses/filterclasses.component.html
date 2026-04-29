@@ -1,0 +1,7 @@
+<div class="filter-bar">
+    <select (change)="changeTrigger($event)">
+        <option value="">All Classes</option>
+        <option *ngFor="let c of classTypes" [value]="c">{{ c }}</option>
+    </select>
+
+</div>

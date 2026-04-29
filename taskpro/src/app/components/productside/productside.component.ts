@@ -59,6 +59,7 @@ export class ProductsideComponent implements OnInit {
     const productserv = this.clientconnect.getProductClient();
 
     productserv.on('patched', (updated: any) => {
+      console.log("product patch started individual view")
 
       this.handleRealtimeUpdate(updated);
     })
@@ -100,6 +101,7 @@ export class ProductsideComponent implements OnInit {
       error: (err: any) => console.error(err)
     });
 
+    
     form.resetForm();
   }
 
@@ -120,6 +122,7 @@ export class ProductsideComponent implements OnInit {
       next: (res: any) => {
         this.snackbar.openSnackBar(res.title + " deleted");
         this.cancelForm();
+
       },
       error: (err: any) => console.error(err)
     });
@@ -130,18 +133,23 @@ export class ProductsideComponent implements OnInit {
 
     this.editingRecordId = '';
   }
-  handleRealtimeUpdate(updated: any) {
+ handleRealtimeUpdate(updated: any) {
 
-    if (!updated.title) return;
+  const check = updated._id === this.editingRecordId;
 
-    const check = updated._id === this.editingRecordId;
-
-    if (this.isEditing && check) {
-      this.snackbar.openSnackBar("Another user editing this record");
-      return;
-    }
-
-    this.cancelEdit();
-    this.cancelForm();
+  if (this.isEditing && check) {
+    this.snackbar.openSnackBar("Already user editing this record so this process discarded");
   }
+
+  this.cancelEdit();
+  this.cancelForm();
+  this.productServ.cancelTrigger();
+
+  if (this.product && this.product._id === updated._id) {
+    this.product = {
+      ...this.product,
+      ...updated
+    };
+  }
+}
 }

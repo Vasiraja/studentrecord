@@ -120,6 +120,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   treeState: boolean = false;
   deletedStudent: any = {};
   deletedProduct: any = {};
+  isCollapsed = false;
 
   // students = [
   //   {
@@ -151,13 +152,24 @@ export class SidebarComponent implements OnInit, AfterViewInit {
       });
     });
     productsserv.on("patched", (product: any) => {
+      console.log("PATCH EVENT PRODUCT:", product);
+      if (!product.title) return;
+
       this.ngzone.run(() => {
         const tree = $(this.treeElem.nativeElement).jstree(true);
+
         if (tree && tree.get_node(product._id)) {
-          tree.rename_node(product._id, product.title)
+          // const updated = this.dbProducts.find(p => p._id === product._id);
+          // console.log("updated",updated)
+          console.log("product updated")
+          console.log(product.title)
+
+          const node = tree.get_node(product._id);
+          console.log("BEFORE RENAME NODE TEXT:", node.text);
+          console.log("NEW TITLE:", product.title);
         }
       })
-    })
+    });
 
 
     studentsserv.on("removed", (student: any) => {
@@ -168,6 +180,34 @@ export class SidebarComponent implements OnInit, AfterViewInit {
           tree.delete_node(student._id);
         }
       });
+    });
+    productsserv.on("removed", (product: any) => {
+      this.ngzone.run(() => {
+        const tree = $(this.treeElem.nativeElement).jstree(true);
+
+        if (tree && tree.get_node(product._id)) {
+          tree.delete_node(product._id);
+        }
+      });
+    })
+
+    this.sidebarservice.sidebarState$.subscribe(state => {
+      this.isCollapsed = state;
+      console.log("Collapsed");
+      console.log(this.isCollapsed)
+    })
+
+    this.sidebarservice.sidebarState$.subscribe(state => {
+      this.isCollapsed = state;
+
+      const tree = $(this.treeElem?.nativeElement).jstree(true);
+
+      if (tree) {
+        if (state) {
+          tree.close_all();
+          this.expandState=!state;
+        }
+      }
     });
 
 
@@ -211,6 +251,8 @@ export class SidebarComponent implements OnInit, AfterViewInit {
           {
             text: "Home",
             icon: "fa-solid fa-home",
+            type: "home",
+
             children: [
               {
                 id: "student_root",
@@ -421,7 +463,11 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 
       })
       .on('rename_node.jstree', (e: any, data: any) => {
+        console.log("seeeee")
+        console.log(data);
         console.log("Renamed:", data.text);
+
+
 
       })
       .on('delete_node.jstree', (e: any, data: any) => {
