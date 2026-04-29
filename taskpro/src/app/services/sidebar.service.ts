@@ -23,6 +23,13 @@ export class SidebarService {
     this.sidebarState$.next(!this.sidebarState$)
 
   }
+  private viewSource = new BehaviorSubject<string>('home'); 
+  view$ = this.viewSource.asObservable();
+  setView(view: string) {
+    console.log("SET VIEW:", view);
+    this.viewSource.next(view);
+  }
+
   // sendNode(data: any) {
   //   this.selectedNode$.next(data);
 

@@ -101,7 +101,7 @@ export class ProductsideComponent implements OnInit {
       error: (err: any) => console.error(err)
     });
 
-    
+
     form.resetForm();
   }
 
@@ -133,23 +133,27 @@ export class ProductsideComponent implements OnInit {
 
     this.editingRecordId = '';
   }
- handleRealtimeUpdate(updated: any) {
+  handleRealtimeUpdate(updated: any) {
 
-  const check = updated._id === this.editingRecordId;
+    const isSameRecord = updated._id === this.editingRecordId;
 
-  if (this.isEditing && check) {
-    this.snackbar.openSnackBar("Already user editing this record so this process discarded");
+    if (this.isEditing && isSameRecord) {
+      this.snackbar.openSnackBar("Another user updated this record");
+
+      this.product = {
+        ...this.product,
+        ...updated
+      };
+
+      this.cancelEdit();
+      this.studentservice.removeAddTrigger();
+      return;
+    }
+    if (this.product && this.product._id === updated._id) {
+      this.product = {
+        ...this.product,
+        ...updated
+      };
+    }
   }
-
-  this.cancelEdit();
-  this.cancelForm();
-  this.productServ.cancelTrigger();
-
-  if (this.product && this.product._id === updated._id) {
-    this.product = {
-      ...this.product,
-      ...updated
-    };
-  }
-}
 }

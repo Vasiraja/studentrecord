@@ -24,6 +24,7 @@ import { FilterComponent } from '../../shared/filter/filter.component';
 import { FilterclassesComponent } from '../../shared/filterclasses/filterclasses.component';
 import { FilterapiscategoriesComponent } from '../../shared/filterapiscategories/filterapiscategories.component';
 
+import * as FileSaver from 'file-saver';
 
 @Component({
   selector: 'app-tableview',
@@ -123,6 +124,7 @@ export class TableviewComponent implements OnInit, OnChanges {
         this.snackbar.openSnackBar("Bulk updated");
         this.selectedProducts = [];
         this.productEditedIDs = [];
+
         this.initialAllData();
       }
     });
@@ -161,7 +163,6 @@ export class TableviewComponent implements OnInit, OnChanges {
 
         console.log(res);
 
-        this.cancelEdit();
       },
       error: (err: any) => {
         console.error(err);
@@ -220,7 +221,6 @@ export class TableviewComponent implements OnInit, OnChanges {
   ];
 
   selectedView: any = 'home';
-
   productsApi: any[] = [];
   products: any[] = [];
   students: any[] = [];
@@ -310,9 +310,9 @@ export class TableviewComponent implements OnInit, OnChanges {
       this.isCollapsed = state;
     });
 
-
-    this.selectedView = "home";
-
+    this.sidebarservice.view$.subscribe(view => {
+      this.selectedView = view;
+    });
 
 
 
@@ -329,33 +329,36 @@ export class TableviewComponent implements OnInit, OnChanges {
 
     })
     serviceStude.on("patched", (updateStudents: any) => {
-      this.handleRealtimeUpdate(updateStudents);
-    })
+      this.ngzone.run(() => {
+        this.handleRealtimeUpdate(updateStudents);
+      });
+    });
     productStude.on("patched", (updatedProducts: any) => {
-      console.log("product patch started table view")
-
-      this.handleRealtimeUpdate(updatedProducts);
-    })
-
-
+      this.ngzone.run(() => {
+        this.handleRealtimeUpdate(updatedProducts);
+      });
+    });
 
 
 
 
 
 
-    if (this.tableData?.type === 'home') {
-      this.selectedView = 'home';
-    }
-    else if (this.tableData?.type === 'products') {
-      this.selectedView = 'products';
-    }
-    else if (this.tableData?.type === 'productdb') {
-      this.selectedView = 'productdb';
-    }
-    else if (this.tableData?.type === 'students') {
-      this.selectedView = 'students';
-    }
+
+
+    // if (this.tableData?.type === 'home') {
+    //   this.selectedView = 'home';
+    // }
+    // else if (this.tableData?.type === 'products') {
+    //   this.selectedView = 'products';
+    // }
+    // else if (this.tableData?.type === 'productdb') {
+    //   this.selectedView = 'productdb';
+    // }
+    // else if (this.tableData?.type === 'students') {
+    //   this.selectedView = 'students';
+    // }
+    this.selectedView = this.tableData?.type || 'home';
 
 
     const studentsserv = this.clientfeathers.getStudentClient();
@@ -377,18 +380,12 @@ export class TableviewComponent implements OnInit, OnChanges {
     this.filteredProducts = this.products;
     this.filterClassesOut = this.students;
     this.filterCategoriesApi = this.productsApi;
+    this.selectedView = this.tableData?.type || 'home';
 
-    if (this.tableData?.type === 'products') {
-      this.selectedView = 'products';
-    }
-    else if (this.tableData?.type === 'productdb') {
-      this.selectedView = 'productdb';
-    }
-    else if (this.tableData?.type === 'students') {
-      this.selectedView = 'students';
-    }
   }
   handleRealtimeUpdate(updated: any) {
+    console.log("updated", updated.studentname)
+    console.log("udpated", updated.title)
     const isSame = this.editingRecordId === updated._id;
 
     if (this.isEditing && isSame && this.originalRecord) {
@@ -400,11 +397,11 @@ export class TableviewComponent implements OnInit, OnChanges {
 
     if (updated.title) {
       this.products = this.products.map(p =>
-        p._id === updated._id ? updated : p
+        p._id === updated._id ? { ...p, ...updated } : p
       );
     } else if (updated.studentname) {
       this.students = this.students.map(s =>
-        s._id === updated._id ? updated : s
+        s._id === updated._id ? { ...s, ...updated } : s
       );
     }
   }
@@ -490,6 +487,7 @@ export class TableviewComponent implements OnInit, OnChanges {
         console.log(res);
         this.snackbar.openSnackBar("bulk data imported")
         this.selectedFile = null;
+
       },
       error: (err: any) => {
         console.error(err)
@@ -517,6 +515,11 @@ export class TableviewComponent implements OnInit, OnChanges {
   //   }
   // });
   // }
+  isProductSelected(product: any): boolean {
+    return this.selectedProducts.some(pro => pro._id === product._id);
+  } isStudentSelected(student: any): boolean {
+    return this.selectedStudents.some(stu => stu._id === student._id);
+  }
 
   formateImg(imgString: any): SafeUrl {
     return this.sanitizer.bypassSecurityTrustUrl(imgString);
@@ -566,6 +569,26 @@ export class TableviewComponent implements OnInit, OnChanges {
     this.editedId = product._id;
     this.editedProduct = { ...product };
     this.originalRecord = { ...product };
+  }
+  downloadExcel() {
+    this.productservice.getProducts().subscribe((res: any) => {
+
+      const cleanData = res.data.map((item: any) => ({
+        productname: item.title,
+        category: item.category,
+        price: item.price,
+        stock: item.stock,
+        overAllRating: item.overAllRating,
+        productId: item.productId
+      }));
+
+      const worksheet = XLSX.utils.json_to_sheet(cleanData);
+
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Products');
+
+      XLSX.writeFile(workbook, 'products.xlsx');
+    });
   }
 
   deleteStudent(id: any) {

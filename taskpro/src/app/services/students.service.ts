@@ -171,9 +171,9 @@ export class StudentsService {
 
     return this.http.patch(`${this.apiUrl}`, data);
   }
-  logout() {
-    return this.http.post('http://localhost:3030/logout', {}, {
-      withCredentials: true
-    });
-  }
+logout() {
+  return this.http.delete('http://localhost:3030/authentication', {
+    withCredentials: true
+  });
+}
 }

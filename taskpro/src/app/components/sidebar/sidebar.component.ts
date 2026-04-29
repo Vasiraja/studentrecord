@@ -140,6 +140,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 
     const studentsserv = this.feathersClient.getStudentClient();
     const productsserv = this.feathersClient.getProductClient();
+
     await this.feathersClient.authenticate();
 
     studentsserv.on("patched", (student: any) => {
@@ -152,23 +153,18 @@ export class SidebarComponent implements OnInit, AfterViewInit {
       });
     });
     productsserv.on("patched", (product: any) => {
-      console.log("PATCH EVENT PRODUCT:", product);
-      if (!product.title) return;
-
       this.ngzone.run(() => {
         const tree = $(this.treeElem.nativeElement).jstree(true);
 
-        if (tree && tree.get_node(product._id)) {
-          // const updated = this.dbProducts.find(p => p._id === product._id);
-          // console.log("updated",updated)
-          console.log("product updated")
-          console.log(product.title)
+        const nodeId = product._id || product.id;
 
-          const node = tree.get_node(product._id);
-          console.log("BEFORE RENAME NODE TEXT:", node.text);
-          console.log("NEW TITLE:", product.title);
+        if (tree && tree.get_node(nodeId)) {
+          const existing = this.dbProducts.find(p => p._id === nodeId);
+          const newTitle = product.title || existing?.title || "Unnamed";
+
+          tree.rename_node(nodeId, newTitle);
         }
-      })
+      });
     });
 
 
@@ -205,7 +201,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
       if (tree) {
         if (state) {
           tree.close_all();
-          this.expandState=!state;
+          this.expandState = !state;
         }
       }
     });
@@ -409,10 +405,12 @@ export class SidebarComponent implements OnInit, AfterViewInit {
       this.studentservice.cancelTrigger();
       const node = value.node;
 
-      if (node.original?.type === "students" || node.original?.type === "products" || node.original?.type === "productdb") {
+      if (node.original?.type === "students" || node.original?.type === "products" || node.original?.type === "productdb" || node.original?.type === "home"
+      ) {
 
         // this.sidebarservice.profileCardData$.next(false);
         this.sidebarservice.profileCardTrigger(false);
+        this.sidebarservice.setView(node.original?.type);
 
         // if (!checkDouble) {
         const sendTable = {

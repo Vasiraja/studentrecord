@@ -1,5 +1,5 @@
 <div class="dashboard-container" [class.collapsed]="isCollapsed">
-    <div class="tab-content" *ngIf="selectedView === 'home'">
+    <div class="tab-content home-view" *ngIf="selectedView === 'home'">
 
         <div class="dashboard-cards">
 
@@ -18,24 +18,27 @@
                 <p>{{ productsApi.length }}</p>
             </div>
 
-
         </div>
 
         <div class="recent-section">
 
-            <h3>Recent Students</h3>
-            <ul>
-                <li *ngFor="let s of students.slice(-5)">
-                    {{ s.studentname }}
-                </li>
-            </ul>
+            <div class="recent-box">
+                <h3>Recent Students</h3>
+                <ul>
+                    <li *ngFor="let s of students.slice(-5)">
+                        {{ s.studentname }}
+                    </li>
+                </ul>
+            </div>
 
-            <h3>Recent Products</h3>
-            <ul>
-                <li *ngFor="let p of products.slice(-5)">
-                    {{ p.title }}
-                </li>
-            </ul>
+            <div class="recent-box">
+                <h3>Recent Products</h3>
+                <ul>
+                    <li *ngFor="let p of products.slice(-5)">
+                        {{ p.title }}
+                    </li>
+                </ul>
+            </div>
 
         </div>
 
@@ -63,7 +66,8 @@
                     <ng-container matColumnDef="select">
                         <th mat-header-cell *matHeaderCellDef>Select</th>
                         <td mat-cell *matCellDef="let student">
-                            <input type="checkbox" (change)="onSelect(student, $event)">
+                            <input type="checkbox" [checked]="isStudentSelected(student)"
+                                (change)="onSelect(student, $event)">
                         </td>
                     </ng-container>
 
@@ -360,7 +364,7 @@
 
                         </div>
                         <div class="upload-row-right">
-                            <i class="fa fa-file-export download-icon" (click)="fileinput.click()"></i>
+                            <i class="fa fa-file-export download-icon" (click)="downloadExcel()"></i>
                             <div class="upload-text">
                                 <div class="hint">
                                     Bulk Export Products
@@ -417,7 +421,8 @@
                     <ng-container matColumnDef="select">
                         <th mat-header-cell *matHeaderCellDef>Select</th>
                         <td mat-cell *matCellDef="let product">
-                            <input type="checkbox" (change)="onSelectProduct(product, $event)">
+                            <input type="checkbox" [checked]="isProductSelected(product)"
+                                (change)="onSelectProduct(product, $event)">
                         </td>
                     </ng-container>
 

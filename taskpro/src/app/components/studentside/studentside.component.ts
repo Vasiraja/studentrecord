@@ -84,7 +84,8 @@ export class StudentsideComponent implements OnInit {
       this.handleRealtimeUpdate(updateStudents);
     })
     productStude.on("patched", (updatedProducts: any) => {
-                  console.log("product patch started anoter dependent view")
+      console.log("product patch started anoter dependent view")
+
 
       this.handleRealtimeUpdate(updatedProducts);
     })
@@ -124,22 +125,24 @@ export class StudentsideComponent implements OnInit {
     this.editingRecordId = '';
   }
   handleRealtimeUpdate(updated: any) {
-    const check = updated._id === this.editingRecordId;
+    console.log("updated", updated.studentname)
+    console.log("udpated", updated.title)
+    const isSame = this.editingRecordId === updated._id;
 
-    if (this.isEditing && check) {
-      this.snackbar.openSnackBar("Already user editing this record so this process discarded");
-
+    if (this.isEditing && isSame && this.originalRecord) {
+      this.studentserv.removeAddTrigger();
+      this.cancelEdit();
+      this.snackbar.openSnackBar(
+        "Another user updated this record. Your changes were discarded."
+      );
     }
-    this.cancelEdit();
-    this.cancelForm();
-    this.studentserv.cancelTrigger();
-
-       this.student = this.student.map((items: any) => items._id === updated._id ? updated : items)
-
-    
-   
 
 
+    if (updated.studentname) {
+      this.student = this.student.map((s: any) =>
+        s._id === updated._id ? { ...s, ...updated } : s
+      );
+    }
   }
   student: any = {};
 

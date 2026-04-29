@@ -2,6 +2,7 @@ import { AuthenticationService, JWTStrategy } from '@feathersjs/authentication'
 import { LocalStrategy } from '@feathersjs/authentication-local'
 
 import hooks from '../src/hooks/cookie-set'
+import { cookieRemove } from '../src/hooks/cookie-remove' 
 import type { Application } from './declarations'
 
 declare module './declarations' {
@@ -18,8 +19,6 @@ class CookieJWTStrategy extends JWTStrategy {
 
     const match = cookieHeader.match(/feathers-jwt=([^;]+)/);
     const token = match ? match[1] : null;
-
-    // console.log('TOKEN:', token);
 
     if (token) {
       return {
@@ -40,5 +39,10 @@ export const authentication = (app: Application) => {
 
   app.use('authentication', authentication)
 
-  app.service('authentication').hooks(hooks)
+   app.service('authentication').hooks({
+    after: {
+      create: [hooks.after.create[0]],  
+      remove: [cookieRemove]             
+    }
+  })
 }
