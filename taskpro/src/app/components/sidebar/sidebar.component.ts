@@ -400,6 +400,15 @@ export class SidebarComponent implements OnInit, AfterViewInit {
         }
       }
     });
+    $(treeView).on('ready.jstree', () => {
+      const tree = $(treeView).jstree(true);
+
+      if (tree) {
+        const homeNode = tree.get_node('#').children[0];
+
+        tree.select_node(homeNode);
+      }
+    });
     $(treeView).on('select_node.jstree', (e: any, value: any) => {
 
       this.studentservice.cancelTrigger();
@@ -472,6 +481,8 @@ export class SidebarComponent implements OnInit, AfterViewInit {
         console.log("Deleted:", data.node);
 
       });
+
+
 
 
 

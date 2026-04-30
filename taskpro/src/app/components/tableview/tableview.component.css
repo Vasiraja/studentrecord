@@ -289,9 +289,9 @@
   transition: 0.3s;
 }
 
-.card:hover {
+/* .card:hover {
   transform: translateY(-4px);
-}
+} */
 
 .card h3 {
   font-size: 14px;

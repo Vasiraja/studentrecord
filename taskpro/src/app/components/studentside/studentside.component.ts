@@ -1,5 +1,5 @@
 import { CommonModule, NgFor } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
@@ -9,6 +9,8 @@ import { StudentsService } from '../../services/students.service';
 import { SnackbarService } from '../../services/snackbar.service';
 import { MatCardHeader } from '@angular/material/card';
 import { ConnectionclientService } from '../../services/connectionclient.service';
+
+
 
 @Component({
   selector: 'app-studentside',
@@ -57,6 +59,7 @@ export class StudentsideComponent implements OnInit {
 
       console.log(this.base64String)
       this.student.profilePhoto = this.base64String;
+      this.cdr.detectChanges();
 
     };
 
@@ -69,7 +72,7 @@ export class StudentsideComponent implements OnInit {
   base64String: any = "";
 
   constructor(private studentserv: StudentsService, private snackbar: SnackbarService,
-    private clientfeathers: ConnectionclientService
+    private clientfeathers: ConnectionclientService, private cdr: ChangeDetectorRef
   ) { }
   ngOnInit(): void {
     this.clientfeathers.authenticate();
@@ -130,6 +133,11 @@ export class StudentsideComponent implements OnInit {
     const isSame = this.editingRecordId === updated._id;
 
     if (this.isEditing && isSame && this.originalRecord) {
+
+      if (updated.profilePhoto || updated.photo) {
+        return;
+      }
+
       this.studentserv.removeAddTrigger();
       this.cancelEdit();
       this.snackbar.openSnackBar(
@@ -138,10 +146,11 @@ export class StudentsideComponent implements OnInit {
     }
 
 
-    if (updated.studentname) {
-      this.student = this.student.map((s: any) =>
-        s._id === updated._id ? { ...s, ...updated } : s
-      );
+    if (this.student && this.student._id === updated._id) {
+      this.student = {
+        ...this.student,
+        ...updated
+      };
     }
   }
   student: any = {};

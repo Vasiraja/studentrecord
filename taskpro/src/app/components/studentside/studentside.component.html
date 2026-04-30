@@ -9,7 +9,7 @@
     <div class="profile-upload-container">
 
         <div class="image-preview">
-            <img *ngIf="student.photo; else noImage" [src]="student.photo" alt="Profile" />
+            <img *ngIf="student.profilePhoto; else noImage" [src]="student.profilePhoto" alt="Profile" />
 
             <ng-template #noImage>
                 <div class="placeholder">
@@ -20,7 +20,7 @@
 
         <input type="file" accept="image/*" (change)="onFileSelect($event)" hidden #fileInput />
 
-        <button mat-stroked-button color="primary" (click)="fileInput.click()">
+        <button mat-stroked-button color="primary" type="button" (click)="fileInput.click()">
             Upload Photo
         </button>
 

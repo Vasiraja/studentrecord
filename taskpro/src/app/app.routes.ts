@@ -8,6 +8,7 @@ import { protectGuard } from './protect.guard';
 import { AddComponent } from './components/add/add.component';
 import { ProductsideComponent } from './components/productside/productside.component';
 import { StudentsideComponent } from './components/studentside/studentside.component';
+import { ProductViewComponent } from './components/product-view/product-view.component';
 
 export const routes: Routes = [
 
@@ -17,5 +18,6 @@ export const routes: Routes = [
     { path: "", component: HomeComponent, canActivate: [protectGuard] },
     // { path: "add", component: AddComponent },
      { path: 'pro', component: StudentsideComponent },
+     { path: 'product', component: ProductViewComponent },
     { path: "**", component: LoginComponent }
 ];

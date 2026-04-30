@@ -162,6 +162,7 @@ export class TableviewComponent implements OnInit, OnChanges {
         this.snackbar.openSnackBar(res.studentname + " updated");
 
         console.log(res);
+        this.initialAllData();
 
       },
       error: (err: any) => {
@@ -173,9 +174,11 @@ export class TableviewComponent implements OnInit, OnChanges {
   saveProduct(product: any) {
     this.productservice.updateProducts(product._id, this.editedProduct).subscribe({
       next: (res: any) => {
+        product.profilePhoto = res.profilePhoto;
         this.snackbar.openSnackBar("Product Updated");
         this.productservice.productEditStatus$.next(false);
         this.cancelEdit()
+        this.initialAllData();
       },
       error: (err: any) => {
         console.error(err);
@@ -282,6 +285,7 @@ export class TableviewComponent implements OnInit, OnChanges {
   filterClassesOut: any[] = [];
   filterCategoriesApi: any[] = [];
   isCollapsed = false;
+  isFileReady = false;
 
 
 
@@ -418,6 +422,7 @@ export class TableviewComponent implements OnInit, OnChanges {
 
     reader.onload = () => {
       this.editedStudent.profilePhoto = reader.result;
+      this.isFileReady = true;
     };
 
     reader.readAsDataURL(file);
@@ -435,19 +440,6 @@ export class TableviewComponent implements OnInit, OnChanges {
   uploadFile() {
     if (!this.selectedFile) return;
 
-    console.log("uploadd--------" + this.selectedFile);
-
-    this.snackbar.openSnackBar("file uploaded");
-
-
-    // Papa.parse(this.selectedFile,
-    //   header: true,
-    //   skipEmptyLines: true,
-    //   dynamicTyping: true,
-    //   complete: (results) => {
-    //     this.parsedRows = results.data as any;
-    //   })
-
     if (this.selectedFile.name.endsWith('.xlsx')) {
       const reader = new FileReader();
 
@@ -455,47 +447,33 @@ export class TableviewComponent implements OnInit, OnChanges {
         const binaryStr = e.target.result;
 
         const workbook = XLSX.read(binaryStr, { type: 'binary' });
-
         const sheetName = workbook.SheetNames[0];
         const sheet = workbook.Sheets[sheetName];
 
-        this.productsArrayBulk = XLSX.utils.sheet_to_json(sheet);
+        let data = XLSX.utils.sheet_to_json(sheet);
 
-        console.log(this.productsArrayBulk);
+        if (data.length <= 0) return;
+
+        const bulkData = data.map((item: any) => ({
+          ...item,
+          bulk: true
+        }));
+
+        this.productservice.bulkCreate(bulkData).subscribe({
+          next: (res: any) => {
+            console.log(res);
+            this.snackbar.openSnackBar("bulk data imported");
+            this.selectedFile = null;
+            this.initialAllData();
+          },
+          error: (err: any) => {
+            console.error(err);
+          }
+        });
       };
 
       reader.readAsBinaryString(this.selectedFile);
-
     }
-
-
-
-
-
-    if (this.productsArrayBulk.length <= 0) return;
-    console.log(this.productsArrayBulk);
-
-    let bulk: boolean = true;
-
-    this.productsArrayBulk = this.productsArrayBulk.map((item) =>
-      ({ ...item, bulk: bulk })
-    );
-
-
-    this.productservice.bulkCreate(this.productsArrayBulk).subscribe({
-      next: (res: any) => {
-        console.log(res);
-        this.snackbar.openSnackBar("bulk data imported")
-        this.selectedFile = null;
-
-      },
-      error: (err: any) => {
-        console.error(err)
-      }
-    })
-
-
-    this.selectedFile = null;
   }
 
   cancelUpload() {

@@ -7,7 +7,7 @@
 
   <div class="profile-upload-container">
     <div class="image-preview">
-      <img *ngIf="product.image; else noImage" [src]="product.image" />
+      <img *ngIf="product.profilePhoto; else noImage" [src]="product.profilePhoto" />
       <ng-template #noImage>
         <div class="placeholder">
           <span>Product Image</span>

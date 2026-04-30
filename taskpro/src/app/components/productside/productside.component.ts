@@ -76,10 +76,12 @@ export class ProductsideComponent implements OnInit {
     const file = event.target.files[0];
     if (!file) return;
 
+    this.product.profilePhoto = file;
+
     const reader = new FileReader();
     reader.onload = () => {
       this.base64String = reader.result as string;
-      this.product.image = this.base64String;
+      this.product.profilePhoto = this.base64String;
     };
 
     reader.readAsDataURL(file);
@@ -95,8 +97,10 @@ export class ProductsideComponent implements OnInit {
 
     this.productservice.addProduct(this.product).subscribe({
       next: (res: any) => {
+        this.product.profilePhoto=res.profilePhoto;
         this.snackbar.openSnackBar(res.title + " added");
         this.cancelForm();
+        
       },
       error: (err: any) => console.error(err)
     });

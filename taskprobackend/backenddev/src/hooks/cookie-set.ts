@@ -10,8 +10,7 @@ export const cookieSet = async (context: HookContext) => {
 
     context.http.headers = {
       ...(context.http.headers || {}),
-      'Set-Cookie': `feathers-jwt=${accessToken}; HttpOnly; Path=/; Max-Age=${7 * 24 * 60 * 60
-        }; SameSite=Lax`
+      'Set-Cookie': `feathers-jwt=${accessToken}; HttpOnly; Path=/;  SameSite=Lax`
     };
 
     delete context.result.accessToken;
